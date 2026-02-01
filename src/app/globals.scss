@@ -1,0 +1,131 @@
+@use '@carbon/react/scss/reset';
+@use '@carbon/react/scss/grid';
+@use '@carbon/react/scss/themes';
+@use '@carbon/react/scss/components';
+
+:root {
+  --genos-primary: #0f62fe;
+  --genos-success: #24a148;
+  --genos-warning: #f1c21b;
+  --genos-danger: #da1e28;
+  --genos-bg: #f4f4f4;
+  --genos-sidebar: #161616;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--genos-bg);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 256px;
+  padding: 2rem;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.collapsed {
+  margin-left: 48px;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+  
+  h1 {
+    font-size: 2rem;
+    font-weight: 400;
+    margin: 0 0 0.5rem 0;
+  }
+  
+  p {
+    color: #525252;
+    margin: 0;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  
+  .stat-label {
+    font-size: 0.875rem;
+    color: #525252;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #161616;
+  }
+  
+  .stat-change {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    
+    &.positive { color: var(--genos-success); }
+    &.negative { color: var(--genos-danger); }
+  }
+}
+
+.content-card {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+  
+  .card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    h2 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  
+  &.active { background: #defbe6; color: #0e6027; }
+  &.inactive { background: #f2f4f8; color: #525252; }
+  &.prospect { background: #d0e2ff; color: #0043ce; }
+  &.in_progress { background: #fff8e1; color: #8a6d3b; }
+  &.review { background: #e1d5e7; color: #6a1b9a; }
+  &.approved { background: #defbe6; color: #0e6027; }
+  &.delivered { background: #d0e2ff; color: #0043ce; }
+}
