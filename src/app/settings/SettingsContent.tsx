@@ -8,6 +8,7 @@ import {
   TabPanels,
   TabPanel,
   TextInput,
+  PasswordInput,
   Button,
   Toggle,
   Select,
@@ -175,15 +176,15 @@ export default function SettingsContent() {
             <Tile style={{ marginTop: '1rem' }}>
               <h3 style={{ marginBottom: '1.5rem' }}>Segurança da Conta</h3>
               <div style={{ display: 'grid', gap: '1rem', maxWidth: '500px' }}>
-                <TextInput.PasswordInput
+                <PasswordInput
                   id="currentPassword"
                   labelText="Senha Atual"
                 />
-                <TextInput.PasswordInput
+                <PasswordInput
                   id="newPassword"
                   labelText="Nova Senha"
                 />
-                <TextInput.PasswordInput
+                <PasswordInput
                   id="confirmPassword"
                   labelText="Confirmar Nova Senha"
                 />
