@@ -1,3 +1,16 @@
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  avatar_url?: string;
+  phone?: string;
+  role: 'admin' | 'manager' | 'user';
+  is_active: boolean;
+  last_login_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export type ClientStatus = 'active' | 'inactive' | 'prospect' | 'churned';
 export type ProjectStatus = 'briefing' | 'in_progress' | 'review' | 'approved' | 'delivered' | 'cancelled';
 export type BriefingStatus = 'draft' | 'submitted' | 'reviewed' | 'approved';

@@ -101,7 +101,6 @@ export default function ClientsContent({ clients: initialClients }: { clients: C
       phone: formData.get('phone') as string,
       company: formData.get('company') as string,
       status: formData.get('status') as string,
-      organization_id: '59dd57b7-d226-400d-bccd-5824a8d624fa',
     };
 
     if (editingClient) {
