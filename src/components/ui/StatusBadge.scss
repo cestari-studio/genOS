@@ -1,0 +1,13 @@
+// ============================================
+// StatusBadge Styles
+// ============================================
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.status-badge__icon {
+  flex-shrink: 0;
+}

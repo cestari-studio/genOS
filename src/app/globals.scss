@@ -1,0 +1,1137 @@
+// ============================================
+// genOS Global Styles
+// Based on Carbon Design System v11 + Carbon for AI
+// ============================================
+
+// Carbon imports
+@use '@carbon/react/scss/reset';
+@use '@carbon/react/scss/grid';
+@use '@carbon/react/scss/themes';
+@use '@carbon/react/scss/components';
+
+// ============================================
+// CSS Custom Properties
+// ============================================
+
+:root {
+  // Brand Colors
+  --genos-primary: #0f62fe;
+  --genos-primary-hover: #0353e9;
+  --genos-primary-active: #002d9c;
+  --genos-secondary: #8a3ffc;
+  --genos-secondary-hover: #6929c4;
+  
+  // Semantic Colors
+  --genos-success: #24a148;
+  --genos-success-light: #defbe6;
+  --genos-warning: #f1c21b;
+  --genos-warning-light: #fcf4d6;
+  --genos-danger: #da1e28;
+  --genos-danger-light: #fff1f1;
+  --genos-info: #4589ff;
+  --genos-info-light: #edf5ff;
+  
+  // Background Colors
+  --genos-bg: #f4f4f4;
+  --genos-bg-hover: #e8e8e8;
+  --genos-bg-active: #c6c6c6;
+  --genos-surface: #ffffff;
+  --genos-surface-hover: #f4f4f4;
+  --genos-sidebar: #161616;
+  --genos-sidebar-hover: #262626;
+  --genos-sidebar-active: #393939;
+  
+  // Text Colors
+  --genos-text-primary: #161616;
+  --genos-text-secondary: #525252;
+  --genos-text-tertiary: #6f6f6f;
+  --genos-text-placeholder: #a8a8a8;
+  --genos-text-inverse: #ffffff;
+  --genos-text-disabled: #c6c6c6;
+  
+  // Border Colors
+  --genos-border: #8d8d8d;
+  --genos-border-subtle: #e0e0e0;
+  --genos-border-strong: #6f6f6f;
+  --genos-border-interactive: #0f62fe;
+  
+  // Layout
+  --genos-sidebar-width: 256px;
+  --genos-sidebar-collapsed: 48px;
+  --genos-header-height: 48px;
+  --genos-panel-width: 320px;
+  
+  // Spacing
+  --genos-spacing-01: 0.125rem;
+  --genos-spacing-02: 0.25rem;
+  --genos-spacing-03: 0.5rem;
+  --genos-spacing-04: 0.75rem;
+  --genos-spacing-05: 1rem;
+  --genos-spacing-06: 1.5rem;
+  --genos-spacing-07: 2rem;
+  --genos-spacing-08: 2.5rem;
+  --genos-spacing-09: 3rem;
+  --genos-spacing-10: 4rem;
+  
+  // Transitions
+  --genos-transition-fast: 70ms;
+  --genos-transition-moderate: 150ms;
+  --genos-transition-base: 240ms;
+  --genos-transition-slow: 400ms;
+  --genos-easing: cubic-bezier(0.2, 0, 0.38, 0.9);
+  
+  // Shadows
+  --genos-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --genos-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --genos-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --genos-shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.15);
+  
+  // Border Radius
+  --genos-radius-sm: 2px;
+  --genos-radius-md: 4px;
+  --genos-radius-lg: 8px;
+  --genos-radius-xl: 12px;
+  --genos-radius-pill: 9999px;
+  
+  // AI Gradient Colors
+  --cds-ai-gradient-start: #0f62fe;
+  --cds-ai-gradient-end: #8a3ffc;
+  --cds-ai-aura-start: rgba(15, 98, 254, 0.16);
+  --cds-ai-aura-end: rgba(138, 63, 252, 0);
+  --cds-ai-border-start: #4589ff;
+  --cds-ai-border-end: #a56eff;
+}
+
+// Dark Mode Theme
+[data-theme="dark"] {
+  --genos-bg: #161616;
+  --genos-bg-hover: #262626;
+  --genos-bg-active: #393939;
+  --genos-surface: #262626;
+  --genos-surface-hover: #393939;
+  --genos-sidebar: #0d0d0d;
+  --genos-sidebar-hover: #1a1a1a;
+  
+  --genos-text-primary: #f4f4f4;
+  --genos-text-secondary: #c6c6c6;
+  --genos-text-tertiary: #a8a8a8;
+  --genos-text-placeholder: #6f6f6f;
+  --genos-text-inverse: #161616;
+  
+  --genos-border: #6f6f6f;
+  --genos-border-subtle: #393939;
+  --genos-border-strong: #8d8d8d;
+  --genos-border-interactive: #4589ff;
+  
+  --genos-success-light: rgba(36, 161, 72, 0.2);
+  --genos-warning-light: rgba(241, 194, 27, 0.2);
+  --genos-danger-light: rgba(218, 30, 40, 0.2);
+  --genos-info-light: rgba(69, 137, 255, 0.2);
+  
+  --genos-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --genos-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.4);
+  --genos-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --genos-shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.6);
+  
+  --cds-ai-gradient-start: #4589ff;
+  --cds-ai-gradient-end: #a56eff;
+  --cds-ai-aura-start: rgba(69, 137, 255, 0.24);
+  --cds-ai-border-start: #78a9ff;
+  --cds-ai-border-end: #be95ff;
+}
+
+// ============================================
+// Base Styles
+// ============================================
+
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--genos-bg);
+  color: var(--genos-text-primary);
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--genos-text-primary);
+}
+
+h1 { font-size: 2.625rem; font-weight: 300; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1rem; font-weight: 600; }
+h6 { font-size: 0.875rem; font-weight: 600; }
+
+p {
+  margin: 0 0 1rem 0;
+  color: var(--genos-text-secondary);
+}
+
+a {
+  color: var(--genos-primary);
+  text-decoration: none;
+  transition: color var(--genos-transition-fast) var(--genos-easing);
+  
+  &:hover {
+    color: var(--genos-primary-hover);
+    text-decoration: underline;
+  }
+}
+
+code, pre {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+// ============================================
+// App Layout
+// ============================================
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--genos-bg);
+}
+
+.main-content {
+  flex: 1;
+  margin-left: var(--genos-sidebar-width);
+  padding: var(--genos-spacing-07);
+  transition: margin-left var(--genos-transition-base) var(--genos-easing);
+  min-height: 100vh;
+  
+  &.collapsed {
+    margin-left: var(--genos-sidebar-collapsed);
+  }
+  
+  @media (max-width: 1056px) {
+    margin-left: var(--genos-sidebar-collapsed);
+    padding: var(--genos-spacing-06);
+  }
+  
+  @media (max-width: 672px) {
+    margin-left: 0;
+    padding: var(--genos-spacing-05);
+  }
+}
+
+// ============================================
+// Page Header
+// ============================================
+
+.page-header {
+  margin-bottom: var(--genos-spacing-07);
+  padding-bottom: var(--genos-spacing-06);
+  border-bottom: 1px solid var(--genos-border-subtle);
+  
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 400;
+    margin: 0 0 var(--genos-spacing-03) 0;
+  }
+  
+  p {
+    font-size: 0.875rem;
+    color: var(--genos-text-secondary);
+    margin: 0;
+  }
+  
+  &__actions {
+    display: flex;
+    gap: var(--genos-spacing-04);
+    margin-top: var(--genos-spacing-05);
+  }
+}
+
+// ============================================
+// Stats Grid
+// ============================================
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--genos-spacing-05);
+  margin-bottom: var(--genos-spacing-07);
+  
+  @media (max-width: 1312px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 672px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  background: var(--genos-surface);
+  padding: var(--genos-spacing-05);
+  border-left: 3px solid var(--genos-primary);
+  transition: box-shadow var(--genos-transition-fast) var(--genos-easing);
+  
+  &:hover {
+    box-shadow: var(--genos-shadow-md);
+  }
+  
+  &--success { border-left-color: var(--genos-success); }
+  &--warning { border-left-color: var(--genos-warning); }
+  &--danger { border-left-color: var(--genos-danger); }
+  &--info { border-left-color: var(--genos-info); }
+  &--purple { border-left-color: var(--genos-secondary); }
+  
+  .stat-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--genos-bg);
+    border-radius: var(--genos-radius-md);
+    margin-bottom: var(--genos-spacing-05);
+    color: var(--genos-primary);
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--genos-text-secondary);
+    margin-bottom: var(--genos-spacing-03);
+    text-transform: uppercase;
+    letter-spacing: 0.32px;
+    font-weight: 500;
+  }
+  
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--genos-text-primary);
+    margin-bottom: var(--genos-spacing-02);
+    line-height: 1.2;
+  }
+  
+  .stat-change {
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: var(--genos-spacing-02);
+    
+    &.positive { color: var(--genos-success); }
+    &.negative { color: var(--genos-danger); }
+  }
+}
+
+// ============================================
+// Content Cards
+// ============================================
+
+.content-card {
+  background: var(--genos-surface);
+  margin-bottom: var(--genos-spacing-05);
+  border-radius: var(--genos-radius-md);
+  
+  .card-header {
+    padding: var(--genos-spacing-05);
+    border-bottom: 1px solid var(--genos-border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .card-actions {
+      display: flex;
+      gap: var(--genos-spacing-03);
+    }
+  }
+  
+  .card-body {
+    padding: var(--genos-spacing-05);
+  }
+  
+  .card-footer {
+    padding: var(--genos-spacing-05);
+    border-top: 1px solid var(--genos-border-subtle);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--genos-spacing-04);
+    background: var(--genos-bg);
+  }
+}
+
+// ============================================
+// Status Badges
+// ============================================
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--genos-radius-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+  
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: var(--genos-spacing-03);
+  }
+  
+  &.active, &.approved, &.delivered, &.completed {
+    background: var(--genos-success-light);
+    color: #0e6027;
+    &::before { background: var(--genos-success); }
+  }
+  
+  &.inactive, &.cancelled, &.archived {
+    background: rgba(141, 141, 141, 0.15);
+    color: #525252;
+    &::before { background: #6f6f6f; }
+  }
+  
+  &.prospect, &.new, &.draft {
+    background: var(--genos-info-light);
+    color: #0043ce;
+    &::before { background: var(--genos-info); }
+  }
+  
+  &.in_progress, &.pending, &.in-progress {
+    background: var(--genos-warning-light);
+    color: #8e6a00;
+    &::before { background: var(--genos-warning); }
+  }
+  
+  &.review, &.on_hold, &.on-hold {
+    background: rgba(138, 63, 252, 0.15);
+    color: #6929c4;
+    &::before { background: var(--genos-secondary); }
+  }
+  
+  &.urgent, &.overdue, &.error, &.failed {
+    background: var(--genos-danger-light);
+    color: #a2191f;
+    &::before { background: var(--genos-danger); }
+  }
+}
+
+[data-theme="dark"] .status-badge {
+  &.active, &.approved, &.delivered, &.completed { color: #6fdc8c; }
+  &.inactive, &.cancelled, &.archived { color: #c6c6c6; }
+  &.prospect, &.new, &.draft { color: #78a9ff; }
+  &.in_progress, &.pending, &.in-progress { color: #f1c21b; }
+  &.review, &.on_hold, &.on-hold { color: #be95ff; }
+  &.urgent, &.overdue, &.error, &.failed { color: #ff8389; }
+}
+
+// ============================================
+// Data Table Enhancements
+// ============================================
+
+.data-table-container {
+  .cds--data-table-header {
+    background: transparent;
+    padding: 0;
+    margin-bottom: var(--genos-spacing-05);
+  }
+  
+  .table-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--genos-spacing-05);
+    flex-wrap: wrap;
+    gap: var(--genos-spacing-04);
+  }
+  
+  .table-filters {
+    display: flex;
+    gap: var(--genos-spacing-04);
+    flex-wrap: wrap;
+  }
+}
+
+// ============================================
+// Empty State
+// ============================================
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--genos-spacing-10) var(--genos-spacing-07);
+  text-align: center;
+  
+  &__icon {
+    width: 64px;
+    height: 64px;
+    color: var(--genos-text-placeholder);
+    margin-bottom: var(--genos-spacing-05);
+  }
+  
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--genos-text-primary);
+    margin-bottom: var(--genos-spacing-03);
+  }
+  
+  &__description {
+    font-size: 0.875rem;
+    color: var(--genos-text-secondary);
+    margin-bottom: var(--genos-spacing-06);
+    max-width: 400px;
+  }
+}
+
+// ============================================
+// Loading State
+// ============================================
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--genos-spacing-10) var(--genos-spacing-07);
+  
+  &__text {
+    font-size: 0.875rem;
+    color: var(--genos-text-secondary);
+    margin-top: var(--genos-spacing-05);
+  }
+}
+
+// ============================================
+// Form Styles
+// ============================================
+
+.form-section {
+  margin-bottom: var(--genos-spacing-07);
+  
+  &__title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: var(--genos-spacing-05);
+    padding-bottom: var(--genos-spacing-03);
+    border-bottom: 1px solid var(--genos-border-subtle);
+  }
+  
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--genos-spacing-05);
+    
+    @media (max-width: 672px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  &__full {
+    grid-column: 1 / -1;
+  }
+}
+
+// ============================================
+// Activity List
+// ============================================
+
+.activity-list {
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    padding: var(--genos-spacing-04) 0;
+    border-bottom: 1px solid var(--genos-border-subtle);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  &__icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--genos-spacing-04);
+    flex-shrink: 0;
+    
+    &--client { background: var(--genos-info-light); color: #0043ce; }
+    &--project { background: rgba(138, 63, 252, 0.15); color: #6929c4; }
+    &--document { background: rgba(0, 157, 154, 0.15); color: #007d79; }
+    &--briefing { background: var(--genos-success-light); color: #0e6027; }
+  }
+  
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  &__title {
+    font-size: 0.875rem;
+    color: var(--genos-text-primary);
+    margin-bottom: 2px;
+  }
+  
+  &__time {
+    font-size: 0.75rem;
+    color: var(--genos-text-placeholder);
+  }
+}
+
+// ============================================
+// Quick Actions Grid
+// ============================================
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--genos-spacing-04);
+  
+  @media (max-width: 1056px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--genos-spacing-05);
+    background: var(--genos-surface);
+    border: 1px solid var(--genos-border-subtle);
+    border-radius: var(--genos-radius-md);
+    cursor: pointer;
+    transition: all var(--genos-transition-fast) var(--genos-easing);
+    
+    &:hover {
+      border-color: var(--genos-primary);
+      box-shadow: var(--genos-shadow-md);
+    }
+  }
+  
+  &__icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--genos-bg);
+    border-radius: var(--genos-radius-lg);
+    margin-bottom: var(--genos-spacing-03);
+    color: var(--genos-primary);
+  }
+  
+  &__label {
+    font-size: 0.875rem;
+    color: var(--genos-text-primary);
+    text-align: center;
+  }
+}
+
+// ============================================
+// AI Chat Interface
+// ============================================
+
+.ai-chat-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 180px);
+  background: var(--genos-surface);
+  border-radius: var(--genos-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--genos-border-subtle);
+}
+
+.ai-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--genos-spacing-04) var(--genos-spacing-05);
+  border-bottom: 1px solid var(--genos-border-subtle);
+  background: var(--genos-bg);
+  
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--genos-spacing-03);
+    font-weight: 600;
+  }
+}
+
+.ai-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--genos-spacing-05);
+  display: flex;
+  flex-direction: column;
+  gap: var(--genos-spacing-05);
+}
+
+.ai-chat-message {
+  display: flex;
+  gap: var(--genos-spacing-04);
+  max-width: 85%;
+  
+  &--user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+  
+  &--assistant {
+    align-self: flex-start;
+  }
+  
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    
+    &--user {
+      background: var(--genos-primary);
+      color: white;
+    }
+    
+    &--assistant {
+      background: linear-gradient(135deg, #8a3ffc 0%, #0f62fe 100%);
+      color: white;
+    }
+  }
+  
+  &__content {
+    padding: var(--genos-spacing-04) var(--genos-spacing-05);
+    border-radius: var(--genos-radius-lg);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    
+    &--user {
+      background: var(--genos-primary);
+      color: white;
+      border-bottom-right-radius: var(--genos-radius-sm);
+    }
+    
+    &--assistant {
+      background: var(--genos-bg);
+      color: var(--genos-text-primary);
+      border-bottom-left-radius: var(--genos-radius-sm);
+      border: 1px solid var(--genos-border-subtle);
+    }
+  }
+  
+  &__time {
+    font-size: 0.625rem;
+    color: var(--genos-text-placeholder);
+    margin-top: var(--genos-spacing-02);
+  }
+}
+
+.ai-chat-input {
+  padding: var(--genos-spacing-05);
+  border-top: 1px solid var(--genos-border-subtle);
+  display: flex;
+  gap: var(--genos-spacing-04);
+  align-items: flex-end;
+  background: var(--genos-bg);
+  
+  .cds--text-area-wrapper {
+    flex: 1;
+  }
+}
+
+// ============================================
+// Animations
+// ============================================
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--genos-transition-base) var(--genos-easing);
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp var(--genos-transition-base) var(--genos-easing);
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft var(--genos-transition-base) var(--genos-easing);
+}
+
+.animate-slide-in-right {
+  animation: slideInRight var(--genos-transition-base) var(--genos-easing);
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+// ============================================
+// Utility Classes
+// ============================================
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: var(--genos-spacing-01); }
+.gap-2 { gap: var(--genos-spacing-02); }
+.gap-3 { gap: var(--genos-spacing-03); }
+.gap-4 { gap: var(--genos-spacing-04); }
+.gap-5 { gap: var(--genos-spacing-05); }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+
+// ============================================
+// Print Styles
+// ============================================
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .main-content {
+    margin-left: 0;
+    padding: 0;
+  }
+}
+
+// ============================================
+// Animation Keyframes
+// ============================================
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Animation Classes
+.animate-fadeIn { animation: fadeIn var(--genos-transition-base) var(--genos-easing); }
+.animate-fadeInUp { animation: fadeInUp var(--genos-transition-base) var(--genos-easing); }
+.animate-fadeInDown { animation: fadeInDown var(--genos-transition-base) var(--genos-easing); }
+.animate-slideInRight { animation: slideInRight var(--genos-transition-base) var(--genos-easing); }
+.animate-slideInLeft { animation: slideInLeft var(--genos-transition-base) var(--genos-easing); }
+.animate-scaleIn { animation: scaleIn var(--genos-transition-base) var(--genos-easing); }
+.animate-pulse { animation: pulse 2s infinite; }
+.animate-spin { animation: spin 1s linear infinite; }
+
+// Stagger animation delays
+.stagger-1 { animation-delay: 50ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 150ms; }
+.stagger-4 { animation-delay: 200ms; }
+.stagger-5 { animation-delay: 250ms; }
+
+// ============================================
+// Skeleton Loading
+// ============================================
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--genos-bg) 25%,
+    var(--genos-bg-hover) 50%,
+    var(--genos-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--genos-radius-md);
+}
+
+.skeleton-text {
+  @extend .skeleton;
+  height: 1rem;
+  margin-bottom: 0.5rem;
+  
+  &:last-child {
+    width: 60%;
+  }
+}
+
+.skeleton-heading {
+  @extend .skeleton;
+  height: 1.5rem;
+  width: 40%;
+  margin-bottom: 0.75rem;
+}
+
+.skeleton-avatar {
+  @extend .skeleton;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.skeleton-card {
+  @extend .skeleton;
+  height: 120px;
+}
+
+// ============================================
+// Focus Styles
+// ============================================
+
+.focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--genos-primary);
+    outline-offset: 2px;
+  }
+}
+
+// ============================================
+// Scrollbar Styles
+// ============================================
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--genos-border) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--genos-border);
+    border-radius: 3px;
+    
+    &:hover {
+      background: var(--genos-border-strong);
+    }
+  }
+}
+
+// ============================================
+// Truncation
+// ============================================
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// ============================================
+// Selection
+// ============================================
+
+::selection {
+  background: rgba(15, 98, 254, 0.2);
+  color: inherit;
+}
+
+// ============================================
+// Reduced Motion
+// ============================================
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

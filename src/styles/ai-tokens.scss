@@ -1,0 +1,529 @@
+// ============================================
+// Carbon for AI - Design Tokens
+// AI styling builds on Carbon with light as metaphor
+// ============================================
+
+@use './tokens' as *;
+
+// ============================================
+// 1. AI COLOR TOKENS - LIGHT MODE
+// ============================================
+
+:root {
+  // AI Gradient Colors (used for borders, glows)
+  --cds-ai-gradient-start: #{$blue-60};
+  --cds-ai-gradient-mid: #{$purple-60};
+  --cds-ai-gradient-end: #{$cyan-50};
+  
+  // AI Aura (glow effect)
+  --cds-ai-aura-start: rgba(15, 98, 254, 0.16);
+  --cds-ai-aura-start-sm: rgba(15, 98, 254, 0.08);
+  --cds-ai-aura-end: rgba(138, 63, 252, 0);
+  --cds-ai-aura-hover-background: rgba(69, 137, 255, 0.12);
+  --cds-ai-aura-hover-start: rgba(15, 98, 254, 0.32);
+  --cds-ai-aura-hover-end: rgba(138, 63, 252, 0);
+  
+  // AI Label
+  --cds-ai-label-background: linear-gradient(135deg, #{$blue-60} 0%, #{$purple-60} 100%);
+  --cds-ai-label-text: #ffffff;
+  --cds-ai-label-hover-background: linear-gradient(135deg, #{$blue-70} 0%, #{$purple-70} 100%);
+  
+  // AI Popover
+  --cds-ai-popover-background: #{$gray-90};
+  --cds-ai-popover-text-primary: #ffffff;
+  --cds-ai-popover-text-secondary: #{$gray-30};
+  --cds-ai-popover-border: #{$gray-80};
+  --cds-ai-popover-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  
+  // AI Border (gradient border effect)
+  --cds-ai-border-start: #{$blue-50};
+  --cds-ai-border-end: #{$purple-50};
+  --cds-ai-border-strong-start: #{$blue-60};
+  --cds-ai-border-strong-end: #{$purple-60};
+  
+  // AI Background
+  --cds-ai-bg: rgba(69, 137, 255, 0.04);
+  --cds-ai-bg-hover: rgba(69, 137, 255, 0.08);
+  --cds-ai-bg-selected: rgba(69, 137, 255, 0.12);
+  
+  // AI Inner shadow (for elevated AI components)
+  --cds-ai-inner-shadow: inset 0 -40px 40px -40px rgba(69, 137, 255, 0.16), 
+                         inset 0 -80px 80px -80px rgba(138, 63, 252, 0.08);
+  
+  // AI Drop shadow
+  --cds-ai-drop-shadow: 0 4px 12px rgba(15, 98, 254, 0.16), 
+                        0 8px 24px rgba(138, 63, 252, 0.08);
+  
+  // AI Skeleton
+  --cds-ai-skeleton-background: linear-gradient(90deg, #{$gray-20} 0%, #{$gray-10} 50%, #{$gray-20} 100%);
+  --cds-ai-skeleton-element: #{$gray-30};
+  
+  // AI Chat specific
+  --cds-ai-chat-user-bg: #{$blue-60};
+  --cds-ai-chat-user-text: #ffffff;
+  --cds-ai-chat-assistant-bg: #{$gray-10};
+  --cds-ai-chat-assistant-text: #{$gray-100};
+  --cds-ai-chat-timestamp: #{$gray-50};
+  --cds-ai-chat-action-bg: rgba(69, 137, 255, 0.08);
+  --cds-ai-chat-action-border: #{$blue-50};
+  --cds-ai-chat-action-text: #{$blue-60};
+  --cds-ai-chat-action-hover-bg: rgba(69, 137, 255, 0.16);
+  
+  // AI Revert
+  --cds-ai-revert-background: #{$gray-10};
+  --cds-ai-revert-icon: #{$blue-60};
+  --cds-ai-revert-text: #{$blue-60};
+}
+
+// ============================================
+// 2. AI COLOR TOKENS - DARK MODE
+// ============================================
+
+[data-theme="dark"],
+.cds--g90,
+.cds--g100 {
+  // AI Gradient Colors
+  --cds-ai-gradient-start: #{$blue-50};
+  --cds-ai-gradient-mid: #{$purple-50};
+  --cds-ai-gradient-end: #{$cyan-40};
+  
+  // AI Aura (glow effect) - more prominent in dark mode
+  --cds-ai-aura-start: rgba(69, 137, 255, 0.24);
+  --cds-ai-aura-start-sm: rgba(69, 137, 255, 0.12);
+  --cds-ai-aura-end: rgba(165, 110, 255, 0);
+  --cds-ai-aura-hover-background: rgba(69, 137, 255, 0.16);
+  --cds-ai-aura-hover-start: rgba(69, 137, 255, 0.40);
+  --cds-ai-aura-hover-end: rgba(165, 110, 255, 0);
+  
+  // AI Label
+  --cds-ai-label-background: linear-gradient(135deg, #{$blue-50} 0%, #{$purple-50} 100%);
+  --cds-ai-label-text: #{$gray-100};
+  --cds-ai-label-hover-background: linear-gradient(135deg, #{$blue-40} 0%, #{$purple-40} 100%);
+  
+  // AI Popover (darker with glow)
+  --cds-ai-popover-background: #{$gray-100};
+  --cds-ai-popover-text-primary: #{$gray-10};
+  --cds-ai-popover-text-secondary: #{$gray-40};
+  --cds-ai-popover-border: #{$gray-80};
+  --cds-ai-popover-shadow: 0 4px 24px rgba(0, 0, 0, 0.6), 
+                           0 0 48px rgba(69, 137, 255, 0.16);
+  
+  // AI Border
+  --cds-ai-border-start: #{$blue-40};
+  --cds-ai-border-end: #{$purple-40};
+  --cds-ai-border-strong-start: #{$blue-50};
+  --cds-ai-border-strong-end: #{$purple-50};
+  
+  // AI Background
+  --cds-ai-bg: rgba(69, 137, 255, 0.08);
+  --cds-ai-bg-hover: rgba(69, 137, 255, 0.12);
+  --cds-ai-bg-selected: rgba(69, 137, 255, 0.16);
+  
+  // AI Inner shadow
+  --cds-ai-inner-shadow: inset 0 -40px 40px -40px rgba(69, 137, 255, 0.24), 
+                         inset 0 -80px 80px -80px rgba(165, 110, 255, 0.12);
+  
+  // AI Drop shadow
+  --cds-ai-drop-shadow: 0 4px 12px rgba(69, 137, 255, 0.24), 
+                        0 8px 24px rgba(165, 110, 255, 0.12);
+  
+  // AI Skeleton
+  --cds-ai-skeleton-background: linear-gradient(90deg, #{$gray-80} 0%, #{$gray-90} 50%, #{$gray-80} 100%);
+  --cds-ai-skeleton-element: #{$gray-70};
+  
+  // AI Chat specific
+  --cds-ai-chat-user-bg: #{$blue-60};
+  --cds-ai-chat-user-text: #ffffff;
+  --cds-ai-chat-assistant-bg: #{$gray-80};
+  --cds-ai-chat-assistant-text: #{$gray-10};
+  --cds-ai-chat-timestamp: #{$gray-50};
+  --cds-ai-chat-action-bg: rgba(69, 137, 255, 0.12);
+  --cds-ai-chat-action-border: #{$blue-40};
+  --cds-ai-chat-action-text: #{$blue-40};
+  --cds-ai-chat-action-hover-bg: rgba(69, 137, 255, 0.20);
+  
+  // AI Revert
+  --cds-ai-revert-background: #{$gray-80};
+  --cds-ai-revert-icon: #{$blue-40};
+  --cds-ai-revert-text: #{$blue-40};
+}
+
+// ============================================
+// 3. AI GRADIENT MIXINS
+// ============================================
+
+@mixin ai-gradient-border($width: 1px) {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: $width;
+    background: linear-gradient(
+      135deg, 
+      var(--cds-ai-border-start) 0%, 
+      var(--cds-ai-border-end) 100%
+    );
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+}
+
+@mixin ai-gradient-border-strong($width: 2px) {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: $width;
+    background: linear-gradient(
+      135deg, 
+      var(--cds-ai-border-strong-start) 0%, 
+      var(--cds-ai-border-strong-end) 100%
+    );
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+}
+
+@mixin ai-aura-glow {
+  box-shadow: 
+    0 0 0 1px var(--cds-ai-border-start),
+    0 4px 12px var(--cds-ai-aura-start),
+    0 8px 24px var(--cds-ai-aura-end);
+}
+
+@mixin ai-aura-glow-hover {
+  box-shadow: 
+    0 0 0 1px var(--cds-ai-border-strong-start),
+    0 4px 16px var(--cds-ai-aura-hover-start),
+    0 12px 32px var(--cds-ai-aura-hover-end);
+}
+
+@mixin ai-inner-shadow {
+  box-shadow: var(--cds-ai-inner-shadow);
+}
+
+// ============================================
+// 4. AI ANIMATION TOKENS
+// ============================================
+
+$ai-thinking-duration: 1.5s;
+$ai-typing-duration: 0.8s;
+$ai-fade-in-duration: 300ms;
+$ai-pulse-duration: 2s;
+
+@keyframes ai-thinking {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes ai-typing {
+  0% { opacity: 0.4; }
+  20% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+@keyframes ai-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes ai-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 0 var(--cds-ai-aura-start),
+      0 0 0 0 var(--cds-ai-aura-end);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 4px var(--cds-ai-aura-start),
+      0 0 0 8px var(--cds-ai-aura-end);
+  }
+}
+
+@keyframes ai-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// ============================================
+// 5. AI COMPONENT STYLES
+// ============================================
+
+// AI Label base style
+.ai-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  background: var(--cds-ai-label-background);
+  color: var(--cds-ai-label-text);
+  cursor: pointer;
+  transition: all 150ms ease;
+  
+  &:hover {
+    background: var(--cds-ai-label-hover-background);
+  }
+  
+  &:focus {
+    outline: 2px solid var(--cds-focus);
+    outline-offset: 1px;
+  }
+  
+  &--mini {
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    justify-content: center;
+    border-radius: 2px;
+    font-size: 10px;
+    
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+  
+  &--inline {
+    padding: 0 4px;
+    height: 16px;
+    font-size: 10px;
+  }
+}
+
+// AI Popover base style
+.ai-popover {
+  position: absolute;
+  z-index: 9500;
+  min-width: 280px;
+  max-width: 400px;
+  padding: 16px;
+  background: var(--cds-ai-popover-background);
+  border: 1px solid var(--cds-ai-popover-border);
+  border-radius: 4px;
+  box-shadow: var(--cds-ai-popover-shadow);
+  
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  
+  &__label {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--cds-ai-popover-text-secondary);
+    margin-bottom: 4px;
+  }
+  
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cds-ai-popover-text-primary);
+    line-height: 1.4;
+  }
+  
+  &__description {
+    font-size: 14px;
+    color: var(--cds-ai-popover-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  
+  &__section {
+    margin-bottom: 16px;
+    
+    &-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--cds-ai-popover-text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.32px;
+    }
+  }
+  
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li {
+      position: relative;
+      padding-left: 16px;
+      font-size: 14px;
+      color: var(--cds-ai-popover-text-primary);
+      line-height: 1.5;
+      margin-bottom: 8px;
+      
+      &::before {
+        content: '–';
+        position: absolute;
+        left: 0;
+        color: var(--cds-ai-popover-text-secondary);
+      }
+      
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+  
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--cds-ai-popover-border);
+  }
+  
+  &__model {
+    font-size: 12px;
+    color: var(--cds-ai-popover-text-secondary);
+    
+    a {
+      color: var(--cds-link-inverse);
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  // Arrow pointer
+  &[data-placement^="bottom"] {
+    &::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      background: var(--cds-ai-popover-background);
+      border-left: 1px solid var(--cds-ai-popover-border);
+      border-top: 1px solid var(--cds-ai-popover-border);
+      transform: translateX(-50%) rotate(45deg);
+    }
+  }
+  
+  &[data-placement^="top"] {
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      background: var(--cds-ai-popover-background);
+      border-right: 1px solid var(--cds-ai-popover-border);
+      border-bottom: 1px solid var(--cds-ai-popover-border);
+      transform: translateX(-50%) rotate(45deg);
+    }
+  }
+}
+
+// AI Component wrapper (adds AI styling to any component)
+.ai-component {
+  position: relative;
+  background: var(--cds-ai-bg);
+  @include ai-gradient-border(1px);
+  @include ai-inner-shadow;
+  
+  &:hover {
+    background: var(--cds-ai-bg-hover);
+  }
+  
+  &--focused,
+  &:focus-within {
+    @include ai-gradient-border-strong(2px);
+    @include ai-aura-glow;
+  }
+}
+
+// AI Thinking indicator
+.ai-thinking {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cds-ai-gradient-start);
+    animation: ai-typing $ai-typing-duration ease-in-out infinite;
+    
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+// AI Skeleton loading
+.ai-skeleton {
+  background: var(--cds-ai-skeleton-background);
+  background-size: 200% 100%;
+  animation: ai-shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+  
+  &--text {
+    height: 16px;
+    margin-bottom: 8px;
+    
+    &:last-child {
+      width: 60%;
+    }
+  }
+  
+  &--circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+  
+  &--rect {
+    width: 100%;
+    height: 80px;
+  }
+}

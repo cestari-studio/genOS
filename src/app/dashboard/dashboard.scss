@@ -1,0 +1,768 @@
+// ============================================
+// Dashboard Page Styles
+// Carbon Design System + AI Insights
+// ============================================
+
+.dashboard-page {
+  padding-bottom: 2rem;
+}
+
+// ============================================
+// Page Header
+// ============================================
+
+.dashboard-header {
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-header__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  
+  @media (max-width: 672px) {
+    flex-direction: column;
+  }
+}
+
+.dashboard-header__greeting {
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: var(--genos-text-primary);
+    margin: 0 0 0.25rem 0;
+    line-height: 1.3;
+  }
+  
+  p {
+    font-size: 0.875rem;
+    color: var(--genos-text-secondary);
+    margin: 0;
+  }
+}
+
+.dashboard-header__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+// ============================================
+// AI Insights Section
+// ============================================
+
+.ai-insights-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(15, 98, 254, 0.05) 0%, rgba(138, 63, 252, 0.05) 100%);
+  border: 1px solid rgba(15, 98, 254, 0.15);
+  border-radius: 8px;
+}
+
+.ai-insights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.ai-insights-header__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--genos-text-primary);
+  
+  svg {
+    color: var(--genos-primary);
+  }
+}
+
+.ai-insights-header__count {
+  font-size: 0.75rem;
+  color: var(--genos-text-secondary);
+}
+
+.ai-insights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  
+  @media (max-width: 1056px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 672px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ai-insight-card {
+  position: relative;
+  padding: 1rem;
+  background: var(--genos-surface);
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+  transition: all 200ms ease;
+  
+  &:hover {
+    box-shadow: var(--genos-shadow-sm);
+  }
+  
+  &--danger {
+    border-left-color: var(--genos-danger);
+    
+    .ai-insight-card__icon--danger {
+      background: rgba(218, 30, 40, 0.1);
+      color: var(--genos-danger);
+    }
+  }
+  
+  &--success {
+    border-left-color: var(--genos-success);
+    
+    .ai-insight-card__icon--success {
+      background: rgba(36, 161, 72, 0.1);
+      color: var(--genos-success);
+    }
+  }
+  
+  &--info {
+    border-left-color: var(--genos-primary);
+    
+    .ai-insight-card__icon--info {
+      background: rgba(15, 98, 254, 0.1);
+      color: var(--genos-primary);
+    }
+  }
+  
+  &--purple {
+    border-left-color: var(--genos-secondary);
+    
+    .ai-insight-card__icon--purple {
+      background: rgba(138, 63, 252, 0.1);
+      color: var(--genos-secondary);
+    }
+  }
+}
+
+.ai-insight-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.ai-insight-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.ai-insight-card__dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--genos-text-tertiary);
+  cursor: pointer;
+  opacity: 0;
+  transition: all 150ms ease;
+  
+  .ai-insight-card:hover & {
+    opacity: 1;
+  }
+  
+  &:hover {
+    background: var(--genos-bg-hover);
+    color: var(--genos-text-primary);
+  }
+}
+
+.ai-insight-card__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--genos-text-primary);
+  margin: 0 0 0.375rem 0;
+}
+
+.ai-insight-card__description {
+  font-size: 0.8125rem;
+  color: var(--genos-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 0.75rem 0;
+}
+
+.ai-insight-card__action {
+  padding-left: 0;
+}
+
+// ============================================
+// Stats Grid
+// ============================================
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  
+  @media (max-width: 1056px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 672px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background: var(--genos-surface);
+  border-radius: 8px;
+  border: 1px solid var(--genos-border-subtle);
+  text-decoration: none;
+  transition: all 200ms ease;
+  
+  &:hover {
+    border-color: var(--genos-border);
+    box-shadow: var(--genos-shadow-sm);
+    
+    .stat-card__footer {
+      color: var(--genos-primary);
+    }
+  }
+  
+  &--blue .stat-card__icon {
+    background: rgba(15, 98, 254, 0.1);
+    color: #0f62fe;
+  }
+  
+  &--purple .stat-card__icon {
+    background: rgba(138, 63, 252, 0.1);
+    color: #8a3ffc;
+  }
+  
+  &--teal .stat-card__icon {
+    background: rgba(0, 157, 154, 0.1);
+    color: #009d9a;
+  }
+  
+  &--green .stat-card__icon {
+    background: rgba(36, 161, 72, 0.1);
+    color: #24a148;
+  }
+}
+
+.stat-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.stat-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.stat-card__trend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  
+  &.positive {
+    background: rgba(36, 161, 72, 0.1);
+    color: var(--genos-success);
+  }
+  
+  &.negative {
+    background: rgba(218, 30, 40, 0.1);
+    color: var(--genos-danger);
+  }
+}
+
+.stat-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-card__value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--genos-text-primary);
+  line-height: 1.2;
+}
+
+.stat-card__label {
+  font-size: 0.8125rem;
+  color: var(--genos-text-secondary);
+}
+
+.stat-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--genos-border-subtle);
+  font-size: 0.75rem;
+  color: var(--genos-text-tertiary);
+  transition: color 150ms ease;
+}
+
+// ============================================
+// Dashboard Grid
+// ============================================
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 1.5rem;
+  
+  @media (max-width: 1056px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-grid__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dashboard-grid__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  
+  @media (max-width: 1056px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 672px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ============================================
+// Dashboard Cards
+// ============================================
+
+.dashboard-card {
+  background: var(--genos-surface);
+  border-radius: 8px;
+  border: 1px solid var(--genos-border-subtle);
+  overflow: hidden;
+  
+  &--ai {
+    position: relative;
+    background: linear-gradient(135deg, #161616 0%, #1a1a2e 100%);
+    border-color: rgba(15, 98, 254, 0.3);
+  }
+}
+
+.dashboard-card__ai-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(180deg, rgba(15, 98, 254, 0.15) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.dashboard-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--genos-border-subtle);
+  
+  .dashboard-card--ai & {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.dashboard-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--genos-text-primary);
+    margin: 0;
+  }
+  
+  svg {
+    color: var(--genos-text-secondary);
+  }
+  
+  .dashboard-card--ai & h3 {
+    color: #f4f4f4;
+  }
+  
+  .dashboard-card--ai & svg {
+    color: var(--genos-primary);
+  }
+}
+
+.dashboard-card__body {
+  padding: 1rem;
+  
+  &--chart {
+    padding: 0.5rem 1rem 1rem;
+    
+    .chart-skeleton {
+      height: 240px;
+    }
+  }
+}
+
+// ============================================
+// Activity Timeline
+// ============================================
+
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--genos-border-subtle);
+  
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.activity-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  
+  &--client {
+    background: rgba(15, 98, 254, 0.1);
+    color: #0f62fe;
+  }
+  
+  &--project {
+    background: rgba(138, 63, 252, 0.1);
+    color: #8a3ffc;
+  }
+  
+  &--document {
+    background: rgba(36, 161, 72, 0.1);
+    color: #24a148;
+  }
+  
+  &--briefing {
+    background: rgba(0, 157, 154, 0.1);
+    color: #009d9a;
+  }
+}
+
+.activity-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-item__title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--genos-text-primary);
+  margin-bottom: 0.125rem;
+}
+
+.activity-item__meta {
+  font-size: 0.75rem;
+  color: var(--genos-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.activity-item__time {
+  flex-shrink: 0;
+  color: var(--genos-text-tertiary);
+}
+
+// ============================================
+// Deadlines List
+// ============================================
+
+.deadlines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.deadline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--genos-bg);
+  border-radius: 6px;
+  transition: background 150ms ease;
+  
+  &:hover {
+    background: var(--genos-bg-hover);
+  }
+}
+
+.deadline-item__date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--genos-surface);
+  border-radius: 6px;
+  flex-shrink: 0;
+  
+  &.urgent {
+    background: rgba(218, 30, 40, 0.1);
+    
+    .deadline-item__day {
+      color: var(--genos-danger);
+    }
+  }
+}
+
+.deadline-item__day {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--genos-text-primary);
+  line-height: 1;
+}
+
+.deadline-item__month {
+  font-size: 0.625rem;
+  color: var(--genos-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.32px;
+}
+
+.deadline-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.deadline-item__project {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--genos-text-primary);
+  margin-bottom: 0.125rem;
+}
+
+.deadline-item__client {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--genos-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.deadline-item__progress {
+  margin-top: 0.5rem;
+  
+  .cds--progress-bar__bar {
+    height: 4px;
+  }
+}
+
+.deadline-item__warning {
+  color: var(--genos-warning);
+  flex-shrink: 0;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+// ============================================
+// Quick Actions
+// ============================================
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--genos-bg);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 150ms ease;
+  
+  svg {
+    color: var(--genos-primary);
+  }
+  
+  span {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--genos-text-primary);
+    text-align: center;
+  }
+  
+  &:hover {
+    background: var(--genos-bg-hover);
+    transform: translateY(-2px);
+  }
+}
+
+// ============================================
+// AI Card
+// ============================================
+
+.ai-card__description {
+  font-size: 0.8125rem;
+  color: #c6c6c6;
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+}
+
+.ai-card__button {
+  width: 100%;
+}
+
+// ============================================
+// Chart Overrides
+// ============================================
+
+.dashboard-card__body--chart {
+  // Carbon Charts theme overrides
+  .cds--cc--chart-wrapper {
+    background: transparent;
+  }
+  
+  .cds--cc--axes g.axis path.domain,
+  .cds--cc--axes g.axis .tick line {
+    stroke: var(--genos-border-subtle);
+  }
+  
+  .cds--cc--axes g.axis .tick text {
+    fill: var(--genos-text-secondary);
+  }
+  
+  .cds--cc--grid rect.chart-grid-backdrop {
+    fill: transparent;
+  }
+  
+  .cds--cc--grid g.x.grid line,
+  .cds--cc--grid g.y.grid line {
+    stroke: var(--genos-border-subtle);
+    stroke-dasharray: 2, 2;
+  }
+  
+  .cds--cc--legend {
+    .legend-item {
+      .checkbox {
+        border-color: var(--genos-border);
+      }
+      
+      .legend-item-label p {
+        color: var(--genos-text-secondary);
+      }
+    }
+  }
+}
+
+// ============================================
+// Dark Mode Adjustments
+// ============================================
+
+[data-theme="dark"] {
+  .ai-insights-section {
+    background: linear-gradient(135deg, rgba(15, 98, 254, 0.08) 0%, rgba(138, 63, 252, 0.08) 100%);
+    border-color: rgba(15, 98, 254, 0.2);
+  }
+  
+  .stat-card,
+  .dashboard-card {
+    background: #262626;
+    border-color: #393939;
+    
+    &:hover {
+      border-color: #525252;
+    }
+  }
+  
+  .ai-insight-card {
+    background: #262626;
+  }
+  
+  .activity-item {
+    border-bottom-color: #393939;
+  }
+  
+  .deadline-item,
+  .quick-action {
+    background: #393939;
+    
+    &:hover {
+      background: #4c4c4c;
+    }
+  }
+  
+  .deadline-item__date {
+    background: #262626;
+  }
+}

@@ -1,0 +1,89 @@
+// ============================================
+// EmptyState Styles
+// ============================================
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  min-height: 300px;
+  
+  // Variants
+  &--search {
+    .empty-state__icon {
+      color: var(--genos-text-placeholder);
+    }
+  }
+  
+  &--error {
+    .empty-state__icon {
+      color: var(--genos-danger);
+    }
+  }
+}
+
+.empty-state__icon {
+  color: var(--genos-text-tertiary);
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+  
+  svg {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.empty-state__title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--genos-text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-state__description {
+  font-size: 0.875rem;
+  color: var(--genos-text-secondary);
+  margin: 0 0 1.5rem 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.empty-state__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+// Compact variant for tables/lists
+.empty-state--compact {
+  padding: 2rem;
+  min-height: 200px;
+  
+  .empty-state__icon {
+    margin-bottom: 1rem;
+    
+    svg {
+      width: 48px;
+      height: 48px;
+    }
+  }
+  
+  .empty-state__title {
+    font-size: 1rem;
+  }
+  
+  .empty-state__description {
+    margin-bottom: 1rem;
+  }
+}
+
+// Dark mode
+[data-theme="dark"] {
+  .empty-state__icon {
+    opacity: 0.4;
+  }
+}
