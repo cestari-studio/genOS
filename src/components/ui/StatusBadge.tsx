@@ -1,78 +1,89 @@
 'use client';
 
+import React, { useMemo } from 'react';
 import { Tag } from '@carbon/react';
-import { 
-  CheckmarkFilled, 
-  Time, 
-  WarningFilled, 
-  CloseOutline,
+import {
+  Edit,
+  UserFollow,
+  User,
   InProgress,
-  Pending,
+  Send,
+  Undo,
+  CheckmarkFilled,
+  Calendar,
+  ErrorFilled,
+  Archive,
 } from '@carbon/icons-react';
-import './StatusBadge.scss';
+import type { PostStatus } from '@/types/database';
+import { POST_STATUS_CONFIG } from '@/types/database';
 
-type StatusType = 
-  | 'active' | 'inactive' | 'pending' | 'approved' | 'rejected' 
-  | 'in_progress' | 'completed' | 'cancelled' | 'draft' | 'review'
-  | 'planning' | 'urgent' | 'high' | 'medium' | 'low';
-
+/**
+ * Props for the StatusBadge component
+ */
 interface StatusBadgeProps {
-  status: StatusType | string;
+  /** Post status from database */
+  status: PostStatus;
+  /** Size of the badge: sm or md (default: sm) */
   size?: 'sm' | 'md';
+  /** Whether to show the icon (default: false) */
   showIcon?: boolean;
-  customLabel?: string;
 }
 
-const statusConfig: Record<string, { 
-  type: 'green' | 'blue' | 'gray' | 'red' | 'purple' | 'cyan' | 'magenta' | 'teal'; 
-  label: string; 
-  icon?: React.ElementType 
-}> = {
-  // Client/General Status
-  active: { type: 'green', label: 'Ativo', icon: CheckmarkFilled },
-  inactive: { type: 'gray', label: 'Inativo', icon: CloseOutline },
-  pending: { type: 'blue', label: 'Pendente', icon: Time },
-  approved: { type: 'green', label: 'Aprovado', icon: CheckmarkFilled },
-  rejected: { type: 'red', label: 'Rejeitado', icon: CloseOutline },
-  cancelled: { type: 'red', label: 'Cancelado', icon: CloseOutline },
-  
-  // Project Status
-  planning: { type: 'cyan', label: 'Planejamento', icon: Pending },
-  in_progress: { type: 'blue', label: 'Em Andamento', icon: InProgress },
-  review: { type: 'purple', label: 'Em Revisão', icon: Time },
-  completed: { type: 'green', label: 'Concluído', icon: CheckmarkFilled },
-  
-  // Document Status
-  draft: { type: 'gray', label: 'Rascunho', icon: Time },
-  
-  // Priority
-  urgent: { type: 'red', label: 'Urgente', icon: WarningFilled },
-  high: { type: 'magenta', label: 'Alta' },
-  medium: { type: 'blue', label: 'Média' },
-  low: { type: 'gray', label: 'Baixa' },
-  
-  // Briefing Status
-  needs_revision: { type: 'magenta', label: 'Revisão Necessária', icon: WarningFilled },
-  in_review: { type: 'purple', label: 'Em Análise', icon: Time },
+/**
+ * Icon mapping for post statuses
+ */
+const STATUS_ICON_MAP: Record<PostStatus, React.ElementType> = {
+  draft: Edit,
+  awaiting_assignment: UserFollow,
+  assigned: User,
+  in_progress: InProgress,
+  submitted: Send,
+  revision_requested: Undo,
+  approved: CheckmarkFilled,
+  scheduled: Calendar,
+  published: CheckmarkFilled,
+  failed: ErrorFilled,
+  archived: Archive,
 };
 
-export default function StatusBadge({ 
-  status, 
-  size = 'sm', 
-  showIcon = false,
-  customLabel 
-}: StatusBadgeProps) {
-  const config = statusConfig[status] || { type: 'gray', label: status };
-  const Icon = config.icon;
-  
+/**
+ * StatusBadge Component
+ *
+ * An enhanced status badge component for displaying v2 post statuses.
+ * Uses Carbon Tag component with color-coded status indicators and optional icons.
+ * Supports multiple sizes and dynamic status labeling from POST_STATUS_CONFIG.
+ *
+ * @example
+ * ```tsx
+ * <StatusBadge status="approved" size="md" showIcon={true} />
+ * <StatusBadge status="in_progress" size="sm" />
+ * ```
+ */
+export default function StatusBadge({ status, size = 'sm', showIcon = false }: StatusBadgeProps) {
+  const config = useMemo(() => {
+    return POST_STATUS_CONFIG[status];
+  }, [status]);
+
+  const Icon = useMemo(() => {
+    return showIcon ? STATUS_ICON_MAP[status] : null;
+  }, [status, showIcon]);
+
+  const iconSize = useMemo(() => {
+    return size === 'sm' ? 12 : 14;
+  }, [size]);
+
   return (
-    <Tag 
-      type={config.type} 
+    <Tag
+      type={config.tagType}
       size={size}
-      className="status-badge"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '4px',
+      }}
     >
-      {showIcon && Icon && <Icon size={12} className="status-badge__icon" />}
-      {customLabel || config.label}
+      {Icon && <Icon size={iconSize} style={{ flexShrink: 0 }} />}
+      <span>{config.label}</span>
     </Tag>
   );
 }

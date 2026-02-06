@@ -21,6 +21,8 @@ import {
   RecentlyViewed,
   Star,
   OverflowMenuVertical,
+  Store,
+  Money,
 } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
 import { AILabel } from '@/components/ui';
@@ -94,19 +96,20 @@ export default function Sidebar({ collapsed: controlledCollapsed, onToggle }: Si
     return pathname?.startsWith(path);
   };
 
-  // Main navigation items
+  // Main navigation items — v2.0
   const mainNavItems: NavItem[] = [
     { path: '/dashboard', label: 'Dashboard', icon: Dashboard },
-    { path: '/clients', label: 'Clientes', icon: UserMultiple },
+    { path: '/brands', label: 'Marcas', icon: Store },
+    { path: '/posts', label: 'Posts', icon: TaskComplete },
+    { path: '/credits', label: 'Créditos', icon: Money },
     { path: '/projects', label: 'Projetos', icon: Folder },
-    { path: '/briefings', label: 'Briefings', icon: TaskComplete },
-    { path: '/documents', label: 'Documentos', icon: Document },
   ];
 
   // Tools section
   const toolsNavItems: NavItem[] = [
     { path: '/helian', label: 'IA Helian', icon: Chat, isAI: true },
     { path: '/analytics', label: 'Analytics', icon: Analytics },
+    { path: '/team', label: 'Equipe', icon: UserMultiple },
   ];
 
   // Footer items
@@ -199,22 +202,22 @@ export default function Sidebar({ collapsed: controlledCollapsed, onToggle }: Si
       {/* Quick Action */}
       {!isCollapsed && (
         <div className="genos-sidebar__quick-action">
-          <button 
+          <button
             className="quick-action-btn"
-            onClick={() => router.push('/projects?new=true')}
+            onClick={() => router.push('/posts?new=true')}
           >
             <Add size={16} />
-            <span>Novo Projeto</span>
+            <span>Novo Post</span>
           </button>
         </div>
       )}
       
       {isCollapsed && (
         <div className="genos-sidebar__quick-action genos-sidebar__quick-action--collapsed">
-          <button 
+          <button
             className="quick-action-btn quick-action-btn--icon"
-            onClick={() => router.push('/projects?new=true')}
-            title="Novo Projeto"
+            onClick={() => router.push('/posts?new=true')}
+            title="Novo Post"
           >
             <Add size={20} />
           </button>

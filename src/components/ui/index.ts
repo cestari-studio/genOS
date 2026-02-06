@@ -13,3 +13,7 @@ export { default as PageLoader } from './PageLoader';
 export { default as EmptyState } from './EmptyState';
 
 export { default as StatusBadge } from './StatusBadge';
+
+export { default as CreditGauge } from './CreditGauge';
+
+export { default as BrandCard } from './BrandCard';
