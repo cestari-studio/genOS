@@ -61,7 +61,6 @@ import {
   Zip,
 } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
-import Header from '@/components/layout/Header';
 import './documents.scss';
 
 interface DocumentFile {
@@ -296,8 +295,6 @@ export default function DocumentsPage() {
 
   return (
     <>
-      <Header />
-      
       <div className="page-header">
         <div className="page-header__content">
           <div className="page-header__title-group">

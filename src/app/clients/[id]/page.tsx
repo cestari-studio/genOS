@@ -61,7 +61,6 @@ import {
   Copy,
 } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
-import Header from '@/components/layout/Header';
 import './client-detail.scss';
 
 interface Client {
@@ -146,13 +145,24 @@ export default function ClientDetailPage() {
       
       setProjects(projectsData || []);
 
-      // Mock activities
-      setActivities([
-        { id: '1', type: 'project', description: 'Projeto "Website Redesign" criado', timestamp: '2025-01-28T10:30:00' },
-        { id: '2', type: 'document', description: 'Contrato de prestação de serviços enviado', timestamp: '2025-01-25T14:15:00' },
-        { id: '3', type: 'briefing', description: 'Briefing inicial recebido', timestamp: '2025-01-20T09:00:00' },
-        { id: '4', type: 'client', description: 'Cliente cadastrado no sistema', timestamp: '2025-01-15T11:45:00' },
-      ]);
+      // Load activities from audit_log
+      const { data: activityData } = await supabase
+        .from('audit_log')
+        .select('*')
+        .eq('entity_id', clientId)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (activityData && activityData.length > 0) {
+        setActivities(activityData.map((a: { id: string; entity_type: string; action: string; created_at: string }) => ({
+          id: a.id,
+          type: a.entity_type || 'client',
+          description: a.action || 'Ação registrada',
+          timestamp: a.created_at,
+        })));
+      } else {
+        setActivities([]);
+      }
 
     } catch (error) {
       console.error('Error loading client:', error);
@@ -234,19 +244,17 @@ export default function ClientDetailPage() {
     });
   };
 
-  // Mock stats
   const clientStats = {
     totalProjects: projects.length,
     activeProjects: projects.filter(p => p.status === 'in_progress').length,
     completedProjects: projects.filter(p => p.status === 'completed').length,
-    totalRevenue: 45000,
-    avgProjectValue: projects.length > 0 ? 45000 / projects.length : 0,
+    totalRevenue: 0,
+    avgProjectValue: 0,
   };
 
   if (loading) {
     return (
       <>
-        <Header />
         <div className="client-detail">
           <div className="client-detail__loading">
             <SkeletonPlaceholder style={{ width: '100%', height: '200px' }} />
@@ -261,7 +269,6 @@ export default function ClientDetailPage() {
   if (!client) {
     return (
       <>
-        <Header />
         <div className="client-detail">
           <InlineNotification
             kind="error"
@@ -280,8 +287,6 @@ export default function ClientDetailPage() {
 
   return (
     <>
-      <Header />
-      
       <div className="client-detail">
         {/* Breadcrumb */}
         <Breadcrumb noTrailingSlash className="client-detail__breadcrumb">
