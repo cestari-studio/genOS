@@ -276,12 +276,17 @@ export default function DocumentsPage() {
   };
 
   const handleCopyLink = (doc: { url?: string | null; name: string }) => {
-    const url = doc.url || `${window.location.origin}/documents/${doc.name}`;
-    navigator.clipboard.writeText(url).then(() => {
-      alert('Link copiado!');
-    }).catch(() => {
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const url = doc.url || `${origin}/documents/${doc.name}`;
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Link copiado!');
+      }).catch(() => {
+        prompt('Copie o link:', url);
+      });
+    } else {
       prompt('Copie o link:', url);
-    });
+    }
   };
 
   const handleRename = async (id: string, currentName: string) => {

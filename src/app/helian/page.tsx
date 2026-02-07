@@ -533,7 +533,7 @@ Como posso ajudar você hoje?`;
                             kind="ghost"
                             size="sm"
                             label="Copiar"
-                            onClick={() => navigator.clipboard.writeText(message.content)}
+                            onClick={() => { if (typeof navigator !== 'undefined' && navigator.clipboard) { navigator.clipboard.writeText(message.content).catch(() => {}); } }}
                           >
                             <Copy size={14} />
                           </IconButton>

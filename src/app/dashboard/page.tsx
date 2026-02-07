@@ -109,10 +109,16 @@ export default function DashboardPage() {
 
   useEffect(() => {
     loadDashboardData();
-    loadAIInsights();
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
+
+  // Load AI insights AFTER stats are available
+  useEffect(() => {
+    if (stats) {
+      loadAIInsights();
+    }
+  }, [stats]);
 
   const loadDashboardData = async () => {
     try {
@@ -150,7 +156,7 @@ export default function DashboardPage() {
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
       const paidInvoices = invoicesRes.data || [];
       const monthlyRev = paidInvoices
-        .filter((inv: any) => new Date(inv.paid_at) >= monthStart)
+        .filter((inv: any) => inv.paid_at && new Date(inv.paid_at) >= monthStart)
         .reduce((sum: number, inv: any) => sum + Number(inv.amount || 0), 0);
 
       setStats({
@@ -287,10 +293,15 @@ export default function DashboardPage() {
   };
 
   const getDaysUntil = (dateStr: string) => {
-    const target = new Date(dateStr);
-    const today = new Date();
-    const diff = Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    return diff;
+    try {
+      const target = new Date(dateStr);
+      if (isNaN(target.getTime())) return 999;
+      const today = new Date();
+      const diff = Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      return diff;
+    } catch {
+      return 999;
+    }
   };
 
   const formatCurrency = (value: number) => {
@@ -547,7 +558,13 @@ export default function DashboardPage() {
               </Button>
             </div>
             <div className="dashboard-card__body dashboard-card__body--chart">
-              <LineChart data={revenueChartData} options={lineChartOptions} />
+              {revenueChartData.length > 0 ? (
+                <LineChart data={revenueChartData} options={lineChartOptions} />
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '240px', color: 'var(--cds-text-secondary, #525252)', fontSize: '14px' }}>
+                  {loading ? <InlineLoading description="Carregando..." /> : 'Sem dados de receita'}
+                </div>
+              )}
             </div>
           </div>
 
@@ -563,7 +580,13 @@ export default function DashboardPage() {
               </Button>
             </div>
             <div className="dashboard-card__body dashboard-card__body--chart">
-              <DonutChart data={projectsChartData} options={donutChartOptions} />
+              {projectsChartData.length > 0 ? (
+                <DonutChart data={projectsChartData} options={donutChartOptions} />
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '240px', color: 'var(--cds-text-secondary, #525252)', fontSize: '14px' }}>
+                  {loading ? <InlineLoading description="Carregando..." /> : 'Sem dados de projetos'}
+                </div>
+              )}
             </div>
           </div>
 
