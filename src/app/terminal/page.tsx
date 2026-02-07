@@ -521,17 +521,19 @@ export default function TerminalPage() {
         <div className="terminal-body" ref={bodyRef}>
           {/* Rainbow ASCII Logo */}
           <div className="terminal-logo">
-            {ASCII_LOGO.map((line, i) => (
-              <div
-                key={i}
-                className="terminal-logo__line"
-                style={{
-                  color: `hsl(${(logoHue + i * 8) % 360}, 85%, 65%)`,
-                }}
-              >
-                {line || '\u00A0'}
-              </div>
-            ))}
+            <div className="terminal-logo__inner">
+              {ASCII_LOGO.map((line, i) => (
+                <div
+                  key={i}
+                  className="terminal-logo__line"
+                  style={{
+                    color: `hsl(${(logoHue + i * 8) % 360}, 85%, 65%)`,
+                  }}
+                >
+                  {line || '\u00A0'}
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Rendered entries */}
