@@ -61,7 +61,7 @@ $white: #ffffff;
 }
 
 .terminal-title {
-  color: $blue-primary;
+  color: $white;
   font-family: 'IBM Plex Mono', 'SF Mono', 'Fira Code', monospace;
   font-size: 12px;
   margin-left: $spacing-03;
@@ -75,9 +75,9 @@ $white: #ffffff;
 
 .terminal-action-btn {
   background: transparent;
-  border: 1px solid #0f62fe40;
-  color: $blue-primary;
-  border-radius: 4px;
+  border: 1px solid rgba($white, 0.2);
+  color: rgba($white, 0.6);
+  border-radius: 0;
   padding: 2px 8px;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
@@ -85,9 +85,9 @@ $white: #ffffff;
   transition: all 0.15s;
 
   &:hover {
-    color: $blue-light;
-    border-color: $blue-primary;
-    background: #0f62fe15;
+    color: $white;
+    border-color: rgba($white, 0.5);
+    background: rgba($white, 0.05);
   }
 }
 
@@ -114,8 +114,8 @@ $white: #ffffff;
 }
 
 .terminal-logo__inner {
-  width: 256px;
-  height: 250px;
+  width: 128px;
+  height: 125px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -124,10 +124,10 @@ $white: #ffffff;
 
 .terminal-logo__line {
   font-family: 'IBM Plex Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
-  font-size: 6.2px;
+  font-size: 3.1px;
   line-height: 1.02;
   white-space: pre;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.1px;
   transition: color 0.04s linear;
 }
 
@@ -145,27 +145,27 @@ $white: #ffffff;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 20px;
   font-weight: 600;
-  color: $blue-primary;
+  color: $white;
   letter-spacing: 1px;
 }
 
 .terminal-branding__subtitle {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 13px;
-  color: $blue-light;
+  color: rgba($white, 0.7);
 }
 
 .terminal-branding__copyright {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
-  color: $blue-muted;
+  color: rgba($white, 0.4);
   margin-top: 4px;
 }
 
 .terminal-branding__hint {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
-  color: #0f62fe60;
+  color: rgba($white, 0.3);
   margin-top: 8px;
 }
 
@@ -205,19 +205,19 @@ $white: #ffffff;
     padding-top: $spacing-03;
   }
 
-  // System messages = BLUE
+  // System messages = WHITE
   &--system {
-    color: $blue-primary;
+    color: rgba($white, 0.7);
   }
 
-  // Terminal output = BLUE
+  // Terminal output = WHITE (AI responses)
   &--output {
-    color: $blue-light;
+    color: rgba($white, 0.85);
   }
 
-  // Info = BLUE lighter
+  // Info = WHITE lighter
   &--info {
-    color: $blue-lighter;
+    color: rgba($white, 0.7);
   }
 
   // Errors = lighter blue (keeping blue theme)
@@ -239,7 +239,7 @@ $white: #ffffff;
 
 // ─── Prompt ──────────────────────────────────────────
 .terminal-prompt {
-  color: $blue-primary;
+  color: $white;
   user-select: none;
 }
 
@@ -314,7 +314,7 @@ $white: #ffffff;
 }
 
 .terminal-suggestions__label {
-  color: #0f62fe60;
+  color: rgba($white, 0.35);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
   margin-bottom: $spacing-03;
@@ -328,29 +328,37 @@ $white: #ffffff;
 }
 
 .terminal-suggestion {
-  background: transparent;
+  background: $black;
   color: $blue-primary;
-  border: 1px solid #0f62fe30;
-  border-radius: 4px;
-  padding: 4px 10px;
+  border: 1px solid #0f62fe4d; // 30%
+  border-radius: 0;
+  padding: 6px 16px;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.12s ease;
   white-space: nowrap;
+  letter-spacing: 0.16px;
+  line-height: 1.34;
+  text-transform: none;
 
   &:hover {
-    background: #0f62fe15;
-    border-color: $blue-primary;
+    background: #0f62fe10;
+    border-color: $blue-primary; // 100%
     color: $blue-light;
   }
 
+  &:active {
+    background: #0f62fe20;
+    border-color: $blue-light;
+  }
+
   &:disabled {
-    opacity: 0.3;
+    opacity: 0.25;
     cursor: not-allowed;
     &:hover {
-      background: transparent;
-      border-color: #0f62fe30;
+      background: $black;
+      border-color: #0f62fe4d;
       color: $blue-primary;
     }
   }

@@ -197,13 +197,20 @@ export default function TerminalPage() {
   }, []);
 
   const handleStatus = useCallback(async () => {
-    const supabase = createClient();
     try {
+      const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      const { count: clientCount } = await supabase.from('clients').select('*', { count: 'exact', head: true });
-      const { count: projectCount } = await supabase.from('projects').select('*', { count: 'exact', head: true });
-      const { count: briefingCount } = await supabase.from('briefings').select('*', { count: 'exact', head: true });
-      const { count: postCount } = await supabase.from('posts_v2').select('*', { count: 'exact', head: true });
+      const [
+        { count: clientCount },
+        { count: projectCount },
+        { count: briefingCount },
+        { count: postCount },
+      ] = await Promise.all([
+        supabase.from('clients').select('*', { count: 'exact', head: true }),
+        supabase.from('projects').select('*', { count: 'exact', head: true }),
+        supabase.from('briefings').select('*', { count: 'exact', head: true }),
+        supabase.from('posts_v2').select('*', { count: 'exact', head: true }),
+      ]);
 
       await revealResponse([
         '',
@@ -218,14 +225,15 @@ export default function TerminalPage() {
         `  Frontend     ● online    app.cestari.studio`,
         '',
       ].join('\n'), 'info');
-    } catch {
+    } catch (err) {
+      console.error('Status error:', err);
       addEntry('error', ['  ✗ Erro ao buscar status. Verifique sua sessão.']);
     }
   }, [addEntry, revealResponse]);
 
   const handleClients = useCallback(async () => {
-    const supabase = createClient();
     try {
+      const supabase = createClient();
       const { data: clients } = await supabase
         .from('clients')
         .select('name, company_name, status, email')
@@ -257,8 +265,8 @@ export default function TerminalPage() {
   }, [addEntry, revealResponse]);
 
   const handleProjects = useCallback(async () => {
-    const supabase = createClient();
     try {
+      const supabase = createClient();
       const { data: projects } = await supabase
         .from('projects')
         .select('name, status, start_date, end_date')
@@ -291,8 +299,8 @@ export default function TerminalPage() {
   }, [addEntry, revealResponse]);
 
   const handleBriefings = useCallback(async () => {
-    const supabase = createClient();
     try {
+      const supabase = createClient();
       const { data: briefings } = await supabase
         .from('briefings')
         .select('title, status, priority, created_at')
@@ -325,8 +333,8 @@ export default function TerminalPage() {
   }, [addEntry, revealResponse]);
 
   const handlePosts = useCallback(async () => {
-    const supabase = createClient();
     try {
+      const supabase = createClient();
       const { data: posts } = await supabase
         .from('posts_v2')
         .select('title, status, platform, scheduled_date')
@@ -441,33 +449,33 @@ export default function TerminalPage() {
   // Run a suggestion
   const runSuggestion = useCallback((text: string) => {
     if (isProcessing) return;
-    setInput(text);
-    // Defer submit to next tick so input state updates
-    setTimeout(() => {
-      const cmd = text.trim();
-      if (!cmd) return;
-      addEntry('input', [cmd]);
-      setCmdHistory(prev => [cmd, ...prev].slice(0, 50));
-      setHistoryIdx(-1);
-      setInput('');
-      setIsProcessing(true);
+    const cmd = text.trim();
+    if (!cmd) return;
 
-      (async () => {
-        try {
-          if (cmd.startsWith('/')) {
-            const handled = await processLocalCommand(cmd);
-            if (!handled) {
-              addEntry('error', [`  Comando desconhecido: ${cmd}`]);
-            }
-          } else {
-            await handleAIChat(cmd);
+    addEntry('input', [cmd]);
+    setCmdHistory(prev => [cmd, ...prev].slice(0, 50));
+    setHistoryIdx(-1);
+    setInput('');
+    setIsProcessing(true);
+
+    (async () => {
+      try {
+        if (cmd.startsWith('/')) {
+          const handled = await processLocalCommand(cmd);
+          if (!handled) {
+            addEntry('error', [`  Comando desconhecido: ${cmd}`]);
           }
-        } finally {
-          setIsProcessing(false);
-          focusInput();
+        } else {
+          await handleAIChat(cmd);
         }
-      })();
-    }, 50);
+      } catch (err) {
+        console.error('Suggestion error:', err);
+        addEntry('error', ['  ✗ Erro ao processar comando.']);
+      } finally {
+        setIsProcessing(false);
+        focusInput();
+      }
+    })();
   }, [isProcessing, addEntry, processLocalCommand, handleAIChat, focusInput]);
 
   // ─── Keyboard Navigation ──────────────────────────
