@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import {
   Tabs,
   TabList,
@@ -20,11 +21,13 @@ import { Save, User, Settings, Notification, Security } from '@carbon/icons-reac
 
 export default function SettingsContent() {
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [profile, setProfile] = useState({
-    name: 'Octavio Cestari',
-    email: 'mail@cestari.studio',
+    name: '',
+    email: '',
     phone: '',
-    company: 'Cestari Studio',
+    company: '',
   });
 
   const [preferences, setPreferences] = useState({
@@ -33,10 +36,136 @@ export default function SettingsContent() {
     language: 'pt-BR',
   });
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const [notifications, setNotifications] = useState({
+    email: true,
+    in_app: true,
+    whatsapp: false,
+  });
+
+  // Fetch user data from Supabase
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        const supabase = createClient();
+
+        // Get authenticated user
+        const { data: authData, error: authError } = await supabase.auth.getUser();
+        if (authError || !authData.user) {
+          setError('Erro ao carregar dados do usuário');
+          setLoading(false);
+          return;
+        }
+
+        const authUserId = authData.user.id;
+
+        // Fetch user profile
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('auth_user_id', authUserId)
+          .single();
+
+        if (userError) {
+          console.error('Error fetching user:', userError);
+          setError('Erro ao carregar perfil do usuário');
+          setLoading(false);
+          return;
+        }
+
+        // Fetch organization name if available
+        let organizationName = '';
+        if (userData.organization_id) {
+          const { data: orgData, error: orgError } = await supabase
+            .from('organizations')
+            .select('name')
+            .eq('id', userData.organization_id)
+            .single();
+
+          if (!orgError && orgData) {
+            organizationName = orgData.name;
+          }
+        }
+
+        // Update profile state
+        setProfile({
+          name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim(),
+          email: userData.email || '',
+          phone: userData.phone || '',
+          company: organizationName,
+        });
+
+        // Update notification preferences
+        if (userData.notification_preferences) {
+          setNotifications(userData.notification_preferences);
+        }
+
+        setLoading(false);
+      } catch (err) {
+        console.error('Error loading user data:', err);
+        setError('Erro ao carregar dados do usuário');
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      setError(null);
+      const supabase = createClient();
+
+      // Get authenticated user
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError || !authData.user) {
+        setError('Erro ao salvar: usuário não autenticado');
+        return;
+      }
+
+      const authUserId = authData.user.id;
+
+      // Parse name into first and last name
+      const nameParts = profile.name.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      // Update user record
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({
+          first_name: firstName,
+          last_name: lastName,
+          phone: profile.phone,
+          notification_preferences: notifications,
+        })
+        .eq('auth_user_id', authUserId);
+
+      if (updateError) {
+        console.error('Error updating profile:', updateError);
+        setError('Erro ao salvar configurações');
+        return;
+      }
+
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      console.error('Error saving profile:', err);
+      setError('Erro ao salvar configurações');
+    }
   };
+
+  if (loading) {
+    return (
+      <div>
+        <div className="page-header">
+          <h1>Configurações</h1>
+          <p>Gerencie suas preferências do sistema</p>
+        </div>
+        <p>Carregando configurações...</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -44,6 +173,16 @@ export default function SettingsContent() {
         <h1>Configurações</h1>
         <p>Gerencie suas preferências do sistema</p>
       </div>
+
+      {error && (
+        <InlineNotification
+          kind="error"
+          title="Erro"
+          subtitle={error}
+          hideCloseButton
+          style={{ marginBottom: '1rem' }}
+        />
+      )}
 
       {saved && (
         <InlineNotification
@@ -140,29 +279,24 @@ export default function SettingsContent() {
                   labelText="Notificações por Email"
                   labelA="Desativado"
                   labelB="Ativado"
-                  toggled={preferences.emailNotifications}
-                  onToggle={(checked) => setPreferences({ ...preferences, emailNotifications: checked })}
+                  toggled={notifications.email}
+                  onToggle={(checked) => setNotifications({ ...notifications, email: checked })}
                 />
                 <Toggle
-                  id="newClient"
-                  labelText="Novos clientes"
+                  id="inAppNotifications"
+                  labelText="Notificações no App"
                   labelA="Desativado"
                   labelB="Ativado"
-                  defaultToggled={true}
+                  toggled={notifications.in_app}
+                  onToggle={(checked) => setNotifications({ ...notifications, in_app: checked })}
                 />
                 <Toggle
-                  id="newBriefing"
-                  labelText="Novos briefings"
+                  id="whatsappNotifications"
+                  labelText="Notificações por WhatsApp"
                   labelA="Desativado"
                   labelB="Ativado"
-                  defaultToggled={true}
-                />
-                <Toggle
-                  id="projectUpdates"
-                  labelText="Atualizações de projetos"
-                  labelA="Desativado"
-                  labelB="Ativado"
-                  defaultToggled={true}
+                  toggled={notifications.whatsapp}
+                  onToggle={(checked) => setNotifications({ ...notifications, whatsapp: checked })}
                 />
                 <Button renderIcon={Save} onClick={handleSave} style={{ marginTop: '1rem' }}>
                   Salvar Notificações

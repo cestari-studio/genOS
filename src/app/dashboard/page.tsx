@@ -105,6 +105,7 @@ export default function DashboardPage() {
   const [aiLoading, setAiLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [dismissedInsights, setDismissedInsights] = useState<string[]>([]);
+  const [userName, setUserName] = useState<string>('Usuário');
 
   useEffect(() => {
     loadDashboardData();
@@ -116,12 +117,30 @@ export default function DashboardPage() {
   const loadDashboardData = async () => {
     try {
       const supabase = createClient();
-      
-      const [clientsRes, projectsRes, briefingsRes, docsRes] = await Promise.all([
+
+      // Get authenticated user
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+
+      // Query user details for greeting
+      if (authUser) {
+        const { data: userData } = await supabase
+          .from('users')
+          .select('first_name')
+          .eq('auth_user_id', authUser.id)
+          .single();
+
+        if (userData?.first_name) {
+          setUserName(userData.first_name);
+        }
+      }
+
+      const [clientsRes, projectsRes, briefingsRes, docsRes, activitiesRes, deadlinesRes] = await Promise.all([
         supabase.from('clients').select('id', { count: 'exact', head: true }),
         supabase.from('projects').select('id', { count: 'exact', head: true }).eq('status', 'in_progress'),
         supabase.from('briefings').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('documents').select('id', { count: 'exact', head: true }),
+        supabase.from('audit_log').select('*').order('created_at', { ascending: false }).limit(5),
+        supabase.from('projects').select('id, name, deadline, status').not('deadline', 'is', null).order('deadline', { ascending: true }).limit(5),
       ]);
 
       setStats({
@@ -133,20 +152,56 @@ export default function DashboardPage() {
         completedProjects: 0,
       });
 
-      setActivities([
-        { id: '1', type: 'client', title: 'Novo cliente cadastrado', description: 'Acme Corporation adicionada ao sistema', time: '5 min', user: 'Você' },
-        { id: '2', type: 'project', title: 'Projeto finalizado', description: 'Rebranding Tech Corp entregue', time: '15 min', user: 'Você' },
-        { id: '3', type: 'briefing', title: 'Briefing recebido', description: 'Campanha Q1 - Startup Inc', time: '1h', user: 'Cliente' },
-        { id: '4', type: 'document', title: 'Contrato assinado', description: 'Fashion Co - Proposta aprovada', time: '2h', user: 'Cliente' },
-        { id: '5', type: 'project', title: 'Novo projeto iniciado', description: 'Social Media Kit - Nova Corp', time: '3h', user: 'Você' },
-      ]);
+      // Process audit log activities
+      if (activitiesRes.data && activitiesRes.data.length > 0) {
+        const formattedActivities: RecentActivity[] = activitiesRes.data.map((log: any) => {
+          const createdAt = new Date(log.created_at);
+          const now = new Date();
+          const diffMs = now.getTime() - createdAt.getTime();
+          const diffMins = Math.floor(diffMs / 60000);
+          const diffHours = Math.floor(diffMs / 3600000);
+          const diffDays = Math.floor(diffMs / 86400000);
 
-      setDeadlines([
-        { id: '1', project: 'Website Redesign', client: 'Tech Corp', deadline: '2025-02-05', status: 'urgent', progress: 75 },
-        { id: '2', project: 'Brand Guidelines', client: 'Startup Inc', deadline: '2025-02-10', status: 'on_track', progress: 45 },
-        { id: '3', project: 'Social Media Kit', client: 'Fashion Co', deadline: '2025-02-15', status: 'on_track', progress: 20 },
-        { id: '4', project: 'App UI Design', client: 'Nova Corp', deadline: '2025-02-20', status: 'at_risk', progress: 10 },
-      ]);
+          let timeStr = 'agora';
+          if (diffMins > 0 && diffMins < 60) timeStr = `${diffMins}m`;
+          else if (diffHours > 0 && diffHours < 24) timeStr = `${diffHours}h`;
+          else if (diffDays > 0) timeStr = `${diffDays}d`;
+
+          return {
+            id: log.id,
+            type: log.entity_type as 'client' | 'project' | 'document' | 'briefing',
+            title: log.action,
+            description: `${log.entity_type} ID: ${log.entity_id}`,
+            time: timeStr,
+            user: 'Sistema',
+          };
+        });
+        setActivities(formattedActivities);
+      } else {
+        setActivities([]);
+      }
+
+      // Process deadline projects
+      if (deadlinesRes.data && deadlinesRes.data.length > 0) {
+        const formattedDeadlines: UpcomingDeadline[] = deadlinesRes.data.map((project: any) => {
+          const daysLeft = getDaysUntil(project.deadline);
+          let status: 'urgent' | 'on_track' | 'at_risk' = 'on_track';
+          if (daysLeft <= 3) status = 'urgent';
+          else if (daysLeft <= 7) status = 'at_risk';
+
+          return {
+            id: project.id,
+            project: project.name,
+            client: 'Cliente',
+            deadline: project.deadline,
+            status: status,
+            progress: 0,
+          };
+        });
+        setDeadlines(formattedDeadlines);
+      } else {
+        setDeadlines([]);
+      }
 
     } catch (error) {
       console.error('Error loading dashboard:', error);
@@ -158,44 +213,10 @@ export default function DashboardPage() {
   const loadAIInsights = async () => {
     // Simulate AI analysis delay
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setAiInsights([
-      {
-        id: 'ai-1',
-        type: 'warning',
-        title: 'Prazo crítico detectado',
-        description: 'O projeto "Website Redesign" está 3 dias atrasado. Considere realocar recursos ou renegociar prazo com o cliente.',
-        action: 'Ver projeto',
-        actionHref: '/projects',
-        priority: 'high',
-      },
-      {
-        id: 'ai-2',
-        type: 'opportunity',
-        title: 'Oportunidade de upsell',
-        description: 'Tech Corp completou 5 projetos. Histórico indica 73% de chance de aceitar proposta de manutenção mensal.',
-        action: 'Criar proposta',
-        actionHref: '/clients',
-        priority: 'medium',
-      },
-      {
-        id: 'ai-3',
-        type: 'trend',
-        title: 'Tendência positiva',
-        description: 'Receita aumentou 23% em relação ao mês anterior. Projetos de branding representam 60% do faturamento.',
-        priority: 'low',
-      },
-      {
-        id: 'ai-4',
-        type: 'suggestion',
-        title: 'Otimização de processo',
-        description: 'Briefings de "Social Media" levam 40% mais tempo que a média. Considere criar template específico.',
-        action: 'Criar template',
-        actionHref: '/briefings?new=template',
-        priority: 'medium',
-      },
-    ]);
-    
+
+    // For now, show empty insights - AI will generate as data is added
+    setAiInsights([]);
+
     setAiLoading(false);
   };
 
@@ -228,22 +249,9 @@ export default function DashboardPage() {
   const visibleInsights = aiInsights.filter(i => !dismissedInsights.includes(i.id));
 
   // Chart data
-  const revenueChartData = useMemo(() => [
-    { group: 'Receita', date: 'Set', value: 32000 },
-    { group: 'Receita', date: 'Out', value: 38000 },
-    { group: 'Receita', date: 'Nov', value: 35000 },
-    { group: 'Receita', date: 'Dez', value: 42000 },
-    { group: 'Receita', date: 'Jan', value: 45000 },
-    { group: 'Receita', date: 'Fev', value: 48000 },
-  ], []);
+  const revenueChartData = useMemo(() => [], []);
 
-  const projectsChartData = useMemo(() => [
-    { group: 'Branding', value: 35 },
-    { group: 'Web Design', value: 25 },
-    { group: 'Social Media', value: 20 },
-    { group: 'UI/UX', value: 15 },
-    { group: 'Outros', value: 5 },
-  ], []);
+  const projectsChartData = useMemo(() => [], []);
 
   const lineChartOptions = {
     title: '',
@@ -272,38 +280,38 @@ export default function DashboardPage() {
   } as any;
 
   const statCards = [
-    { 
-      label: 'Clientes Ativos', 
-      value: stats?.totalClients || 0, 
+    {
+      label: 'Clientes Ativos',
+      value: stats?.totalClients || 0,
       icon: UserMultiple,
-      change: '+12%',
+      change: '—',
       positive: true,
       color: 'blue',
       href: '/clients'
     },
-    { 
-      label: 'Projetos Ativos', 
-      value: stats?.activeProjects || 0, 
+    {
+      label: 'Projetos Ativos',
+      value: stats?.activeProjects || 0,
       icon: Folder,
-      change: '+5%',
+      change: '—',
       positive: true,
       color: 'purple',
       href: '/projects'
     },
-    { 
-      label: 'Briefings Pendentes', 
-      value: stats?.pendingBriefings || 0, 
+    {
+      label: 'Briefings Pendentes',
+      value: stats?.pendingBriefings || 0,
       icon: TaskComplete,
-      change: '-2',
+      change: '—',
       positive: true,
       color: 'teal',
       href: '/briefings'
     },
-    { 
-      label: 'Receita Mensal', 
-      value: formatCurrency(stats?.monthlyRevenue || 0), 
+    {
+      label: 'Receita Mensal',
+      value: formatCurrency(stats?.monthlyRevenue || 0),
       icon: Money,
-      change: '+23%',
+      change: '—',
       positive: true,
       color: 'green',
       href: '/analytics'
@@ -346,7 +354,7 @@ export default function DashboardPage() {
       <div className="dashboard-header">
         <div className="dashboard-header__content">
           <div className="dashboard-header__greeting">
-            <h1>{getGreeting()}, Octavio</h1>
+            <h1>{getGreeting()}, {userName}</h1>
             <p>Aqui está o resumo do seu dia.</p>
           </div>
           <div className="dashboard-header__actions">
@@ -361,17 +369,19 @@ export default function DashboardPage() {
       </div>
 
       {/* AI Insights Banner */}
-      {visibleInsights.length > 0 && (
-        <div className="ai-insights-section">
-          <div className="ai-insights-header">
-            <div className="ai-insights-header__title">
-              <IbmWatsonxCodeAssistant size={20} />
-              <span>Insights da IA</span>
-              <AILabel size="sm" textLabel="Helian" />
-            </div>
-            <span className="ai-insights-header__count">{visibleInsights.length} insights disponíveis</span>
+      <div className="ai-insights-section">
+        <div className="ai-insights-header">
+          <div className="ai-insights-header__title">
+            <IbmWatsonxCodeAssistant size={20} />
+            <span>Insights da IA</span>
+            <AILabel size="sm" textLabel="Helian" />
           </div>
-          
+          {visibleInsights.length > 0 && (
+            <span className="ai-insights-header__count">{visibleInsights.length} insights disponíveis</span>
+          )}
+        </div>
+
+        {visibleInsights.length > 0 ? (
           <div className="ai-insights-grid">
             {visibleInsights.slice(0, 3).map((insight) => (
               <div key={insight.id} className={`ai-insight-card ai-insight-card--${getInsightColor(insight.type)}`}>
@@ -379,7 +389,7 @@ export default function DashboardPage() {
                   <div className={`ai-insight-card__icon ai-insight-card__icon--${getInsightColor(insight.type)}`}>
                     {getInsightIcon(insight.type)}
                   </div>
-                  <button 
+                  <button
                     className="ai-insight-card__dismiss"
                     onClick={() => dismissInsight(insight.id)}
                     aria-label="Dispensar"
@@ -390,9 +400,9 @@ export default function DashboardPage() {
                 <h4 className="ai-insight-card__title">{insight.title}</h4>
                 <p className="ai-insight-card__description">{insight.description}</p>
                 {insight.action && (
-                  <Button 
-                    kind="ghost" 
-                    size="sm" 
+                  <Button
+                    kind="ghost"
+                    size="sm"
                     href={insight.actionHref}
                     renderIcon={ArrowRight}
                     className="ai-insight-card__action"
@@ -403,8 +413,12 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="ai-insights-empty">
+            <p>Insights serão gerados conforme dados são adicionados</p>
+          </div>
+        )}
+      </div>
 
       {/* Stats Cards */}
       <div className="stats-grid">
@@ -486,23 +500,27 @@ export default function DashboardPage() {
             </div>
             <div className="dashboard-card__body">
               <div className="activity-timeline">
-                {activities.map((activity) => (
-                  <div key={activity.id} className="activity-item">
-                    <div className={`activity-item__icon activity-item__icon--${activity.type}`}>
-                      {getActivityIcon(activity.type)}
-                    </div>
-                    <div className="activity-item__content">
-                      <div className="activity-item__title">{activity.title}</div>
-                      <div className="activity-item__meta">
-                        <span>{activity.description}</span>
-                        <span className="activity-item__time">• {activity.time}</span>
+                {activities.length > 0 ? (
+                  activities.map((activity) => (
+                    <div key={activity.id} className="activity-item">
+                      <div className={`activity-item__icon activity-item__icon--${activity.type}`}>
+                        {getActivityIcon(activity.type)}
                       </div>
+                      <div className="activity-item__content">
+                        <div className="activity-item__title">{activity.title}</div>
+                        <div className="activity-item__meta">
+                          <span>{activity.description}</span>
+                          <span className="activity-item__time">• {activity.time}</span>
+                        </div>
+                      </div>
+                      <Tag size="sm" type={activity.user === 'Você' ? 'blue' : 'gray'}>
+                        {activity.user}
+                      </Tag>
                     </div>
-                    <Tag size="sm" type={activity.user === 'Você' ? 'blue' : 'gray'}>
-                      {activity.user}
-                    </Tag>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p style={{ color: '#525252', fontSize: '14px' }}>Nenhuma atividade recente</p>
+                )}
               </div>
             </div>
           </div>
@@ -520,33 +538,37 @@ export default function DashboardPage() {
             </div>
             <div className="dashboard-card__body">
               <div className="deadlines-list">
-                {deadlines.map((deadline) => {
-                  const daysLeft = getDaysUntil(deadline.deadline);
-                  return (
-                    <div key={deadline.id} className="deadline-item">
-                      <div className={`deadline-item__date ${daysLeft <= 3 ? 'urgent' : ''}`}>
-                        <span className="deadline-item__day">
-                          {new Date(deadline.deadline).getDate()}
-                        </span>
-                        <span className="deadline-item__month">
-                          {new Date(deadline.deadline).toLocaleDateString('pt-BR', { month: 'short' })}
-                        </span>
+                {deadlines.length > 0 ? (
+                  deadlines.map((deadline) => {
+                    const daysLeft = getDaysUntil(deadline.deadline);
+                    return (
+                      <div key={deadline.id} className="deadline-item">
+                        <div className={`deadline-item__date ${daysLeft <= 3 ? 'urgent' : ''}`}>
+                          <span className="deadline-item__day">
+                            {new Date(deadline.deadline).getDate()}
+                          </span>
+                          <span className="deadline-item__month">
+                            {new Date(deadline.deadline).toLocaleDateString('pt-BR', { month: 'short' })}
+                          </span>
+                        </div>
+                        <div className="deadline-item__content">
+                          <span className="deadline-item__project">{deadline.project}</span>
+                          <span className="deadline-item__client">{deadline.client}</span>
+                          <ProgressBar
+                            label={`${deadline.progress}%`}
+                            value={deadline.progress}
+                            size="small"
+                            hideLabel
+                            className="deadline-item__progress"
+                          />
+                        </div>
+                        {daysLeft <= 3 && <WarningFilled size={16} className="deadline-item__warning" />}
                       </div>
-                      <div className="deadline-item__content">
-                        <span className="deadline-item__project">{deadline.project}</span>
-                        <span className="deadline-item__client">{deadline.client}</span>
-                        <ProgressBar 
-                          label={`${deadline.progress}%`}
-                          value={deadline.progress} 
-                          size="small"
-                          hideLabel
-                          className="deadline-item__progress"
-                        />
-                      </div>
-                      {daysLeft <= 3 && <WarningFilled size={16} className="deadline-item__warning" />}
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  <p style={{ color: '#525252', fontSize: '14px' }}>Nenhum prazo pendente</p>
+                )}
               </div>
             </div>
           </div>

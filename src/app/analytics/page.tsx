@@ -89,54 +89,136 @@ export default function AnalyticsPage() {
     setLoading(true);
     try {
       const supabase = createClient();
-      
-      const [clientsRes, projectsRes] = await Promise.all([
-        supabase.from('clients').select('*'),
-        supabase.from('projects').select('*'),
+
+      // Load clients and projects
+      const [clientsRes, projectsRes, invoicesRes] = await Promise.all([
+        supabase.from('clients').select('id, name, status'),
+        supabase.from('projects').select('id, client_id, project_type, status, created_at'),
+        supabase.from('invoices').select('id, client_id, amount, status, issue_date'),
       ]);
 
       const clients = clientsRes.data || [];
       const projects = projectsRes.data || [];
+      const invoices = invoicesRes.data || [];
 
       // Calculate analytics
       const activeClients = clients.filter(c => c.status === 'active').length;
       const completedProjects = projects.filter(p => p.status === 'completed').length;
       const inProgressProjects = projects.filter(p => p.status === 'in_progress').length;
 
+      // Calculate revenue data
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+      const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+      const currentMonthRevenue = invoices
+        .filter(inv => {
+          const invDate = new Date(inv.issue_date);
+          return inv.status === 'paid' && invDate.getMonth() === currentMonth && invDate.getFullYear() === currentYear;
+        })
+        .reduce((sum, inv) => sum + (inv.amount || 0), 0);
+
+      const previousMonthRevenue = invoices
+        .filter(inv => {
+          const invDate = new Date(inv.issue_date);
+          return inv.status === 'paid' && invDate.getMonth() === previousMonth && invDate.getFullYear() === previousYear;
+        })
+        .reduce((sum, inv) => sum + (inv.amount || 0), 0);
+
+      const revenueChange = previousMonthRevenue === 0 ? 0 : ((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100;
+
       setAnalytics({
-        revenue: { current: 45000, previous: 38000, change: 18.4 },
-        clients: { total: clients.length, new: 3, active: activeClients },
+        revenue: { current: currentMonthRevenue, previous: previousMonthRevenue, change: revenueChange },
+        clients: { total: clients.length, new: 0, active: activeClients },
         projects: { total: projects.length, completed: completedProjects, inProgress: inProgressProjects },
-        conversion: { rate: 68, leads: 25, converted: 17 },
+        conversion: { rate: clients.length > 0 ? Math.round((activeClients / clients.length) * 100) : 0, leads: clients.length, converted: activeClients },
       });
 
-      // Mock chart data
-      setChartData([
-        { month: 'Jul', revenue: 28000, projects: 4 },
-        { month: 'Ago', revenue: 32000, projects: 5 },
-        { month: 'Set', revenue: 35000, projects: 4 },
-        { month: 'Out', revenue: 38000, projects: 6 },
-        { month: 'Nov', revenue: 42000, projects: 5 },
-        { month: 'Dez', revenue: 45000, projects: 7 },
-      ]);
+      // Build chart data - last 6 months
+      const chartMonths: ChartData[] = [];
+      for (let i = 5; i >= 0; i--) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const monthIndex = date.getMonth();
+        const monthYear = date.getFullYear();
+        const monthName = months[monthIndex];
 
-      // Mock project types
-      setProjectTypes([
-        { type: 'Branding', count: 12, revenue: 156000, percentage: 35 },
-        { type: 'Website', count: 8, revenue: 120000, percentage: 27 },
-        { type: 'Social Media', count: 15, revenue: 89000, percentage: 20 },
-        { type: 'Design Gráfico', count: 10, revenue: 45000, percentage: 10 },
-        { type: 'Outros', count: 5, revenue: 35000, percentage: 8 },
-      ]);
+        const monthRevenue = invoices
+          .filter(inv => {
+            const invDate = new Date(inv.issue_date);
+            return inv.status === 'paid' && invDate.getMonth() === monthIndex && invDate.getFullYear() === monthYear;
+          })
+          .reduce((sum, inv) => sum + (inv.amount || 0), 0);
 
-      // Mock top clients
-      setTopClients([
-        { id: '1', name: 'Carlos Silva', company: 'Tech Corp', revenue: 45000, projects: 5 },
-        { id: '2', name: 'Maria Santos', company: 'Startup Inc', revenue: 38000, projects: 4 },
-        { id: '3', name: 'João Lima', company: 'Fashion Co', revenue: 32000, projects: 6 },
-        { id: '4', name: 'Ana Costa', company: 'Nova Corp', revenue: 28000, projects: 3 },
-        { id: '5', name: 'Pedro Oliveira', company: 'Digital Co', revenue: 22000, projects: 4 },
-      ]);
+        const monthProjects = projects.filter(p => {
+          const projDate = new Date(p.created_at || new Date());
+          return projDate.getMonth() === monthIndex && projDate.getFullYear() === monthYear;
+        }).length;
+
+        chartMonths.push({ month: monthName, revenue: monthRevenue, projects: monthProjects });
+      }
+      setChartData(chartMonths);
+
+      // Build project types
+      const typeMap: { [key: string]: { count: number; revenue: number } } = {};
+      projects.forEach(project => {
+        const type = project.project_type || 'Outros';
+        if (!typeMap[type]) {
+          typeMap[type] = { count: 0, revenue: 0 };
+        }
+        typeMap[type].count += 1;
+      });
+
+      // Add revenue to project types from invoices
+      invoices.forEach(invoice => {
+        const project = projects.find(p => p.client_id === invoice.client_id);
+        if (project && invoice.status === 'paid') {
+          const type = project.project_type || 'Outros';
+          if (typeMap[type]) {
+            typeMap[type].revenue += invoice.amount || 0;
+          }
+        }
+      });
+
+      const totalProjectRevenue = Object.values(typeMap).reduce((sum, t) => sum + t.revenue, 0);
+      const projectTypesList: ProjectTypeData[] = Object.entries(typeMap).map(([type, data]) => ({
+        type,
+        count: data.count,
+        revenue: data.revenue,
+        percentage: totalProjectRevenue === 0 ? 0 : Math.round((data.revenue / totalProjectRevenue) * 100),
+      }));
+      setProjectTypes(projectTypesList);
+
+      // Build top clients - list by project count
+      const clientProjectCount: { [key: string]: { name: string; count: number; revenue: number } } = {};
+      clients.forEach(client => {
+        clientProjectCount[client.id] = { name: client.name, count: 0, revenue: 0 };
+      });
+
+      projects.forEach(project => {
+        if (clientProjectCount[project.client_id]) {
+          clientProjectCount[project.client_id].count += 1;
+        }
+      });
+
+      invoices.forEach(invoice => {
+        if (invoice.status === 'paid' && clientProjectCount[invoice.client_id]) {
+          clientProjectCount[invoice.client_id].revenue += invoice.amount || 0;
+        }
+      });
+
+      const topClientsList: TopClient[] = Object.entries(clientProjectCount)
+        .map(([id, data]) => ({
+          id,
+          name: data.name,
+          company: data.name,
+          revenue: data.revenue,
+          projects: data.count,
+        }))
+        .sort((a, b) => b.revenue - a.revenue)
+        .slice(0, 5);
+      setTopClients(topClientsList);
 
     } catch (error) {
       console.error('Error loading analytics:', error);

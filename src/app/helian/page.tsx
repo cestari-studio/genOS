@@ -46,7 +46,6 @@ import {
   Star,
   StarFilled,
 } from '@carbon/icons-react';
-import Header from '@/components/layout/Header';
 import './helian.scss';
 
 interface Message {
@@ -337,8 +336,6 @@ Como posso ajudar você hoje?`;
 
   return (
     <>
-      <Header />
-      
       <div className="helian-container">
         {/* Sidebar */}
         <aside className={`helian-sidebar ${sidebarCollapsed ? 'helian-sidebar--collapsed' : ''}`}>

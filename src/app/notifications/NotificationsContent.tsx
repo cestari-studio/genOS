@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Tile,
   Button,
@@ -13,6 +13,7 @@ import {
   InformationFilled,
   TrashCan,
 } from '@carbon/icons-react';
+import { createClient } from '@/lib/supabase/client';
 
 interface NotificationItem {
   id: string;
@@ -23,40 +24,34 @@ interface NotificationItem {
   read: boolean;
 }
 
-const mockNotifications: NotificationItem[] = [
-  {
-    id: '1',
-    type: 'success',
-    title: 'Novo cliente cadastrado',
-    message: 'José Victor Ferreira de Carvalho foi adicionado ao sistema.',
-    time: '2 horas atrás',
-    read: false,
-  },
-  {
-    id: '2',
-    type: 'info',
-    title: 'Briefing recebido',
-    message: 'Um novo briefing foi submetido por Bruno Corbucci.',
-    time: '5 horas atrás',
-    read: false,
-  },
-  {
-    id: '3',
-    type: 'warning',
-    title: 'Projeto pendente',
-    message: 'O projeto "Redesign Website" está aguardando aprovação.',
-    time: '1 dia atrás',
-    read: true,
-  },
-  {
-    id: '4',
-    type: 'info',
-    title: 'Documento enviado',
-    message: 'Contrato de serviço foi enviado para Gabriel Salvadeo.',
-    time: '2 dias atrás',
-    read: true,
-  },
-];
+// Helper function to map notification type from database to component type
+const mapNotificationType = (dbType: string): 'info' | 'success' | 'warning' => {
+  if (dbType === 'post_approved' || dbType === 'post_published') {
+    return 'success';
+  } else if (dbType.startsWith('credit_expiring_') || dbType === 'credit_expired') {
+    return 'warning';
+  }
+  return 'info';
+};
+
+// Helper function to format date as relative time
+const formatRelativeTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffSecs < 60) return 'agora mesmo';
+  if (diffMins < 60) return `${diffMins} minuto${diffMins > 1 ? 's' : ''} atrás`;
+  if (diffHours < 24) return `${diffHours} hora${diffHours > 1 ? 's' : ''} atrás`;
+  if (diffDays < 30) return `${diffDays} dia${diffDays > 1 ? 's' : ''} atrás`;
+
+  // For older dates, show the date
+  return date.toLocaleDateString('pt-BR');
+};
 
 const iconMap = {
   info: <InformationFilled size={20} style={{ color: '#0f62fe' }} />,
@@ -65,23 +60,153 @@ const iconMap = {
 };
 
 export default function NotificationsContent() {
-  const [notifications, setNotifications] = useState(mockNotifications);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const markAsRead = (id: string) => {
-    setNotifications(notifications.map(n =>
-      n.id === id ? { ...n, read: true } : n
-    ));
+  // Fetch notifications from Supabase
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const supabase = createClient();
+
+        // Get auth user
+        const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+        if (authError || !authUser) {
+          throw new Error('Unable to get authenticated user');
+        }
+
+        // Get the cestari user
+        const { data: cestariUser, error: userError } = await supabase
+          .from('users')
+          .select('id')
+          .eq('auth_user_id', authUser.id)
+          .single();
+
+        if (userError || !cestariUser) {
+          throw new Error('Unable to get user profile');
+        }
+
+        // Query notifications
+        const { data: notificationsData, error: notificationsError } = await supabase
+          .from('notifications')
+          .select('*')
+          .eq('user_id', cestariUser.id)
+          .order('created_at', { ascending: false });
+
+        if (notificationsError) {
+          throw notificationsError;
+        }
+
+        // Map and transform the data
+        const mappedNotifications: NotificationItem[] = (notificationsData || []).map((notification: any) => ({
+          id: notification.id,
+          type: mapNotificationType(notification.type),
+          title: notification.title,
+          message: notification.message,
+          time: formatRelativeTime(notification.created_at),
+          read: notification.read_at !== null,
+        }));
+
+        setNotifications(mappedNotifications);
+      } catch (err) {
+        console.error('Error fetching notifications:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load notifications');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  const markAsRead = async (id: string) => {
+    try {
+      const supabase = createClient();
+      await supabase
+        .from('notifications')
+        .update({ read_at: new Date().toISOString() })
+        .eq('id', id);
+
+      // Update local state
+      setNotifications(notifications.map(n =>
+        n.id === id ? { ...n, read: true } : n
+      ));
+    } catch (err) {
+      console.error('Error marking notification as read:', err);
+    }
   };
 
-  const markAllAsRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, read: true })));
+  const markAllAsRead = async () => {
+    try {
+      const supabase = createClient();
+      const unreadIds = notifications.filter(n => !n.read).map(n => n.id);
+
+      if (unreadIds.length === 0) return;
+
+      await supabase
+        .from('notifications')
+        .update({ read_at: new Date().toISOString() })
+        .in('id', unreadIds);
+
+      // Update local state
+      setNotifications(notifications.map(n => ({ ...n, read: true })));
+    } catch (err) {
+      console.error('Error marking all notifications as read:', err);
+    }
   };
 
-  const deleteNotification = (id: string) => {
-    setNotifications(notifications.filter(n => n.id !== id));
+  const deleteNotification = async (id: string) => {
+    try {
+      const supabase = createClient();
+      await supabase
+        .from('notifications')
+        .delete()
+        .eq('id', id);
+
+      // Update local state
+      setNotifications(notifications.filter(n => n.id !== id));
+    } catch (err) {
+      console.error('Error deleting notification:', err);
+    }
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  if (isLoading) {
+    return (
+      <div>
+        <div className="page-header">
+          <div>
+            <h1>Notificações</h1>
+            <p>Acompanhe as atualizações do sistema</p>
+          </div>
+        </div>
+        <Tile style={{ textAlign: 'center', padding: '3rem' }}>
+          <p style={{ color: '#525252' }}>Carregando notificações...</p>
+        </Tile>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <div className="page-header">
+          <div>
+            <h1>Notificações</h1>
+            <p>Acompanhe as atualizações do sistema</p>
+          </div>
+        </div>
+        <Tile style={{ textAlign: 'center', padding: '3rem', backgroundColor: '#fff4f4' }}>
+          <p style={{ color: '#da1e28' }}>Erro ao carregar notificações: {error}</p>
+        </Tile>
+      </div>
+    );
+  }
 
   return (
     <div>

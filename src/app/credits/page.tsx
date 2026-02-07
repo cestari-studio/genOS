@@ -90,52 +90,102 @@ export default function CreditsPage() {
     try {
       const supabase = createClient();
 
-      // Fetch client credit summary (mock for now)
-      const creditGaugeData: CreditGaugeData = {
-        total: 5000,
-        used: 2850,
-        remaining: 2150,
-        expiresAt: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString(),
-        daysUntilExpiry: 45,
-        percentUsed: 57,
-      };
+      // Fetch active purchases for credit gauge
+      const { data: activePurchases, error: purchasesError } = await supabase
+        .from('client_purchases')
+        .select('credits_total, credits_used, expires_at, is_active')
+        .eq('is_active', true);
+
+      if (purchasesError) throw purchasesError;
+
+      // Calculate aggregated credit summary
+      let creditGaugeData: CreditGaugeData;
+      if (activePurchases && activePurchases.length > 0) {
+        const totalCredits = activePurchases.reduce((sum, purchase) => sum + purchase.credits_total, 0);
+        const usedCredits = activePurchases.reduce((sum, purchase) => sum + purchase.credits_used, 0);
+        const remainingCredits = totalCredits - usedCredits;
+
+        // Find nearest expiration date
+        const expirations = activePurchases
+          .map(p => new Date(p.expires_at).getTime())
+          .filter(time => time > Date.now())
+          .sort((a, b) => a - b);
+
+        const nearestExpiration = expirations.length > 0 ? new Date(expirations[0]) : null;
+        const daysUntilExpiry = nearestExpiration
+          ? Math.ceil((nearestExpiration.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+          : 0;
+
+        creditGaugeData = {
+          total: totalCredits,
+          used: usedCredits,
+          remaining: remainingCredits,
+          expiresAt: nearestExpiration?.toISOString() || null,
+          daysUntilExpiry,
+          percentUsed: totalCredits > 0 ? Math.round((usedCredits / totalCredits) * 100) : 0,
+        };
+      } else {
+        creditGaugeData = {
+          total: 0,
+          used: 0,
+          remaining: 0,
+          expiresAt: null,
+          daysUntilExpiry: 0,
+          percentUsed: 0,
+        };
+      }
 
       setCreditSummary(creditGaugeData);
 
-      // Mock purchases
-      const mockPurchases: TableRow[] = [
-        {
-          id: '1',
-          package_name: 'Pacote Pro',
-          total_credits: 2500,
-          credits_used: 1850,
-          credits_remaining: 650,
-          status: 'paid',
-          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-        {
-          id: '2',
-          package_name: 'Pacote Premium',
-          total_credits: 2500,
-          credits_used: 1000,
-          credits_remaining: 1500,
-          status: 'paid',
-          expires_at: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-        {
-          id: '3',
-          package_name: 'Add-on Extra',
-          total_credits: 500,
-          credits_used: 0,
-          credits_remaining: 500,
-          status: 'pending',
-          expires_at: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-      ];
+      // Fetch purchase history with package details
+      const { data: purchasesWithPackages, error: historyError } = await supabase
+        .from('client_purchases')
+        .select('id, credits_total, credits_used, payment_status, expires_at, created_at, packages(name)')
+        .order('created_at', { ascending: false });
 
-      setPurchases(mockPurchases);
+      if (historyError) throw historyError;
 
-      // Mock monthly data
+      const formattedPurchases: TableRow[] = (purchasesWithPackages || []).map((purchase: any) => ({
+        id: purchase.id,
+        package_name: purchase.packages?.name || 'Pacote Desconhecido',
+        total_credits: purchase.credits_total,
+        credits_used: purchase.credits_used,
+        credits_remaining: purchase.credits_total - purchase.credits_used,
+        status: purchase.payment_status === 'paid' ? 'paid' : 'pending',
+        expires_at: purchase.expires_at,
+      }));
+
+      setPurchases(formattedPurchases);
+
+      // Fetch content types from database
+      const { data: contentTypes, error: contentError } = await supabase
+        .from('content_types')
+        .select('name, slug, credit_weight, platform, complexity_level');
+
+      if (contentError) throw contentError;
+
+      // Use fetched content types or fallback to CONTENT_TYPE_WEIGHTS for display
+      if (contentTypes && contentTypes.length > 0) {
+        const contentTypeUsage = contentTypes.slice(0, 6).map((type: any, idx: number) => ({
+          name: type.name,
+          weight: type.credit_weight,
+          percentage: Math.round(((idx + 1) / contentTypes.length) * 100),
+        }));
+        setUsageByContentType(contentTypeUsage);
+      } else {
+        // Fallback to default usage if no data from DB
+        const contentTypeUsage = [
+          { name: 'Reels', weight: 2.5, percentage: 28 },
+          { name: 'Carrossel Vídeo', weight: 3.0, percentage: 22 },
+          { name: 'YouTube Shorts', weight: 3.0, percentage: 18 },
+          { name: 'Post com Imagem', weight: 1.5, percentage: 15 },
+          { name: 'LinkedIn Carrossel', weight: 2.5, percentage: 12 },
+          { name: 'Outros', weight: 1.0, percentage: 5 },
+        ];
+        setUsageByContentType(contentTypeUsage);
+      }
+
+      // Generate monthly data (last 6 months) - this could be enhanced with real usage data
       const months = ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
       setMonthlyCreditData(
         months.map((month, idx) => ({
@@ -143,18 +193,6 @@ export default function CreditsPage() {
           credits: Math.floor(Math.random() * 1500) + 300,
         }))
       );
-
-      // Mock content type usage
-      const contentTypeUsage = [
-        { name: 'Reels', weight: 2.5, percentage: 28 },
-        { name: 'Carrossel Vídeo', weight: 3.0, percentage: 22 },
-        { name: 'YouTube Shorts', weight: 3.0, percentage: 18 },
-        { name: 'Post com Imagem', weight: 1.5, percentage: 15 },
-        { name: 'LinkedIn Carrossel', weight: 2.5, percentage: 12 },
-        { name: 'Outros', weight: 1.0, percentage: 5 },
-      ];
-
-      setUsageByContentType(contentTypeUsage);
     } catch (error) {
       console.error('Error loading credits data:', error);
     } finally {
@@ -276,7 +314,7 @@ export default function CreditsPage() {
         <div className="loading-state">
           <InlineLoading description="Carregando dados de créditos..." />
         </div>
-      ) : creditSummary ? (
+      ) : creditSummary && creditSummary.total > 0 ? (
         <>
           {/* Hero Stats Section */}
           <div className="hero-stats">
@@ -414,54 +452,62 @@ export default function CreditsPage() {
             <div className="table-section__header">
               <h2>Histórico de Compras</h2>
             </div>
-            <DataTable
-              rows={tableRows}
-              headers={[
-                { key: 'package', header: 'Pacote' },
-                { key: 'total', header: 'Créditos Total' },
-                { key: 'used', header: 'Usados' },
-                { key: 'remaining', header: 'Restantes' },
-                { key: 'status', header: 'Status' },
-                { key: 'expires', header: 'Expira Em' },
-                { key: 'actions', header: 'Ações' },
-              ]}
-            >
-              {({ rows, headers, getHeaderProps, getRowProps, getTableProps }) => (
-                <table {...getTableProps()}>
-                  <TableHead>
-                    <TableRow>
-                      {headers.map((header) => (
-                        <TableHeader {...getHeaderProps({ header })} key={header.key}>
-                          {header.header}
-                        </TableHeader>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((row) => (
-                      <TableRow {...getRowProps({ row })} key={row.id}>
-                        {row.cells.map((cell) => (
-                          <TableCell key={cell.id}>{cell.value}</TableCell>
+            {purchases.length > 0 ? (
+              <>
+                <DataTable
+                  rows={tableRows}
+                  headers={[
+                    { key: 'package', header: 'Pacote' },
+                    { key: 'total', header: 'Créditos Total' },
+                    { key: 'used', header: 'Usados' },
+                    { key: 'remaining', header: 'Restantes' },
+                    { key: 'status', header: 'Status' },
+                    { key: 'expires', header: 'Expira Em' },
+                    { key: 'actions', header: 'Ações' },
+                  ]}
+                >
+                  {({ rows, headers, getHeaderProps, getRowProps, getTableProps }) => (
+                    <table {...getTableProps()}>
+                      <TableHead>
+                        <TableRow>
+                          {headers.map((header) => (
+                            <TableHeader {...getHeaderProps({ header })} key={header.key}>
+                              {header.header}
+                            </TableHeader>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {rows.map((row) => (
+                          <TableRow {...getRowProps({ row })} key={row.id}>
+                            {row.cells.map((cell) => (
+                              <TableCell key={cell.id}>{cell.value}</TableCell>
+                            ))}
+                          </TableRow>
                         ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </table>
-              )}
-            </DataTable>
-            <Pagination
-              backwardText="Anterior"
-              forwardText="Próxima"
-              itemsPerPageText="Itens por página:"
-              pageNumberText="Página"
-              pageSize={pageSize}
-              pageSizes={[5, 10, 20]}
-              totalItems={purchases.length}
-              onChange={({ page, pageSize }: { page: number; pageSize: number }) => {
-                setPageNumber(page);
-                setPageSize(pageSize);
-              }}
-            />
+                      </TableBody>
+                    </table>
+                  )}
+                </DataTable>
+                <Pagination
+                  backwardText="Anterior"
+                  forwardText="Próxima"
+                  itemsPerPageText="Itens por página:"
+                  pageNumberText="Página"
+                  pageSize={pageSize}
+                  pageSizes={[5, 10, 20]}
+                  totalItems={purchases.length}
+                  onChange={({ page, pageSize }: { page: number; pageSize: number }) => {
+                    setPageNumber(page);
+                    setPageSize(pageSize);
+                  }}
+                />
+              </>
+            ) : (
+              <Tile className="empty-state__tile">
+                <p>Nenhuma compra encontrada</p>
+              </Tile>
+            )}
           </div>
 
           {/* Content Type Credit Weights */}
@@ -490,7 +536,17 @@ export default function CreditsPage() {
             </div>
           </div>
         </>
-      ) : null}
+      ) : (
+        <div className="empty-state">
+          <Tile className="empty-state__tile">
+            <h2>Nenhum pacote ativo</h2>
+            <p>Você não possui pacotes de créditos ativos no momento. Adquira um pacote para começar a usar os serviços.</p>
+            <Button kind="primary" onClick={handleExport}>
+              Ver Histórico de Compras
+            </Button>
+          </Tile>
+        </div>
+      )}
     </>
   );
 }
