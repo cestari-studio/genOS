@@ -18,14 +18,48 @@ interface ChatMessage {
 
 // ─── Constants ─────────────────────────────────────────
 const ASCII_LOGO = [
-  '',
-  '  ██████╗ ███████╗███╗   ██╗ ██████╗ ███████╗',
-  '  ██╔════╝ ██╔════╝████╗  ██║██╔═══██╗██╔════╝',
-  '  ██║  ███╗█████╗  ██╔██╗ ██║██║   ██║███████╗',
-  '  ██║   ██║██╔══╝  ██║╚██╗██║██║   ██║╚════██║',
-  '  ╚██████╔╝███████╗██║ ╚████║╚██████╔╝███████║',
-  '   ╚═════╝ ╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝',
-  '',
+  '                                                                ',
+  '                         ██████████████████                     ',
+  '                     █████                █████                 ',
+  '                  ████                        ███               ',
+  '               ████                      ███████████████        ',
+  '             ████                   ██████        ███  ██████   ',
+  '            ███                 █████               ██      ███ ',
+  '          ███                 ███                    ███      ███',
+  '         ██                 ███                       ███      ██',
+  '        ██                ███                           ██████  █',
+  '       ██                ██                                  ████',
+  '      ██               ███                                      ',
+  '     ██               ███                                       ',
+  '    ███              ██                                         ',
+  '    ██              ██                                          ',
+  '   ███             ███                                          ',
+  '   ██              ██                                           ',
+  '   ██             ██                                            ',
+  '   ██             ██                                            ',
+  '   ██             ██                                            ',
+  '   ██            ██                                             ',
+  '   ██            ██                                             ',
+  '   ██            ██                                             ',
+  '    ██           ██                                             ',
+  '    ██           ██                                             ',
+  '     ██           ██                                 ███        ',
+  '     ██           ██                                █████████   ',
+  '      ██          ███                              ██       ████',
+  '       ███         ██                            ███           █',
+  '        ███         ██                          ███            █',
+  '          ███       ███                       ███            ███',
+  '           ███       ███                   ████             ███ ',
+  '             ████      ██               █████             ███   ',
+  '                ██████  ███        ███████              ████    ',
+  '                     ████████████████                 ████      ',
+  '                            ███                    ████         ',
+  '                               █████           ██████           ',
+  '                                  ███████████████               ',
+  '                                                                ',
+];
+
+const ASCII_WELCOME = [
   '  Cestari Studio Terminal v1.0',
   '  Assistente IA para gestão de conteúdo',
   '',
@@ -62,7 +96,7 @@ function classifyLine(line: string): string {
 // ─── Component ─────────────────────────────────────────
 export default function TerminalPage() {
   const [entries, setEntries] = useState<TerminalEntry[]>([
-    { id: 'welcome', type: 'system', lines: ASCII_LOGO },
+    { id: 'welcome-text', type: 'system', lines: ASCII_WELCOME },
   ]);
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -72,9 +106,18 @@ export default function TerminalPage() {
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
   const [historyIdx, setHistoryIdx] = useState(-1);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [logoHue, setLogoHue] = useState(0);
 
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Rainbow logo animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLogoHue(h => (h + 1) % 360);
+    }, 30);
+    return () => clearInterval(interval);
+  }, []);
 
   // Auto-scroll
   useEffect(() => {
@@ -476,6 +519,21 @@ export default function TerminalPage() {
 
         {/* Terminal Body */}
         <div className="terminal-body" ref={bodyRef}>
+          {/* Rainbow ASCII Logo */}
+          <div className="terminal-logo">
+            {ASCII_LOGO.map((line, i) => (
+              <div
+                key={i}
+                className="terminal-logo__line"
+                style={{
+                  color: `hsl(${(logoHue + i * 8) % 360}, 85%, 65%)`,
+                }}
+              >
+                {line || '\u00A0'}
+              </div>
+            ))}
+          </div>
+
           {/* Rendered entries */}
           {entries.map(entry => (
             <div key={entry.id} className={`terminal-entry terminal-entry--${entry.type}`}>

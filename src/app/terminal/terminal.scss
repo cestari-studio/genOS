@@ -84,6 +84,32 @@
   }
 }
 
+// Rainbow ASCII Logo
+.terminal-logo {
+  padding: 8px 16px 0;
+  text-align: center;
+  user-select: none;
+  overflow: hidden;
+}
+
+.terminal-logo__line {
+  font-family: 'IBM Plex Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 8px;
+  line-height: 1.1;
+  white-space: pre;
+  letter-spacing: 0px;
+  transition: color 0.08s linear;
+
+  @media (min-width: 672px) {
+    font-size: 10px;
+  }
+
+  @media (min-width: 1056px) {
+    font-size: 12px;
+    line-height: 1.15;
+  }
+}
+
 // Terminal output area
 .terminal-body {
   flex: 1;
