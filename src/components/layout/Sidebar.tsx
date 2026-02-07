@@ -14,6 +14,7 @@ import {
   Notification,
   Logout,
   Chat,
+  Terminal,
   ChevronLeft,
   ChevronRight,
   Add,
@@ -107,6 +108,7 @@ export default function Sidebar({ collapsed: controlledCollapsed, onToggle }: Si
 
   // Tools section
   const toolsNavItems: NavItem[] = [
+    { path: '/terminal', label: 'Terminal IA', icon: Terminal, isAI: true },
     { path: '/helian', label: 'IA Helian', icon: Chat, isAI: true },
     { path: '/analytics', label: 'Analytics', icon: Analytics },
     { path: '/team', label: 'Equipe', icon: UserMultiple },
