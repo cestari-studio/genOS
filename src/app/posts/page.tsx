@@ -30,6 +30,7 @@ import {
   Switch,
   DatePicker,
   DatePickerInput,
+  InlineLoading,
 } from '@carbon/react';
 import {
   Add,
@@ -57,505 +58,6 @@ import type {
 import { POST_STATUS_CONFIG, PLATFORM_CONFIG } from '@/types/database';
 import './posts.scss';
 
-// ============================================
-// Mock data for development
-// ============================================
-const MOCK_BRANDS: Brand[] = [
-  {
-    id: 'brand-1',
-    organization_id: 'org-1',
-    client_id: 'user-1',
-    name: 'TechVision',
-    slug: 'techvision',
-    tagline: 'Inovação que transforma',
-    description: 'Empresa de tecnologia focada em inovação',
-    logo_url: null,
-    primary_color: '#0f62fe',
-    secondary_color: '#6929c4',
-    font_family: 'IBM Plex Sans',
-    brand_voice: 'Profissional e inovador',
-    target_audience: 'CTOs e desenvolvedores',
-    keywords: ['tecnologia', 'inovação', 'software'],
-    language: 'pt-BR',
-    instagram_handle: '@techvision',
-    facebook_page: 'techvision',
-    linkedin_page: 'techvision-co',
-    twitter_handle: '@techvision',
-    tiktok_handle: null,
-    website_url: 'https://techvision.com.br',
-    settings: {},
-    is_active: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'brand-2',
-    organization_id: 'org-1',
-    client_id: 'user-2',
-    name: 'Bella Moda',
-    slug: 'bella-moda',
-    tagline: 'Estilo que inspira',
-    description: 'Marca de moda feminina premium',
-    logo_url: null,
-    primary_color: '#9f1853',
-    secondary_color: '#ee5396',
-    font_family: 'Playfair Display',
-    brand_voice: 'Elegante e sofisticado',
-    target_audience: 'Mulheres 25-45 anos',
-    keywords: ['moda', 'elegância', 'feminino'],
-    language: 'pt-BR',
-    instagram_handle: '@bellamoda',
-    facebook_page: 'bellamoda',
-    linkedin_page: null,
-    twitter_handle: null,
-    tiktok_handle: '@bellamoda',
-    website_url: 'https://bellamoda.com.br',
-    settings: {},
-    is_active: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'brand-3',
-    organization_id: 'org-1',
-    client_id: 'user-3',
-    name: 'Organic Foods',
-    slug: 'organic-foods',
-    tagline: 'Do campo à sua mesa',
-    description: 'Alimentos orgânicos e sustentáveis',
-    logo_url: null,
-    primary_color: '#198038',
-    secondary_color: '#005d5d',
-    font_family: 'Inter',
-    brand_voice: 'Natural e acolhedor',
-    target_audience: 'Consumidores conscientes',
-    keywords: ['orgânico', 'sustentável', 'saúde'],
-    language: 'pt-BR',
-    instagram_handle: '@organicfoods',
-    facebook_page: 'organicfoods',
-    linkedin_page: 'organic-foods',
-    twitter_handle: null,
-    tiktok_handle: null,
-    website_url: null,
-    settings: {},
-    is_active: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
-
-const MOCK_POSTS: Post[] = [
-  {
-    id: 'post-1',
-    brand_id: 'brand-1',
-    client_id: 'user-1',
-    project_id: 'proj-1',
-    created_by: 'user-1',
-    assigned_to: 'user-5',
-    content_type_id: 'ct-1',
-    content_type_slug: 'post_simples',
-    platform: 'instagram',
-    credits_consumed: 10,
-    title: 'Lançamento da nova versão beta',
-    body: 'Estamos animados em anunciar o lançamento da versão beta de nossa plataforma revolucionária!',
-    hashtags: ['#TechVision', '#Inovação', '#Beta'],
-    cta_text: 'Saiba mais',
-    cta_url: 'https://techvision.com.br/beta',
-    framework: 'aida',
-    selected_assets: [],
-    scheduled_for: new Date(Date.now() + 86400000).toISOString(),
-    published_at: null,
-    external_post_id: null,
-    external_url: null,
-    status: 'draft',
-    revision_count: 0,
-    last_revision_at: null,
-    impressions: 0,
-    reach: 0,
-    engagement_rate: 0,
-    likes: 0,
-    comments: 0,
-    shares: 0,
-    saves: 0,
-    clicks: 0,
-    ai_generated: false,
-    ai_model: null,
-    generation_prompt: null,
-    character_count: 125,
-    notes: 'Aguardando aprovação da marca',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'post-2',
-    brand_id: 'brand-2',
-    client_id: 'user-2',
-    project_id: 'proj-2',
-    created_by: 'user-1',
-    assigned_to: 'user-5',
-    content_type_id: 'ct-2',
-    content_type_slug: 'post_imagem',
-    platform: 'instagram',
-    credits_consumed: 15,
-    title: 'Coleção Primavera 2025',
-    body: 'Descubra nossa nova coleção de primavera com designs exclusivos e cores vibrantes.',
-    hashtags: ['#BellaModa', '#Primavera', '#ModaFeminina'],
-    cta_text: 'Ver Coleção',
-    cta_url: 'https://bellamoda.com.br/primavera',
-    framework: 'storytelling',
-    selected_assets: [],
-    scheduled_for: null,
-    published_at: null,
-    external_post_id: null,
-    external_url: null,
-    status: 'awaiting_assignment',
-    revision_count: 0,
-    last_revision_at: null,
-    impressions: 0,
-    reach: 0,
-    engagement_rate: 0,
-    likes: 0,
-    comments: 0,
-    shares: 0,
-    saves: 0,
-    clicks: 0,
-    ai_generated: false,
-    ai_model: null,
-    generation_prompt: null,
-    character_count: 98,
-    notes: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'post-3',
-    brand_id: 'brand-1',
-    client_id: 'user-1',
-    project_id: 'proj-1',
-    created_by: 'user-5',
-    assigned_to: 'user-5',
-    content_type_id: 'ct-1',
-    content_type_slug: 'post_simples',
-    platform: 'linkedin',
-    credits_consumed: 12,
-    title: 'Tendências de IA em 2025',
-    body: 'Neste artigo exploramos as principais tendências de inteligência artificial que dominarão 2025.',
-    hashtags: ['#IA', '#Tecnologia', '#Futuro'],
-    cta_text: 'Ler Artigo',
-    cta_url: 'https://blog.techvision.com.br/ia-2025',
-    framework: 'educational',
-    selected_assets: [],
-    scheduled_for: null,
-    published_at: null,
-    external_post_id: null,
-    external_url: null,
-    status: 'in_progress',
-    revision_count: 0,
-    last_revision_at: null,
-    impressions: 0,
-    reach: 0,
-    engagement_rate: 0,
-    likes: 0,
-    comments: 0,
-    shares: 0,
-    saves: 0,
-    clicks: 0,
-    ai_generated: true,
-    ai_model: 'claude-opus-4-6',
-    generation_prompt: 'Escreva sobre as principais tendências de IA em 2025',
-    character_count: 156,
-    notes: 'Primeira versão gerada por IA',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'post-4',
-    brand_id: 'brand-2',
-    client_id: 'user-2',
-    project_id: 'proj-2',
-    created_by: 'user-1',
-    assigned_to: 'user-5',
-    content_type_id: 'ct-3',
-    content_type_slug: 'post_fixo',
-    platform: 'facebook',
-    credits_consumed: 10,
-    title: 'Promoção Flash: 40% de desconto',
-    body: 'Por 48 horas apenas! Aproveite nossa promoção especial com 40% de desconto em itens selecionados.',
-    hashtags: ['#BellaModa', '#Promoção', '#Desconto'],
-    cta_text: 'Comprar Agora',
-    cta_url: 'https://bellamoda.com.br/promocao',
-    framework: 'problem_solution',
-    selected_assets: [],
-    scheduled_for: new Date(Date.now() + 172800000).toISOString(),
-    published_at: null,
-    external_post_id: null,
-    external_url: null,
-    status: 'submitted',
-    revision_count: 1,
-    last_revision_at: new Date(Date.now() - 86400000).toISOString(),
-    impressions: 0,
-    reach: 0,
-    engagement_rate: 0,
-    likes: 0,
-    comments: 0,
-    shares: 0,
-    saves: 0,
-    clicks: 0,
-    ai_generated: false,
-    ai_model: null,
-    generation_prompt: null,
-    character_count: 124,
-    notes: 'Enviado para revisão',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'post-5',
-    brand_id: 'brand-3',
-    client_id: 'user-3',
-    project_id: 'proj-3',
-    created_by: 'user-1',
-    assigned_to: null,
-    content_type_id: 'ct-4',
-    content_type_slug: 'reels',
-    platform: 'instagram',
-    credits_consumed: 25,
-    title: 'Como escolher alimentos orgânicos',
-    body: 'Veja um guia prático de como identificar alimentos orgânicos verdadeiros no supermercado.',
-    hashtags: ['#Orgânico', '#Saúde', '#Sustentável'],
-    cta_text: 'Mais Dicas',
-    cta_url: 'https://organicfoods.com.br/dicas',
-    framework: 'educational',
-    selected_assets: [],
-    scheduled_for: null,
-    published_at: null,
-    external_post_id: null,
-    external_url: null,
-    status: 'revision_requested',
-    revision_count: 1,
-    last_revision_at: new Date(Date.now() - 43200000).toISOString(),
-    impressions: 0,
-    reach: 0,
-    engagement_rate: 0,
-    likes: 0,
-    comments: 0,
-    shares: 0,
-    saves: 0,
-    clicks: 0,
-    ai_generated: false,
-    ai_model: null,
-    generation_prompt: null,
-    character_count: 109,
-    notes: 'Revisar duração do vídeo',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'post-6',
-    brand_id: 'brand-1',
-    client_id: 'user-1',
-    project_id: 'proj-1',
-    created_by: 'user-1',
-    assigned_to: null,
-    content_type_id: 'ct-5',
-    content_type_slug: 'linkedin_post',
-    platform: 'linkedin',
-    credits_consumed: 12,
-    title: 'Case de sucesso: Transformação digital',
-    body: 'Conheça a história de como uma empresa tradicional alcançou a transformação digital.',
-    hashtags: ['#TransformaçãoDigital', '#CaseDeSuccesso', '#Inovação'],
-    cta_text: 'Ler História Completa',
-    cta_url: 'https://blog.techvision.com.br/case-sucesso',
-    framework: 'testimonial',
-    selected_assets: [],
-    scheduled_for: null,
-    published_at: new Date(Date.now() - 604800000).toISOString(),
-    external_post_id: 'ext-post-6',
-    external_url: 'https://linkedin.com/feed/update/1234567890',
-    status: 'published',
-    revision_count: 2,
-    last_revision_at: new Date(Date.now() - 1209600000).toISOString(),
-    impressions: 2450,
-    reach: 1850,
-    engagement_rate: 8.5,
-    likes: 156,
-    comments: 34,
-    shares: 12,
-    saves: 45,
-    clicks: 98,
-    ai_generated: false,
-    ai_model: null,
-    generation_prompt: null,
-    character_count: 198,
-    notes: 'Alto engajamento',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'post-7',
-    brand_id: 'brand-2',
-    client_id: 'user-2',
-    project_id: 'proj-2',
-    created_by: 'user-1',
-    assigned_to: null,
-    content_type_id: 'ct-6',
-    content_type_slug: 'story_video',
-    platform: 'instagram',
-    credits_consumed: 20,
-    title: 'Behind the scenes: Ensaio de primavera',
-    body: 'Confira os bastidores do nosso novo ensaio de primavera com modelos incríveis.',
-    hashtags: ['#BTS', '#Primavera', '#Ensaio'],
-    cta_text: 'Ver Mais',
-    cta_url: 'https://instagram.com/bellamoda',
-    framework: 'storytelling',
-    selected_assets: [],
-    scheduled_for: null,
-    published_at: new Date(Date.now() - 259200000).toISOString(),
-    external_post_id: 'ext-post-7',
-    external_url: 'https://instagram.com/stories/bellamoda/123456',
-    status: 'published',
-    revision_count: 0,
-    last_revision_at: null,
-    impressions: 5200,
-    reach: 4100,
-    engagement_rate: 12.3,
-    likes: 320,
-    comments: 68,
-    shares: 25,
-    saves: 120,
-    clicks: 450,
-    ai_generated: false,
-    ai_model: null,
-    generation_prompt: null,
-    character_count: 115,
-    notes: 'Melhor desempenho do mês',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'post-8',
-    brand_id: 'brand-3',
-    client_id: 'user-3',
-    project_id: 'proj-3',
-    created_by: 'user-1',
-    assigned_to: null,
-    content_type_id: 'ct-7',
-    content_type_slug: 'post_simples',
-    platform: 'facebook',
-    credits_consumed: 10,
-    title: 'Novo ponto de venda em São Paulo',
-    body: 'Inauguramos nossa nova loja em São Paulo para melhor servir você!',
-    hashtags: ['#OrganicFoods', '#NovaLoja', '#SãoPaulo'],
-    cta_text: 'Visitar Loja',
-    cta_url: 'https://organicfoods.com.br/lojas/sp',
-    framework: 'benefits',
-    selected_assets: [],
-    scheduled_for: null,
-    published_at: null,
-    external_post_id: null,
-    external_url: null,
-    status: 'approved',
-    revision_count: 1,
-    last_revision_at: new Date(Date.now() - 172800000).toISOString(),
-    impressions: 0,
-    reach: 0,
-    engagement_rate: 0,
-    likes: 0,
-    comments: 0,
-    shares: 0,
-    saves: 0,
-    clicks: 0,
-    ai_generated: false,
-    ai_model: null,
-    generation_prompt: null,
-    character_count: 89,
-    notes: 'Pronto para publicar',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'post-9',
-    brand_id: 'brand-1',
-    client_id: 'user-1',
-    project_id: 'proj-1',
-    created_by: 'user-5',
-    assigned_to: null,
-    content_type_id: 'ct-8',
-    content_type_slug: 'post_simples',
-    platform: 'tiktok',
-    credits_consumed: 18,
-    title: 'Dica rápida: Produtividade com IA',
-    body: 'Descubra 3 formas de aumentar sua produtividade usando ferramentas de IA.',
-    hashtags: ['#IA', '#Produtividade', '#Dica'],
-    cta_text: 'Assista Completo',
-    cta_url: 'https://tiktok.com/@techvision',
-    framework: 'list',
-    selected_assets: [],
-    scheduled_for: null,
-    published_at: null,
-    external_post_id: null,
-    external_url: null,
-    status: 'scheduled',
-    revision_count: 0,
-    last_revision_at: null,
-    impressions: 0,
-    reach: 0,
-    engagement_rate: 0,
-    likes: 0,
-    comments: 0,
-    shares: 0,
-    saves: 0,
-    clicks: 0,
-    ai_generated: true,
-    ai_model: 'claude-opus-4-6',
-    generation_prompt: '3 dicas rápidas sobre produtividade com IA',
-    character_count: 112,
-    notes: 'Agendado para próxima terça',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'post-10',
-    brand_id: 'brand-2',
-    client_id: 'user-2',
-    project_id: 'proj-2',
-    created_by: 'user-1',
-    assigned_to: null,
-    content_type_id: 'ct-9',
-    content_type_slug: 'carrossel_imagens',
-    platform: 'instagram',
-    credits_consumed: 20,
-    title: 'Carrossel: Estilos para o verão',
-    body: '5 estilos incríveis para você se inspirar neste verão.',
-    hashtags: ['#Estilo', '#Verão', '#Inspiração'],
-    cta_text: 'Ver Mais Estilos',
-    cta_url: 'https://bellamoda.com.br/colecoes',
-    framework: 'question',
-    selected_assets: [],
-    scheduled_for: null,
-    published_at: null,
-    external_post_id: null,
-    external_url: null,
-    status: 'failed',
-    revision_count: 0,
-    last_revision_at: null,
-    impressions: 0,
-    reach: 0,
-    engagement_rate: 0,
-    likes: 0,
-    comments: 0,
-    shares: 0,
-    saves: 0,
-    clicks: 0,
-    ai_generated: false,
-    ai_model: null,
-    generation_prompt: null,
-    character_count: 89,
-    notes: 'Erro ao publicar - retentar depois',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
 
 // ============================================
 // Helper: Render platform icon
@@ -818,8 +320,9 @@ function TableView({ posts }: { posts: Post[] }) {
 function PostsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [posts, setPosts] = useState<Post[]>(MOCK_POSTS);
-  const [loading, setLoading] = useState(false);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState(0); // 0 = Kanban, 1 = Table
 
@@ -839,6 +342,49 @@ function PostsContent() {
   });
 
   const [hashtagsInput, setHashtagsInput] = useState('');
+
+  // Load data from Supabase
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const supabase = createClient();
+
+        // Fetch brands
+        const { data: brandsData, error: brandsError } = await supabase
+          .from('brands')
+          .select('*')
+          .eq('is_active', true);
+
+        if (brandsError) {
+          console.error('Error fetching brands:', brandsError);
+          setBrands([]);
+        } else {
+          setBrands(brandsData || []);
+        }
+
+        // Fetch posts with brand join
+        const { data: postsData, error: postsError } = await supabase
+          .from('posts_v2')
+          .select('*, brands:brand_id (name)');
+
+        if (postsError) {
+          console.error('Error fetching posts:', postsError);
+          setPosts([]);
+        } else {
+          setPosts(postsData || []);
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+        setPosts([]);
+        setBrands([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   // Auto-open modal from URL
   useEffect(() => {
@@ -878,8 +424,9 @@ function PostsContent() {
 
   const handleSave = async () => {
     try {
-      const newPost: Post = {
-        id: `post-${Date.now()}`,
+      const supabase = createClient();
+      const newPost = {
+        organization_id: '213247a0-ac0f-4a1f-b337-0c2d963f2c7c',
         brand_id: formData.brand_id,
         client_id: 'user-1',
         project_id: formData.project_id || null,
@@ -919,11 +466,26 @@ function PostsContent() {
         generation_prompt: null,
         character_count: formData.body.length,
         notes: null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
       };
 
-      setPosts([newPost, ...posts]);
+      const { error } = await supabase
+        .from('posts_v2')
+        .insert([newPost]);
+
+      if (error) {
+        console.error('Error inserting post:', error);
+        return;
+      }
+
+      // Reload posts
+      const { data: postsData, error: postsError } = await supabase
+        .from('posts_v2')
+        .select('*, brands:brand_id (name)');
+
+      if (!postsError) {
+        setPosts(postsData || []);
+      }
+
       setModalOpen(false);
       resetForm();
     } catch (error) {
@@ -961,47 +523,60 @@ function PostsContent() {
         </div>
       </div>
 
+      {/* Loading State */}
+      {loading && (
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          <InlineLoading description="Carregando posts..." />
+        </div>
+      )}
+
       {/* View Switcher */}
-      <div className="view-switcher-container">
-        <ContentSwitcher size="md" onChange={(e: { index?: number }) => setViewMode(e.index ?? 0)} selectedIndex={viewMode}>
-          <Switch name="kanban" text="Kanban" />
-          <Switch name="table" text="Tabela" />
-        </ContentSwitcher>
-      </div>
+      {!loading && (
+        <div className="view-switcher-container">
+          <ContentSwitcher size="md" onChange={(e: { index?: number }) => setViewMode(e.index ?? 0)} selectedIndex={viewMode}>
+            <Switch name="kanban" text="Kanban" />
+            <Switch name="table" text="Tabela" />
+          </ContentSwitcher>
+        </div>
+      )}
 
       {/* Stats Row */}
-      <div className="posts-stats">
-        <Tile className="stat-tile stat-tile--blue">
-          <div className="stat-tile__content">
-            <div className="stat-tile__value">{stats.total}</div>
-            <div className="stat-tile__label">Total de Posts</div>
+      {!loading && (
+        <>
+          <div className="posts-stats">
+            <Tile className="stat-tile stat-tile--blue">
+              <div className="stat-tile__content">
+                <div className="stat-tile__value">{stats.total}</div>
+                <div className="stat-tile__label">Total de Posts</div>
+              </div>
+            </Tile>
+            <Tile className="stat-tile stat-tile--cyan">
+              <div className="stat-tile__content">
+                <div className="stat-tile__value">{stats.inProduction}</div>
+                <div className="stat-tile__label">Em Produção</div>
+              </div>
+            </Tile>
+            <Tile className="stat-tile stat-tile--teal">
+              <div className="stat-tile__content">
+                <div className="stat-tile__value">{stats.scheduled}</div>
+                <div className="stat-tile__label">Agendados</div>
+              </div>
+            </Tile>
+            <Tile className="stat-tile stat-tile--green">
+              <div className="stat-tile__content">
+                <div className="stat-tile__value">{stats.published}</div>
+                <div className="stat-tile__label">Publicados</div>
+              </div>
+            </Tile>
           </div>
-        </Tile>
-        <Tile className="stat-tile stat-tile--cyan">
-          <div className="stat-tile__content">
-            <div className="stat-tile__value">{stats.inProduction}</div>
-            <div className="stat-tile__label">Em Produção</div>
-          </div>
-        </Tile>
-        <Tile className="stat-tile stat-tile--teal">
-          <div className="stat-tile__content">
-            <div className="stat-tile__value">{stats.scheduled}</div>
-            <div className="stat-tile__label">Agendados</div>
-          </div>
-        </Tile>
-        <Tile className="stat-tile stat-tile--green">
-          <div className="stat-tile__content">
-            <div className="stat-tile__value">{stats.published}</div>
-            <div className="stat-tile__label">Publicados</div>
-          </div>
-        </Tile>
-      </div>
 
-      {/* View Content */}
-      <div className="view-content">
-        {viewMode === 0 && <KanbanView posts={posts} />}
-        {viewMode === 1 && <TableView posts={posts} />}
-      </div>
+          {/* View Content */}
+          <div className="view-content">
+            {viewMode === 0 && <KanbanView posts={posts} />}
+            {viewMode === 1 && <TableView posts={posts} />}
+          </div>
+        </>
+      )}
 
       {/* New Post Modal */}
       <Modal
@@ -1018,9 +593,9 @@ function PostsContent() {
             id="brand-selector"
             titleText="Marca"
             label="Selecionar marca"
-            items={MOCK_BRANDS}
+            items={brands}
             itemToString={(item: Brand) => item?.name || ''}
-            selectedItem={MOCK_BRANDS.find((b) => b.id === formData.brand_id) || null}
+            selectedItem={brands.find((b) => b.id === formData.brand_id) || null}
             onChange={(e: { selectedItem?: Brand | null }) => {
               if (e.selectedItem) {
                 setFormData({ ...formData, brand_id: e.selectedItem.id });

@@ -29,7 +29,6 @@ import {
 } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
 import { ClientPurchase, ClientCreditsSummary, CreditGaugeData, Package, ContentType, ContentTypeSlug } from '@/types/database';
-import Header from '@/components/layout/Header';
 import './credits.scss';
 
 interface ContentTypeWeight {
@@ -259,8 +258,6 @@ export default function CreditsPage() {
 
   return (
     <>
-      <Header />
-
       <div className="page-header">
         <div className="page-header__content">
           <div className="page-header__title-group">

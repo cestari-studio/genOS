@@ -41,7 +41,6 @@ import {
   Dashboard,
 } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
-import Header from '@/components/layout/Header';
 import './analytics.scss';
 
 interface AnalyticsData {
@@ -164,8 +163,6 @@ export default function AnalyticsPage() {
 
   return (
     <>
-      <Header />
-      
       <div className="page-header">
         <div className="page-header__content">
           <div className="page-header__title-group">

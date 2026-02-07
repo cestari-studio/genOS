@@ -125,12 +125,12 @@ export default function DashboardPage() {
       ]);
 
       setStats({
-        totalClients: clientsRes.count || 12,
-        activeProjects: projectsRes.count || 8,
-        pendingBriefings: briefingsRes.count || 5,
-        totalDocuments: docsRes.count || 47,
-        monthlyRevenue: 45000,
-        completedProjects: 12,
+        totalClients: clientsRes.count || 0,
+        activeProjects: projectsRes.count || 0,
+        pendingBriefings: briefingsRes.count || 0,
+        totalDocuments: docsRes.count || 0,
+        monthlyRevenue: 0,
+        completedProjects: 0,
       });
 
       setActivities([

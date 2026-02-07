@@ -149,21 +149,8 @@ function ProjectsContent() {
       setClients(clientsData || []);
     } catch (error) {
       console.error('Error loading data:', error);
-      // Demo data
-      setProjects([
-        { id: '1', name: 'Website Redesign', description: 'Complete website overhaul', client_id: '1', client_name: 'Tech Corp', status: 'in_progress', priority: 'urgent', progress: 75, deadline: '2025-02-05', budget: 15000, created_at: '2025-01-01' },
-        { id: '2', name: 'Brand Guidelines', description: 'Brand identity manual', client_id: '2', client_name: 'Startup Inc', status: 'planning', priority: 'high', progress: 20, deadline: '2025-02-15', budget: 8000, created_at: '2025-01-10' },
-        { id: '3', name: 'Social Media Kit', description: 'Templates for social media', client_id: '3', client_name: 'Fashion Co', status: 'in_progress', priority: 'medium', progress: 45, deadline: '2025-02-20', budget: 5000, created_at: '2025-01-15' },
-        { id: '4', name: 'App UI Design', description: 'Mobile app interface', client_id: '4', client_name: 'Nova Corp', status: 'review', priority: 'high', progress: 90, deadline: '2025-02-10', budget: 12000, created_at: '2025-01-05' },
-        { id: '5', name: 'Marketing Campaign', description: 'Q1 campaign materials', client_id: '1', client_name: 'Tech Corp', status: 'completed', priority: 'medium', progress: 100, deadline: '2025-01-30', budget: 7000, created_at: '2025-01-01' },
-        { id: '6', name: 'Pitch Deck', description: 'Investor presentation', client_id: '2', client_name: 'Startup Inc', status: 'planning', priority: 'urgent', progress: 10, deadline: '2025-02-08', budget: 3000, created_at: '2025-01-20' },
-      ]);
-      setClients([
-        { id: '1', name: 'Tech Corp' },
-        { id: '2', name: 'Startup Inc' },
-        { id: '3', name: 'Fashion Co' },
-        { id: '4', name: 'Nova Corp' },
-      ]);
+      setProjects([]);
+      setClients([]);
     } finally {
       setLoading(false);
     }

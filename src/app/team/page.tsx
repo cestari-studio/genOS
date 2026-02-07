@@ -30,6 +30,7 @@ import {
   Pagination,
   Tile,
   Tooltip,
+  InlineLoading,
 } from '@carbon/react';
 import {
   Add,
@@ -51,209 +52,6 @@ import {
 } from '@/types/database';
 import './team.scss';
 
-// Mock data for team members
-const MOCK_TEAM_DATA: User[] = [
-  {
-    id: '1',
-    email: 'ana.silva@cestari.com',
-    password_hash: null,
-    first_name: 'Ana',
-    last_name: 'Silva',
-    avatar_url: null,
-    phone: null,
-    role: 'agency_owner',
-    organization_id: 'org_1',
-    can_see_client_data: true,
-    can_see_analytics: true,
-    can_manage_team: true,
-    can_publish_posts: true,
-    is_freelancer: false,
-    hourly_rate: null,
-    bio: null,
-    portfolio_url: null,
-    is_active: true,
-    email_verified: true,
-    last_login_at: new Date().toISOString(),
-    preferences: {},
-    created_at: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    email: 'carlos.santos@cestari.com',
-    password_hash: null,
-    first_name: 'Carlos',
-    last_name: 'Santos',
-    avatar_url: null,
-    phone: null,
-    role: 'agency_manager',
-    organization_id: 'org_1',
-    can_see_client_data: true,
-    can_see_analytics: true,
-    can_manage_team: true,
-    can_publish_posts: true,
-    is_freelancer: false,
-    hourly_rate: null,
-    bio: null,
-    portfolio_url: null,
-    is_active: true,
-    email_verified: true,
-    last_login_at: new Date().toISOString(),
-    preferences: {},
-    created_at: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    email: 'maria.oliveira@cestari.com',
-    password_hash: null,
-    first_name: 'Maria',
-    last_name: 'Oliveira',
-    avatar_url: null,
-    phone: null,
-    role: 'agency_member',
-    organization_id: 'org_1',
-    can_see_client_data: true,
-    can_see_analytics: true,
-    can_manage_team: false,
-    can_publish_posts: true,
-    is_freelancer: false,
-    hourly_rate: null,
-    bio: null,
-    portfolio_url: null,
-    is_active: true,
-    email_verified: true,
-    last_login_at: new Date().toISOString(),
-    preferences: {},
-    created_at: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    email: 'joao.freelancer@email.com',
-    password_hash: null,
-    first_name: 'João',
-    last_name: 'Freelancer',
-    avatar_url: null,
-    phone: null,
-    role: 'freelancer',
-    organization_id: 'org_1',
-    can_see_client_data: false,
-    can_see_analytics: false,
-    can_manage_team: false,
-    can_publish_posts: true,
-    is_freelancer: true,
-    hourly_rate: 85.5,
-    bio: null,
-    portfolio_url: null,
-    is_active: true,
-    email_verified: true,
-    last_login_at: new Date().toISOString(),
-    preferences: {},
-    created_at: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    email: 'cliente@empresa.com.br',
-    password_hash: null,
-    first_name: 'Cliente',
-    last_name: 'Principal',
-    avatar_url: null,
-    phone: null,
-    role: 'client_owner',
-    organization_id: 'org_1',
-    can_see_client_data: true,
-    can_see_analytics: true,
-    can_manage_team: false,
-    can_publish_posts: false,
-    is_freelancer: false,
-    hourly_rate: null,
-    bio: null,
-    portfolio_url: null,
-    is_active: true,
-    email_verified: true,
-    last_login_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-    preferences: {},
-    created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: '6',
-    email: 'pedro.inativo@cestari.com',
-    password_hash: null,
-    first_name: 'Pedro',
-    last_name: 'Inativo',
-    avatar_url: null,
-    phone: null,
-    role: 'agency_member',
-    organization_id: 'org_1',
-    can_see_client_data: true,
-    can_see_analytics: false,
-    can_manage_team: false,
-    can_publish_posts: true,
-    is_freelancer: false,
-    hourly_rate: null,
-    bio: null,
-    portfolio_url: null,
-    is_active: false,
-    email_verified: true,
-    last_login_at: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
-    preferences: {},
-    created_at: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: '7',
-    email: 'helena.freelancer@email.com',
-    password_hash: null,
-    first_name: 'Helena',
-    last_name: 'Designer',
-    avatar_url: null,
-    phone: null,
-    role: 'freelancer',
-    organization_id: 'org_1',
-    can_see_client_data: false,
-    can_see_analytics: false,
-    can_manage_team: false,
-    can_publish_posts: true,
-    is_freelancer: true,
-    hourly_rate: 120.0,
-    bio: null,
-    portfolio_url: null,
-    is_active: true,
-    email_verified: true,
-    last_login_at: new Date().toISOString(),
-    preferences: {},
-    created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: '8',
-    email: 'funcionario@cestari.com',
-    password_hash: null,
-    first_name: 'Roberto',
-    last_name: 'Funcionário',
-    avatar_url: null,
-    phone: null,
-    role: 'employee',
-    organization_id: 'org_1',
-    can_see_client_data: false,
-    can_see_analytics: true,
-    can_manage_team: false,
-    can_publish_posts: false,
-    is_freelancer: false,
-    hourly_rate: null,
-    bio: null,
-    portfolio_url: null,
-    is_active: true,
-    email_verified: true,
-    last_login_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    preferences: {},
-    created_at: new Date(Date.now() - 200 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
 
 // Role color mapping
 const ROLE_COLORS: Record<UserRole, string> = {
@@ -268,8 +66,8 @@ const ROLE_COLORS: Record<UserRole, string> = {
 };
 
 export default function TeamPage() {
-  const [teamMembers, setTeamMembers] = useState<User[]>(MOCK_TEAM_DATA);
-  const [filteredMembers, setFilteredMembers] = useState<User[]>(MOCK_TEAM_DATA);
+  const [teamMembers, setTeamMembers] = useState<User[]>([]);
+  const [filteredMembers, setFilteredMembers] = useState<User[]>([]);
   const [selectedRole, setSelectedRole] = useState<UserRole | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -287,7 +85,37 @@ export default function TeamPage() {
     hourly_rate: null,
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const pageSize = 10;
+
+  // Load team members from Supabase
+  const loadTeamMembers = async () => {
+    try {
+      setLoading(true);
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading team members:', error);
+        setTeamMembers([]);
+      } else {
+        setTeamMembers(data || []);
+      }
+    } catch (err) {
+      console.error('Error loading team members:', err);
+      setTeamMembers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load data on mount
+  useEffect(() => {
+    loadTeamMembers();
+  }, []);
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -392,10 +220,72 @@ export default function TeamPage() {
   };
 
   // Handle form submit
-  const handleFormSubmit = () => {
-    // In real app, this would call API
-    console.log('Submitting:', editingMember ? 'Edit' : 'Create', formData);
-    handleCloseModal();
+  const handleFormSubmit = async () => {
+    try {
+      const supabase = createClient();
+      if (editingMember) {
+        // Update existing member
+        const { error } = await supabase
+          .from('users')
+          .update({
+            ...formData,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', editingMember.id);
+
+        if (error) {
+          console.error('Error updating member:', error);
+          return;
+        }
+      } else {
+        // Create new member
+        const { error } = await supabase
+          .from('users')
+          .insert([
+            {
+              ...formData,
+              organization_id: '213247a0-ac0f-4a1f-b337-0c2d963f2c7c',
+              is_active: true,
+              email_verified: false,
+              preferences: {},
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            },
+          ]);
+
+        if (error) {
+          console.error('Error creating member:', error);
+          return;
+        }
+      }
+
+      // Reload data and close modal
+      await loadTeamMembers();
+      handleCloseModal();
+    } catch (err) {
+      console.error('Error submitting form:', err);
+    }
+  };
+
+  // Handle activate/deactivate
+  const handleToggleActive = async (member: User) => {
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('users')
+        .update({ is_active: !member.is_active })
+        .eq('id', member.id);
+
+      if (error) {
+        console.error('Error updating member status:', error);
+        return;
+      }
+
+      // Reload data
+      await loadTeamMembers();
+    } catch (err) {
+      console.error('Error toggling member status:', err);
+    }
   };
 
   // Handle export
@@ -444,32 +334,38 @@ export default function TeamPage() {
       </div>
 
       {/* Stats Row */}
-      <div className="team-stats">
-        <Tile className="stat-tile stat-tile--blue">
-          <div className="stat-tile__content">
-            <div className="stat-tile__value">{stats.total}</div>
-            <div className="stat-tile__label">Total Membros</div>
-          </div>
-        </Tile>
-        <Tile className="stat-tile stat-tile--green">
-          <div className="stat-tile__content">
-            <div className="stat-tile__value">{stats.active}</div>
-            <div className="stat-tile__label">Ativos</div>
-          </div>
-        </Tile>
-        <Tile className="stat-tile stat-tile--purple">
-          <div className="stat-tile__content">
-            <div className="stat-tile__value">{stats.freelancers}</div>
-            <div className="stat-tile__label">Freelancers</div>
-          </div>
-        </Tile>
-        <Tile className="stat-tile stat-tile--cyan">
-          <div className="stat-tile__content">
-            <div className="stat-tile__value">{stats.uniqueRoles}</div>
-            <div className="stat-tile__label">Tipos de Cargo</div>
-          </div>
-        </Tile>
-      </div>
+      {loading ? (
+        <div className="loading-container">
+          <InlineLoading description="Carregando membros da equipe..." />
+        </div>
+      ) : (
+        <div className="team-stats">
+          <Tile className="stat-tile stat-tile--blue">
+            <div className="stat-tile__content">
+              <div className="stat-tile__value">{stats.total}</div>
+              <div className="stat-tile__label">Total Membros</div>
+            </div>
+          </Tile>
+          <Tile className="stat-tile stat-tile--green">
+            <div className="stat-tile__content">
+              <div className="stat-tile__value">{stats.active}</div>
+              <div className="stat-tile__label">Ativos</div>
+            </div>
+          </Tile>
+          <Tile className="stat-tile stat-tile--purple">
+            <div className="stat-tile__content">
+              <div className="stat-tile__value">{stats.freelancers}</div>
+              <div className="stat-tile__label">Freelancers</div>
+            </div>
+          </Tile>
+          <Tile className="stat-tile stat-tile--cyan">
+            <div className="stat-tile__content">
+              <div className="stat-tile__value">{stats.uniqueRoles}</div>
+              <div className="stat-tile__label">Tipos de Cargo</div>
+            </div>
+          </Tile>
+        </div>
+      )}
 
       {/* Role Filter Bar */}
       <div className="role-filter-bar">
@@ -608,6 +504,7 @@ export default function TeamPage() {
                             member.is_active ? 'Desativar' : 'Ativar'
                           }
                           isDelete={member.is_active}
+                          onClick={() => handleToggleActive(member)}
                         />
                       </OverflowMenu>
                     </TableCell>

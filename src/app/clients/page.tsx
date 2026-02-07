@@ -151,26 +151,19 @@ function ClientsContent() {
 
       if (error) throw error;
       
-      // Mock additional data for demo
-      const enrichedClients = (data || []).map((client, index) => ({
+      // Map clients with default enrichment values
+      const enrichedClients = (data || []).map((client) => ({
         ...client,
-        total_projects: Math.floor(Math.random() * 10),
-        total_revenue: Math.floor(Math.random() * 50000),
-        is_favorite: index < 3,
+        total_projects: 0,
+        total_revenue: 0,
+        is_favorite: false,
       }));
-      
+
       setClients(enrichedClients);
       generateAIInsights(enrichedClients);
     } catch (error) {
       console.error('Error loading clients:', error);
-      // Mock data for demo
-      setClients([
-        { id: '1', name: 'Tech Corp', email: 'contato@techcorp.com', phone: '(11) 99999-9999', company: 'Tech Corp Ltda', status: 'active', created_at: new Date().toISOString(), notes: null, total_projects: 5, total_revenue: 45000, is_favorite: true },
-        { id: '2', name: 'Startup Inc', email: 'hello@startup.io', phone: '(11) 98888-8888', company: 'Startup Inc', status: 'active', created_at: new Date().toISOString(), notes: null, total_projects: 3, total_revenue: 28000, is_favorite: true },
-        { id: '3', name: 'Fashion Co', email: 'moda@fashion.com', phone: '(11) 97777-7777', company: 'Fashion Co', status: 'prospect', created_at: new Date().toISOString(), notes: null, total_projects: 1, total_revenue: 12000, is_favorite: false },
-        { id: '4', name: 'Nova Corp', email: 'contact@nova.com', phone: '(11) 96666-6666', company: 'Nova Corporation', status: 'prospect', created_at: new Date().toISOString(), notes: null, total_projects: 0, total_revenue: 0, is_favorite: false },
-        { id: '5', name: 'Digital Agency', email: 'info@digital.com', phone: '(11) 95555-5555', company: 'Digital Agency', status: 'inactive', created_at: new Date().toISOString(), notes: null, total_projects: 2, total_revenue: 8000, is_favorite: false },
-      ]);
+      setClients([]);
     } finally {
       setLoading(false);
     }
