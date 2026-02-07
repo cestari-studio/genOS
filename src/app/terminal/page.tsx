@@ -104,9 +104,15 @@ export default function TerminalPage() {
   const [historyIdx, setHistoryIdx] = useState(-1);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [logoHue, setLogoHue] = useState(0);
+  const [isBlinking, setIsBlinking] = useState(false);
 
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const avatarRef = useRef<HTMLDivElement>(null);
+  const welcomeShown = useRef(false);
+
+  // Derived avatar state
+  const avatarState = isProcessing && isRevealing ? 'responding' : isProcessing ? 'processing' : input.length > 0 ? 'typing' : 'idle';
 
   // Blue spectrum logo animation (2x speed)
   useEffect(() => {
@@ -131,6 +137,110 @@ export default function TerminalPage() {
     }, 100);
     return () => clearInterval(interval);
   }, [isProcessing, isRevealing]);
+
+  // Avatar eye tracking — follows mouse when idle, darts when processing, reads when responding
+  useEffect(() => {
+    if (avatarState === 'processing') {
+      const interval = setInterval(() => {
+        if (!avatarRef.current) return;
+        avatarRef.current.style.setProperty('--pupil-x', `${(Math.random() - 0.5) * 5}px`);
+        avatarRef.current.style.setProperty('--pupil-y', `${(Math.random() - 0.5) * 3}px`);
+      }, 300);
+      return () => clearInterval(interval);
+    }
+    if (avatarState === 'responding') {
+      let y = -2;
+      const interval = setInterval(() => {
+        if (!avatarRef.current) return;
+        y += 0.15;
+        if (y > 2.5) y = -2;
+        avatarRef.current.style.setProperty('--pupil-x', `${(Math.random() - 0.5) * 0.5}px`);
+        avatarRef.current.style.setProperty('--pupil-y', `${y}px`);
+      }, 60);
+      return () => clearInterval(interval);
+    }
+    const onMove = (e: MouseEvent) => {
+      if (!avatarRef.current) return;
+      const r = avatarRef.current.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      const a = Math.atan2(e.clientY - cy, e.clientX - cx);
+      const d = Math.min(Math.hypot(e.clientX - cx, e.clientY - cy) / 80, 2.5);
+      avatarRef.current.style.setProperty('--pupil-x', `${Math.cos(a) * d}px`);
+      avatarRef.current.style.setProperty('--pupil-y', `${Math.sin(a) * d}px`);
+    };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [avatarState]);
+
+  // Avatar blink — random intervals
+  useEffect(() => {
+    let outer: ReturnType<typeof setTimeout>;
+    let inner: ReturnType<typeof setTimeout>;
+    const blink = () => {
+      setIsBlinking(true);
+      inner = setTimeout(() => setIsBlinking(false), 150);
+      outer = setTimeout(blink, 2000 + Math.random() * 4000);
+    };
+    outer = setTimeout(blink, 1500 + Math.random() * 2000);
+    return () => { clearTimeout(outer); clearTimeout(inner); };
+  }, []);
+
+  // Welcome message on mount
+  useEffect(() => {
+    if (welcomeShown.current) return;
+    welcomeShown.current = true;
+    const load = async () => {
+      setIsProcessing(true);
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        const [{ count: cc }, { count: pc }, { count: bc }, { count: poc }] = await Promise.all([
+          supabase.from('clients').select('*', { count: 'exact', head: true }),
+          supabase.from('projects').select('*', { count: 'exact', head: true }),
+          supabase.from('briefings').select('*', { count: 'exact', head: true }),
+          supabase.from('posts_v2').select('*', { count: 'exact', head: true }),
+        ]);
+        const name = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Operador';
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('pt-BR');
+        const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        const welcome = [
+          '',
+          '  ─── DASHBOARD ──────────────────────────────────────────',
+          '',
+          `  Bem-vindo, ${name}!`,
+          `  Sessão iniciada em ${dateStr} às ${timeStr}`,
+          '',
+          '  ─── MÓDULOS ATIVOS ─────────────────────────────────────',
+          '',
+          `  Clientes    ${String(cc ?? 0).padEnd(10)}Projetos    ${pc ?? 0}`,
+          `  Briefings   ${String(bc ?? 0).padEnd(10)}Posts       ${poc ?? 0}`,
+          '',
+          '  ─── COMANDOS ───────────────────────────────────────────',
+          '',
+          '  /help       Ver ajuda            /status    Diagnóstico',
+          '  /clients    Listar clientes      /projects  Listar projetos',
+          '  /briefings  Listar briefings     /posts     Listar posts',
+          '',
+          '  Ou faça qualquer pergunta em linguagem natural para a IA.',
+          '',
+          '  ─────────────────────────────────────────────────────────',
+          '',
+        ].join('\n');
+        await revealResponse(welcome, 'system');
+      } catch (err) {
+        console.error('Welcome error:', err);
+        addEntry('system', ['', '  Sistema inicializado. Digite /help para comandos.', '']);
+      } finally {
+        setIsProcessing(false);
+        focusInput();
+      }
+    };
+    const timer = setTimeout(load, 300);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Focus input
   const focusInput = useCallback(() => {
@@ -522,32 +632,39 @@ export default function TerminalPage() {
           </div>
         </div>
 
-        {/* Dashboard Header — Logo left + Branding right */}
+        {/* Dashboard Header — ASCII Dashboard Layout */}
         <div className="terminal-dashboard">
-          <div className="terminal-logo">
-            <div className="terminal-logo__inner">
-              {ASCII_LOGO.map((line, i) => {
-                const blueHue = 200 + Math.sin((logoHue + i * 6) * Math.PI / 180) * 30 + 30;
-                const lightness = 55 + Math.sin((logoHue + i * 10) * Math.PI / 180) * 15;
-                return (
-                  <div
-                    key={i}
-                    className="terminal-logo__line"
-                    style={{
-                      color: `hsl(${blueHue}, 90%, ${lightness}%)`,
-                    }}
-                  >
-                    {line || '\u00A0'}
-                  </div>
-                );
-              })}
+          <div className="terminal-frame-line">
+            {'┌─── CESTARI STUDIO ' + '─'.repeat(43) + '┐'}
+          </div>
+          <div className="terminal-dashboard__content">
+            <div className="terminal-logo">
+              <div className="terminal-logo__inner">
+                {ASCII_LOGO.map((line, i) => {
+                  const blueHue = 200 + Math.sin((logoHue + i * 6) * Math.PI / 180) * 30 + 30;
+                  const lightness = 55 + Math.sin((logoHue + i * 10) * Math.PI / 180) * 15;
+                  return (
+                    <div
+                      key={i}
+                      className="terminal-logo__line"
+                      style={{
+                        color: `hsl(${blueHue}, 90%, ${lightness}%)`,
+                      }}
+                    >
+                      {line || '\u00A0'}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="terminal-branding">
+              <div className="terminal-branding__title">{BRANDING.title}</div>
+              <div className="terminal-branding__subtitle">{BRANDING.subtitle}</div>
+              <div className="terminal-branding__copyright">{BRANDING.copyright}</div>
             </div>
           </div>
-          <div className="terminal-branding">
-            <div className="terminal-branding__title">{BRANDING.title}</div>
-            <div className="terminal-branding__subtitle">{BRANDING.subtitle}</div>
-            <div className="terminal-branding__copyright">{BRANDING.copyright}</div>
-            <div className="terminal-branding__hint">{BRANDING.hint}</div>
+          <div className="terminal-frame-line">
+            {'└' + '─'.repeat(62) + '┘'}
           </div>
         </div>
 
@@ -579,34 +696,44 @@ export default function TerminalPage() {
             </div>
           )}
 
-          {/* Processing indicator */}
-          {isProcessing && !isRevealing && (
-            <div className="terminal-entry terminal-entry--info">
-              <div className="terminal-line">
-                {'  '}{SPINNER_FRAMES[spinnerFrame]} Processando
-                <span className="processing-dots" />
+          {/* Input Area with Avatar */}
+          <div className="terminal-input-area">
+            <div
+              className={`terminal-avatar ${isBlinking ? 'terminal-avatar--blink' : ''}`}
+              ref={avatarRef}
+              data-state={avatarState}
+            >
+              <div className="terminal-avatar__eye terminal-avatar__eye--left">
+                <div className="terminal-avatar__pupil" />
+              </div>
+              <div className="terminal-avatar__eye terminal-avatar__eye--right">
+                <div className="terminal-avatar__pupil" />
               </div>
             </div>
-          )}
-
-          {/* Input */}
-          {!isProcessing && (
-            <form className="terminal-input-form" onSubmit={handleSubmit}>
-              <span className="terminal-prompt">❯ </span>
-              <input
-                ref={inputRef}
-                type="text"
-                className="terminal-input"
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="digite um comando ou pergunta..."
-                autoFocus
-                autoComplete="off"
-                spellCheck={false}
-              />
-            </form>
-          )}
+            {isProcessing && !isRevealing && (
+              <div className="terminal-processing-text">
+                {SPINNER_FRAMES[spinnerFrame]} Processando
+                <span className="processing-dots" />
+              </div>
+            )}
+            {!isProcessing && (
+              <form className="terminal-input-form" onSubmit={handleSubmit}>
+                <span className="terminal-prompt">❯ </span>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  className="terminal-input"
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="digite um comando ou pergunta..."
+                  autoFocus
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+              </form>
+            )}
+          </div>
         </div>
 
         {/* Suggestions */}
