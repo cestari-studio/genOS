@@ -199,46 +199,6 @@ async function callClaude(systemPrompt: string, message: string, history: { role
   return data.content?.[0]?.text || 'Sem resposta.';
 }
 
-// Call Google Gemini API
-async function callGemini(systemPrompt: string, message: string, history: { role: string; content: string }[] = []) {
-  const apiKey = process.env.GOOGLE_AI_API_KEY;
-  if (!apiKey) return null;
-
-  const model = process.env.GOOGLE_AI_MODEL || 'gemini-2.0-flash';
-
-  const contents = [
-    ...history.map(h => ({
-      role: h.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: h.content }],
-    })),
-    { role: 'user', parts: [{ text: message }] },
-  ];
-
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents,
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        generationConfig: {
-          maxOutputTokens: 1500,
-          temperature: 0.7,
-        },
-      }),
-    }
-  );
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(`Gemini API error: ${response.status} — ${JSON.stringify(error)}`);
-  }
-
-  const data = await response.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sem resposta.';
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body: ChatRequest = await request.json();
@@ -252,7 +212,7 @@ export async function POST(request: NextRequest) {
     const context = await getBusinessContext();
     const systemPrompt = buildSystemPrompt(context);
 
-    // Try Claude first, then Gemini
+    // Call Claude
     let response: string | null = null;
 
     try {
@@ -261,35 +221,24 @@ export async function POST(request: NextRequest) {
       console.error('Claude error:', e);
     }
 
+    // No API key configured — return helpful fallback
     if (!response) {
-      try {
-        response = await callGemini(systemPrompt, message, history);
-      } catch (e) {
-        console.error('Gemini error:', e);
-      }
-    }
-
-    // No AI provider configured — return helpful fallback
-    if (!response) {
-      const hasAnyKey = process.env.ANTHROPIC_API_KEY || process.env.GOOGLE_AI_API_KEY;
-
-      if (!hasAnyKey) {
+      if (!process.env.ANTHROPIC_API_KEY) {
         response = [
           '',
-          '  ⚠ Nenhuma API de IA configurada.',
+          '  ⚠ API Claude não configurada.',
           '',
-          '  Para ativar o assistente, adicione uma das variáveis',
+          '  Para ativar o assistente, adicione a variável',
           '  de ambiente no Vercel:',
           '',
-          '  ● ANTHROPIC_API_KEY    → Claude (Anthropic)',
-          '  ● GOOGLE_AI_API_KEY    → Gemini (Google)',
+          '  ● ANTHROPIC_API_KEY → sua chave da Anthropic',
           '',
           '  Enquanto isso, use os comandos locais:',
           '  /clients  /projects  /briefings  /status',
           '',
         ].join('\n');
       } else {
-        response = '  ⚠ Erro ao conectar com a IA. Tente novamente.';
+        response = '  ⚠ Erro ao conectar com Claude. Tente novamente.';
       }
     }
 
