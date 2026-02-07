@@ -19,18 +19,83 @@
   flex-direction: column;
   background: var(--genos-surface);
   border-right: 1px solid var(--genos-border-subtle);
-  transition: width 0.2s ease;
-  
+  transition: width 0.3s ease;
+  overflow: hidden;
+
   &--collapsed {
     width: 56px;
-    
+
     .helian-sidebar__header {
       justify-content: center;
       padding: 1rem 0.5rem;
     }
-    
+
+    .helian-logo {
+      justify-content: center;
+    }
+
     .helian-logo__icon {
       margin: 0;
+    }
+
+    .helian-logo__text {
+      display: none;
+    }
+
+    .helian-sidebar__action .new-chat-btn {
+      width: 40px;
+      padding: 0;
+      justify-content: center;
+    }
+
+    .helian-sidebar__action .new-chat-btn span {
+      display: none;
+    }
+
+    .helian-sidebar__section {
+      padding: 0.75rem 0.5rem;
+
+      h4 {
+        display: none;
+      }
+    }
+
+    .helian-sidebar__footer {
+      display: none;
+    }
+
+    .conversations-list {
+      gap: 0.5rem;
+    }
+
+    .conversation-item {
+      justify-content: center;
+      padding: 0.75rem;
+      gap: 0;
+
+      &__content {
+        display: none;
+      }
+
+      &__star {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+      }
+    }
+
+    .suggested-prompt {
+      justify-content: center;
+      padding: 0.625rem 0.5rem;
+
+      span {
+        display: none;
+      }
+
+      svg {
+        margin: 0;
+      }
     }
   }
   
@@ -229,6 +294,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  transition: width 0.3s ease;
 }
 
 // Welcome Screen

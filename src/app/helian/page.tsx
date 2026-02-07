@@ -46,6 +46,7 @@ import {
   Star,
   StarFilled,
 } from '@carbon/icons-react';
+import { renderSafeMarkdown } from '@/lib/security/sanitize';
 import './helian.scss';
 
 interface Message {
@@ -319,21 +320,6 @@ Como posso ajudar você hoje?`;
     );
   };
 
-  const renderMarkdown = (content: string) => {
-    return content
-      .replace(/## (.*?)$/gm, '<h2>$1</h2>')
-      .replace(/### (.*?)$/gm, '<h3>$1</h3>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br />')
-      .replace(/\|(.+)\|/g, (match) => {
-        const cells = match.split('|').filter(c => c.trim());
-        return `<tr>${cells.map(c => `<td>${c.trim()}</td>`).join('')}</tr>`;
-      })
-      .replace(/- (.*?)(?=<br|$)/g, '<li>$1</li>');
-  };
-
   return (
     <>
       <div className="helian-container">
@@ -497,9 +483,9 @@ Como posso ajudar você hoje?`;
                   </div>
                   <div className="chat-message__wrapper">
                     <div className={`chat-message__content chat-message__content--${message.role}`}>
-                      <div 
+                      <div
                         className="chat-message__text"
-                        dangerouslySetInnerHTML={{ __html: renderMarkdown(message.content) }} 
+                        dangerouslySetInnerHTML={{ __html: renderSafeMarkdown(message.content) }}
                       />
                       
                       {message.sources && message.sources.length > 0 && (

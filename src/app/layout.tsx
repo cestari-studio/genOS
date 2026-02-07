@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import AppShell from '@/components/layout/AppShell';
 import './globals.scss';
 
@@ -23,9 +24,11 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <AppShell>
-          {children}
-        </AppShell>
+        <ThemeProvider>
+          <AppShell>
+            {children}
+          </AppShell>
+        </ThemeProvider>
       </body>
     </html>
   );

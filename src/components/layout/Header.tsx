@@ -29,6 +29,7 @@ import {
   Keyboard,
 } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
+import { useTheme } from '@/contexts/ThemeContext';
 import './Header.scss';
 
 interface HeaderProps {
@@ -57,7 +58,7 @@ export default function Header({ onMenuClick, user }: HeaderProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [notificationCount, setNotificationCount] = useState(3);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const { theme, toggleTheme } = useTheme();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -157,21 +158,6 @@ export default function Header({ onMenuClick, user }: HeaderProps) {
     }
     setCommandPaletteOpen(false);
   };
-
-  // Toggle theme
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('genos-theme', newTheme);
-  };
-
-  // Load theme on mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('genos-theme') as 'light' | 'dark' || 'dark';
-    setTheme(savedTheme);
-    document.documentElement.setAttribute('data-theme', savedTheme);
-  }, []);
 
   // Close user menu when clicking outside
   useEffect(() => {

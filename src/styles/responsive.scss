@@ -1,0 +1,748 @@
+// ============================================
+// genOS Responsive Styles
+// Mobile-First Responsive Design
+// Based on Carbon Design System Breakpoints
+// ============================================
+
+// Breakpoints
+$breakpoint-sm: 672px;  // Mobile max-width
+$breakpoint-md: 1056px; // Tablet max-width
+$breakpoint-lg: 1584px; // Desktop
+
+// ============================================
+// MOBILE STYLES (default, applies to all)
+// Mobile-first approach: base styles are mobile
+// ============================================
+
+// App Shell - Mobile
+.app-shell {
+  flex-direction: column;
+
+  &--sidebar-visible {
+    .app-shell__sidebar {
+      display: flex;
+    }
+  }
+}
+
+.app-shell__sidebar {
+  position: fixed;
+  left: 0;
+  top: 48px;
+  width: 256px;
+  height: calc(100vh - 48px);
+  display: none;
+  z-index: 9000;
+  overflow-y: auto;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    position: relative;
+    top: auto;
+    display: flex;
+    height: auto;
+  }
+}
+
+.app-shell__main {
+  flex: 1;
+  margin-left: 0;
+  margin-top: var(--genos-header-height, 48px);
+  min-height: calc(100vh - var(--genos-header-height, 48px));
+  width: 100%;
+  transition: margin-left var(--genos-transition-base, 240ms) var(--genos-easing, cubic-bezier(0.2, 0, 0.38, 0.9));
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    margin-left: var(--genos-sidebar-collapsed, 48px);
+  }
+
+  @media (min-width: calc(#{$breakpoint-lg} + 1px)) {
+    margin-left: var(--genos-sidebar-width, 256px);
+  }
+
+  .app-shell--collapsed & {
+    @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+      margin-left: var(--genos-sidebar-collapsed, 48px);
+    }
+  }
+}
+
+.app-shell__content {
+  padding: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+  width: 100%;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    padding: 1.5rem;
+  }
+
+  @media (min-width: calc(#{$breakpoint-lg} + 1px)) {
+    max-width: 1584px;
+    padding: 1.5rem;
+  }
+}
+
+// ============================================
+// HEADER STYLES - MOBILE
+// ============================================
+
+.genos-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  height: var(--genos-header-height, 48px);
+  background: var(--genos-surface, #ffffff);
+  border-bottom: 1px solid var(--genos-border-subtle, #e0e0e0);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 8000;
+  gap: 1rem;
+}
+
+.genos-header__search {
+  flex: 1;
+  max-width: 320px;
+  display: flex;
+  align-items: center;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    flex: 0 1 400px;
+  }
+}
+
+.genos-header__search .search-placeholder {
+  display: none;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    display: block;
+  }
+}
+
+.genos-header__search .search-shortcut {
+  display: none;
+}
+
+// ============================================
+// PAGE HEADER STYLES - MOBILE
+// ============================================
+
+.page-header {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--genos-text-primary, #161616);
+    margin: 0 0 0.5rem 0;
+
+    @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+      font-size: 2rem;
+    }
+  }
+
+  p {
+    font-size: 0.8125rem;
+    color: var(--genos-text-secondary, #525252);
+    margin: 0;
+    line-height: 1.5;
+
+    @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// ============================================
+// DATA TABLES & GRIDS - MOBILE
+// ============================================
+
+.cds--data-table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -1rem;
+  padding: 0 1rem;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    overflow-x: visible;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.cds--data-table {
+  min-width: 600px;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    min-width: auto;
+  }
+}
+
+// Scrollbar styling for mobile tables
+.cds--data-table-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.cds--data-table-container::-webkit-scrollbar-track {
+  background: var(--genos-bg, #f4f4f4);
+}
+
+.cds--data-table-container::-webkit-scrollbar-thumb {
+  background: var(--genos-border, #8d8d8d);
+  border-radius: 2px;
+
+  &:hover {
+    background: var(--genos-border-strong, #6f6f6f);
+  }
+}
+
+// ============================================
+// DASHBOARD CARDS - MOBILE
+// ============================================
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: calc(#{$breakpoint-lg} + 1px)) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background: var(--genos-surface, #ffffff);
+  border: 1px solid var(--genos-border-subtle, #e0e0e0);
+  border-radius: var(--genos-radius-md, 4px);
+  transition: all var(--genos-transition-base, 240ms) var(--genos-easing, cubic-bezier(0.2, 0, 0.38, 0.9));
+
+  &:hover {
+    border-color: var(--genos-border-interactive, #0f62fe);
+    box-shadow: var(--genos-shadow-md, 0 2px 6px rgba(0, 0, 0, 0.1));
+  }
+}
+
+.metric-card__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--genos-text-secondary, #525252);
+  margin-bottom: 0.5rem;
+}
+
+.metric-card__value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--genos-text-primary, #161616);
+  margin-bottom: 0.25rem;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    font-size: 2rem;
+  }
+}
+
+.metric-card__change {
+  font-size: 0.75rem;
+  color: var(--genos-text-secondary, #525252);
+}
+
+// ============================================
+// FORMS - MOBILE
+// ============================================
+
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--genos-text-primary, #161616);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid var(--genos-border-subtle, #e0e0e0);
+  border-radius: var(--genos-radius-md, 4px);
+  transition: all var(--genos-transition-base, 240ms) var(--genos-easing, cubic-bezier(0.2, 0, 0.38, 0.9));
+
+  &:focus {
+    outline: none;
+    border-color: var(--genos-border-interactive, #0f62fe);
+    box-shadow: 0 0 0 3px var(--genos-info-light, #edf5ff);
+  }
+
+  &:disabled {
+    background: var(--genos-bg, #f4f4f4);
+    color: var(--genos-text-disabled, #c6c6c6);
+    cursor: not-allowed;
+  }
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+}
+
+// Form layout - 2 columns on tablet+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// ============================================
+// COMMAND PALETTE - MOBILE
+// ============================================
+
+.command-palette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100vh;
+  max-height: none;
+  border-radius: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 512px;
+    height: auto;
+    max-height: 80vh;
+    border-radius: var(--genos-radius-lg, 8px);
+  }
+}
+
+.command-palette__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+.command-palette__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    max-height: 80vh;
+  }
+}
+
+.command-palette__input {
+  padding: 1rem;
+  font-size: 1rem;
+  border: none;
+  border-bottom: 1px solid var(--genos-border-subtle, #e0e0e0);
+}
+
+.command-palette__list {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// ============================================
+// HELIAN CHAT - MOBILE
+// ============================================
+
+.helian-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+.helian-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    width: calc(100% - 56px);
+  }
+
+  @media (min-width: calc(#{$breakpoint-lg} + 1px)) {
+    width: calc(100% - 320px);
+  }
+}
+
+.helian-sidebar {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  border-top: 1px solid var(--genos-border-subtle, #e0e0e0);
+  background: var(--genos-surface, #ffffff);
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    display: flex;
+    width: 56px;
+    border-top: none;
+    border-left: 1px solid var(--genos-border-subtle, #e0e0e0);
+  }
+
+  @media (min-width: calc(#{$breakpoint-lg} + 1px)) {
+    width: 320px;
+  }
+
+  &--expanded {
+    @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+      width: 320px;
+    }
+  }
+}
+
+.helian-sidebar__item {
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--genos-transition-base, 240ms) var(--genos-easing, cubic-bezier(0.2, 0, 0.38, 0.9));
+  min-height: 44px;
+
+  @media (min-width: calc(#{$breakpoint-lg} + 1px)) {
+    justify-content: flex-start;
+    padding: 1rem;
+  }
+
+  &:hover {
+    background: var(--genos-surface-hover, #f4f4f4);
+  }
+}
+
+// ============================================
+// SETTINGS & TABS - MOBILE
+// ============================================
+
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+
+.settings-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    width: 200px;
+    flex-shrink: 0;
+  }
+}
+
+.settings-tab {
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--genos-text-secondary, #525252);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: all var(--genos-transition-base, 240ms) var(--genos-easing, cubic-bezier(0.2, 0, 0.38, 0.9));
+  text-align: left;
+  min-height: 44px;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    border-left: 4px solid transparent;
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: var(--genos-surface-hover, #f4f4f4);
+    color: var(--genos-text-primary, #161616);
+  }
+
+  &.active {
+    color: var(--genos-primary, #0f62fe);
+    border-left-color: var(--genos-primary, #0f62fe);
+    background: var(--genos-info-light, #edf5ff);
+  }
+}
+
+.settings-content {
+  flex: 1;
+  width: 100%;
+}
+
+// ============================================
+// MODALS & DIALOGS - MOBILE
+// ============================================
+
+.modal-dialog {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+}
+
+.modal-dialog__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.modal-dialog__content {
+  background: var(--genos-surface, #ffffff);
+  border-radius: var(--genos-radius-lg, 8px);
+  width: 100%;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: var(--genos-shadow-xl, 0 8px 24px rgba(0, 0, 0, 0.15));
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    max-width: 512px;
+    max-height: 80vh;
+  }
+}
+
+// ============================================
+// BUTTONS - TOUCH FRIENDLY
+// ============================================
+
+button,
+.button,
+[role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--genos-transition-base, 240ms) var(--genos-easing, cubic-bezier(0.2, 0, 0.38, 0.9));
+  border-radius: var(--genos-radius-md, 4px);
+  border: 1px solid transparent;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+// Mobile-only: visible on <= 672px, hidden on > 672px
+.mobile-only {
+  display: block;
+
+  @media (min-width: calc(#{$breakpoint-sm} + 1px)) {
+    display: none;
+  }
+}
+
+// Desktop-only: hidden on <= 672px, visible on > 672px
+.desktop-only {
+  display: none;
+
+  @media (min-width: calc(#{$breakpoint-sm} + 1px)) {
+    display: block;
+  }
+}
+
+// Flex desktop-only
+.desktop-only--flex {
+  display: none;
+
+  @media (min-width: calc(#{$breakpoint-sm} + 1px)) {
+    display: flex;
+  }
+}
+
+// Tablet hide: visible on <= 1056px, hidden on > 1056px
+.tablet-hide {
+  display: block;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    display: none;
+  }
+}
+
+// Tablet show: hidden on <= 1056px, visible on > 1056px
+.tablet-show {
+  display: none;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    display: block;
+  }
+}
+
+// Hide on mobile, show on tablet
+.hidden-mobile {
+  display: none;
+
+  @media (min-width: calc(#{$breakpoint-sm} + 1px)) {
+    display: block;
+  }
+}
+
+// ============================================
+// SPACING UTILITIES - RESPONSIVE
+// ============================================
+
+.p-mobile {
+  padding: 1rem;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    padding: 1.5rem;
+  }
+}
+
+.px-mobile {
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+.py-mobile {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  @media (min-width: calc(#{$breakpoint-md} + 1px)) {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
+// ============================================
+// SCROLL BEHAVIOR
+// ============================================
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+// Prevent horizontal scroll on mobile
+@media (max-width: #{$breakpoint-sm}) {
+  body {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .app-shell__main {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+// ============================================
+// TOUCH & POINTER EVENTS
+// ============================================
+
+@media (hover: none) and (pointer: coarse) {
+  // Touch devices
+  button,
+  a,
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    &:active {
+      opacity: 0.8;
+    }
+  }
+}
+
+// ============================================
+// ANIMATIONS - REDUCED MOTION
+// ============================================
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// ============================================
+// PRINT STYLES
+// ============================================
+
+@media print {
+  .genos-header,
+  .genos-sidebar,
+  .command-palette,
+  .mobile-only {
+    display: none !important;
+  }
+
+  .app-shell__main {
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  .app-shell__content {
+    max-width: 100%;
+  }
+}

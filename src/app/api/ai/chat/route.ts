@@ -1,6 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
+// ─── Rate Limiting ──────────────────────────────────
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 30; // requests per window
+const RATE_WINDOW = 60_000; // 1 minute
+
+function checkRateLimit(key: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(key);
+
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(key, { count: 1, resetAt: now + RATE_WINDOW });
+    return true;
+  }
+
+  if (entry.count >= RATE_LIMIT) {
+    return false;
+  }
+
+  entry.count++;
+  return true;
+}
+
+// ─── Input Validation ───────────────────────────────
+const MAX_MESSAGE_LENGTH = 4000;
+const MAX_HISTORY_LENGTH = 20;
+
+function sanitizeInput(text: string): string {
+  return text
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // strip control chars
+    .trim();
+}
+
 interface ChatRequest {
   message: string;
   history?: { role: string; content: string }[];
@@ -201,12 +233,40 @@ async function callClaude(systemPrompt: string, message: string, history: { role
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting by IP
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: 'Muitas requisições. Tente novamente em 1 minuto.' },
+        { status: 429 }
+      );
+    }
+
     const body: ChatRequest = await request.json();
-    const { message, history = [] } = body;
+    let { message } = body;
+    let history = body.history || [];
 
     if (!message?.trim()) {
       return NextResponse.json({ error: 'Mensagem vazia' }, { status: 400 });
     }
+
+    // Input validation & sanitization
+    message = sanitizeInput(message);
+
+    if (message.length > MAX_MESSAGE_LENGTH) {
+      return NextResponse.json(
+        { error: `Mensagem muito longa (máx. ${MAX_MESSAGE_LENGTH} caracteres).` },
+        { status: 400 }
+      );
+    }
+
+    // Sanitize and limit history
+    history = history
+      .slice(-MAX_HISTORY_LENGTH)
+      .map(h => ({
+        role: h.role === 'assistant' ? 'assistant' : 'user',
+        content: sanitizeInput(h.content || '').slice(0, MAX_MESSAGE_LENGTH),
+      }));
 
     // Get business context
     const context = await getBusinessContext();
