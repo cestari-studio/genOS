@@ -59,13 +59,12 @@ const ASCII_LOGO = [
   '                                                                ',
 ];
 
-const ASCII_WELCOME = [
-  '  Cestari Studio Terminal v1.0',
-  '  Assistente IA para gestão de conteúdo',
-  '',
-  '  Digite uma pergunta ou use /help para comandos.',
-  '',
-];
+const BRANDING = {
+  title: 'genOS™️ Content Factory CLI v1.0',
+  subtitle: 'Powered by Helian AI',
+  copyright: '© 2026 Cestari Studio Inc. All rights reserved.',
+  hint: 'Digite uma pergunta ou use /help para comandos.',
+};
 
 const SUGGESTIONS = [
   'Quais clientes precisam de atenção?',
@@ -95,9 +94,7 @@ function classifyLine(line: string): string {
 
 // ─── Component ─────────────────────────────────────────
 export default function TerminalPage() {
-  const [entries, setEntries] = useState<TerminalEntry[]>([
-    { id: 'welcome-text', type: 'system', lines: ASCII_WELCOME },
-  ]);
+  const [entries, setEntries] = useState<TerminalEntry[]>([]);
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [spinnerFrame, setSpinnerFrame] = useState(0);
@@ -111,11 +108,11 @@ export default function TerminalPage() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Rainbow logo animation
+  // Blue spectrum logo animation (2x speed)
   useEffect(() => {
     const interval = setInterval(() => {
-      setLogoHue(h => (h + 1) % 360);
-    }, 30);
+      setLogoHue(h => (h + 2) % 360);
+    }, 15);
     return () => clearInterval(interval);
   }, []);
 
@@ -506,7 +503,7 @@ export default function TerminalPage() {
             <span className="terminal-dot terminal-dot--yellow" />
             <span className="terminal-dot terminal-dot--green" />
           </div>
-          <span className="terminal-title">genos — Cestari Studio Terminal</span>
+          <span className="terminal-title">genOS™️ — Cestari Studio Terminal</span>
           <div className="terminal-titlebar__actions">
             <button
               className="terminal-action-btn"
@@ -517,25 +514,37 @@ export default function TerminalPage() {
           </div>
         </div>
 
-        {/* Terminal Body */}
-        <div className="terminal-body" ref={bodyRef}>
-          {/* Rainbow ASCII Logo */}
+        {/* Dashboard Header — Logo left + Branding right */}
+        <div className="terminal-dashboard">
           <div className="terminal-logo">
             <div className="terminal-logo__inner">
-              {ASCII_LOGO.map((line, i) => (
-                <div
-                  key={i}
-                  className="terminal-logo__line"
-                  style={{
-                    color: `hsl(${(logoHue + i * 8) % 360}, 85%, 65%)`,
-                  }}
-                >
-                  {line || '\u00A0'}
-                </div>
-              ))}
+              {ASCII_LOGO.map((line, i) => {
+                const blueHue = 200 + Math.sin((logoHue + i * 6) * Math.PI / 180) * 30 + 30;
+                const lightness = 55 + Math.sin((logoHue + i * 10) * Math.PI / 180) * 15;
+                return (
+                  <div
+                    key={i}
+                    className="terminal-logo__line"
+                    style={{
+                      color: `hsl(${blueHue}, 90%, ${lightness}%)`,
+                    }}
+                  >
+                    {line || '\u00A0'}
+                  </div>
+                );
+              })}
             </div>
           </div>
+          <div className="terminal-branding">
+            <div className="terminal-branding__title">{BRANDING.title}</div>
+            <div className="terminal-branding__subtitle">{BRANDING.subtitle}</div>
+            <div className="terminal-branding__copyright">{BRANDING.copyright}</div>
+            <div className="terminal-branding__hint">{BRANDING.hint}</div>
+          </div>
+        </div>
 
+        {/* Terminal Body */}
+        <div className="terminal-body" ref={bodyRef}>
           {/* Rendered entries */}
           {entries.map(entry => (
             <div key={entry.id} className={`terminal-entry terminal-entry--${entry.type}`}>
