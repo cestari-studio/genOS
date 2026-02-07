@@ -83,7 +83,8 @@ function makeId() {
   return `entry-${++entryCounter}-${Date.now()}`;
 }
 
-function classifyLine(line: string): string {
+function classifyLine(line: string | undefined | null): string {
+  if (!line) return '';
   if (line.includes('✓')) return 'terminal-line--success';
   if (line.includes('⚠') || line.includes('ALTA')) return 'terminal-line--warning';
   if (line.includes('●') && (line.includes('online') || line.includes('ativo'))) return 'terminal-line--success';
@@ -262,7 +263,8 @@ export default function TerminalPage() {
       let i = 0;
       const interval = setInterval(() => {
         if (i < lines.length) {
-          setRevealLines(prev => [...prev, lines[i]]);
+          const currentLine = lines[i];
+          setRevealLines(prev => [...prev, currentLine]);
           i++;
         } else {
           clearInterval(interval);
