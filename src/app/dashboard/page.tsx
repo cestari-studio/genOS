@@ -221,12 +221,61 @@ export default function DashboardPage() {
   };
 
   const loadAIInsights = async () => {
-    // Simulate AI analysis delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 800));
 
-    // For now, show empty insights - AI will generate as data is added
-    setAiInsights([]);
+    const insights: AIInsight[] = [];
 
+    if (stats) {
+      if (stats.monthlyRevenue > 0) {
+        insights.push({
+          id: 'rev-1',
+          type: 'trend',
+          title: `Receita de R$ ${stats.monthlyRevenue.toLocaleString('pt-BR')} este mês`,
+          description: 'Acompanhe o faturamento mensal para identificar tendências de crescimento.',
+          action: 'Ver analytics',
+          actionHref: '/analytics',
+          priority: 'medium',
+        });
+      }
+
+      if (stats.pendingBriefings > 0) {
+        insights.push({
+          id: 'brief-1',
+          type: 'warning',
+          title: `${stats.pendingBriefings} briefing${stats.pendingBriefings > 1 ? 's' : ''} pendente${stats.pendingBriefings > 1 ? 's' : ''}`,
+          description: 'Revise os briefings para manter o fluxo de produção ativo.',
+          action: 'Ver briefings',
+          actionHref: '/briefings',
+          priority: 'high',
+        });
+      }
+
+      if (stats.activeProjects > 0) {
+        insights.push({
+          id: 'proj-1',
+          type: 'suggestion',
+          title: `${stats.activeProjects} projeto${stats.activeProjects > 1 ? 's' : ''} em andamento`,
+          description: 'Mantenha os projetos atualizados para garantir entregas no prazo.',
+          action: 'Ver projetos',
+          actionHref: '/projects',
+          priority: 'medium',
+        });
+      }
+
+      if (stats.totalClients > 0 && stats.activeProjects === 0) {
+        insights.push({
+          id: 'opp-1',
+          type: 'opportunity',
+          title: 'Nenhum projeto ativo no momento',
+          description: `Você tem ${stats.totalClients} clientes. Considere iniciar novos projetos.`,
+          action: 'Criar projeto',
+          actionHref: '/projects',
+          priority: 'low',
+        });
+      }
+    }
+
+    setAiInsights(insights);
     setAiLoading(false);
   };
 

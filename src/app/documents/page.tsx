@@ -275,6 +275,39 @@ export default function DocumentsPage() {
     }
   };
 
+  const handleCopyLink = (doc: { url?: string | null; name: string }) => {
+    const url = doc.url || `${window.location.origin}/documents/${doc.name}`;
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Link copiado!');
+    }).catch(() => {
+      prompt('Copie o link:', url);
+    });
+  };
+
+  const handleRename = async (id: string, currentName: string) => {
+    const newName = prompt('Novo nome:', currentName);
+    if (!newName || newName === currentName) return;
+    try {
+      const supabase = createClient();
+      await supabase.from('documents').update({ name: newName }).eq('id', id);
+      loadData();
+    } catch (error) {
+      console.error('Error renaming:', error);
+    }
+  };
+
+  const handleRenameFolder = async (id: string, currentName: string) => {
+    const newName = prompt('Novo nome da pasta:', currentName);
+    if (!newName || newName === currentName) return;
+    try {
+      const supabase = createClient();
+      await supabase.from('document_folders').update({ name: newName }).eq('id', id);
+      loadData();
+    } catch (error) {
+      console.error('Error renaming folder:', error);
+    }
+  };
+
   const filteredDocuments = documents.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || doc.status === statusFilter;
@@ -353,7 +386,7 @@ export default function DocumentsPage() {
                       <span className="folder-card__count">{folder.documents_count || 0} itens</span>
                     </div>
                     <OverflowMenu flipped size="sm" ariaLabel="Ações" onClick={(e) => e.stopPropagation()}>
-                      <OverflowMenuItem itemText="Renomear" />
+                      <OverflowMenuItem itemText="Renomear" onClick={() => handleRenameFolder(folder.id, folder.name)} />
                       <OverflowMenuItem itemText="Mover" />
                       <OverflowMenuItem itemText="Excluir" isDelete onClick={() => handleDeleteFolder(folder.id)} />
                     </OverflowMenu>
@@ -396,7 +429,8 @@ export default function DocumentsPage() {
                       <OverflowMenu flipped size="sm" ariaLabel="Ações">
                         <OverflowMenuItem itemText="Visualizar" onClick={() => setViewDocModal(doc)} />
                         <OverflowMenuItem itemText="Download" onClick={() => doc.url && window.open(doc.url)} />
-                        <OverflowMenuItem itemText="Copiar link" />
+                        <OverflowMenuItem itemText="Copiar link" onClick={() => handleCopyLink(doc)} />
+                        <OverflowMenuItem itemText="Renomear" onClick={() => handleRename(doc.id, doc.name)} />
                         <OverflowMenuItem itemText="Mover" />
                         <OverflowMenuItem itemText="Excluir" isDelete onClick={() => handleDelete(doc.id)} />
                       </OverflowMenu>

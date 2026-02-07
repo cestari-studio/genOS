@@ -151,12 +151,13 @@ function ClientsContent() {
 
       if (error) throw error;
       
-      // Map clients with default enrichment values
+      // Map clients with favorites from localStorage
+      const savedFavorites: string[] = JSON.parse(localStorage.getItem('genos_favorite_clients') || '[]');
       const enrichedClients = (data || []).map((client) => ({
         ...client,
         total_projects: 0,
         total_revenue: 0,
-        is_favorite: false,
+        is_favorite: savedFavorites.includes(client.id),
       }));
 
       setClients(enrichedClients);
@@ -286,10 +287,14 @@ function ClientsContent() {
   };
 
   const toggleFavorite = async (client: Client) => {
-    // In a real app, this would update the database
-    setClients(prev => prev.map(c => 
-      c.id === client.id ? { ...c, is_favorite: !c.is_favorite } : c
+    const newValue = !client.is_favorite;
+    setClients(prev => prev.map(c =>
+      c.id === client.id ? { ...c, is_favorite: newValue } : c
     ));
+    // Persist to localStorage
+    const saved: string[] = JSON.parse(localStorage.getItem('genos_favorite_clients') || '[]');
+    const updated = newValue ? [...saved, client.id] : saved.filter(id => id !== client.id);
+    localStorage.setItem('genos_favorite_clients', JSON.stringify(updated));
   };
 
   const handleSort = (key: string) => {

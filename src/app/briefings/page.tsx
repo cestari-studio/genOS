@@ -259,6 +259,34 @@ export default function BriefingsPage() {
     }
   };
 
+  const handleDuplicate = async (briefing: Briefing) => {
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.from('briefings').insert([{
+        client_id: briefing.client_id,
+        project_id: briefing.project_id || null,
+        briefing_type: briefing.type,
+        title: `${briefing.title} (cópia)`,
+        form_data: briefing.responses || {},
+        status: 'draft',
+      }]);
+      if (!error) {
+        const { data } = await supabase.from('briefings').select('*, clients(name), projects(name)').order('created_at', { ascending: false });
+        if (data) setBriefings(data.map((b: any) => ({ ...b, client_name: b.clients?.name, project_title: b.projects?.name, type: b.briefing_type || 'general', description: b.form_data?.description || '', priority: b.form_data?.priority || 'medium', due_date: b.form_data?.due_date || null, responses: b.form_data })));
+      }
+    } catch (err) { console.error('Duplicate error:', err); }
+  };
+
+  const handleSend = async (briefing: Briefing) => {
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.from('briefings').update({ status: 'submitted', submitted_at: new Date().toISOString() }).eq('id', briefing.id);
+      if (!error) {
+        setBriefings(prev => prev.map(b => b.id === briefing.id ? { ...b, status: 'in_review' as Briefing['status'] } : b));
+      }
+    } catch (err) { console.error('Send error:', err); }
+  };
+
   const filteredBriefings = briefings.filter(briefing => {
     const matchesSearch = briefing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (briefing.client_name && briefing.client_name.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -340,7 +368,7 @@ export default function BriefingsPage() {
                   <OverflowMenu flipped size="sm" ariaLabel="Ações">
                     <OverflowMenuItem itemText="Ver detalhes" onClick={() => setViewBriefingModal(briefing)} />
                     <OverflowMenuItem itemText="Editar" onClick={() => openEditModal(briefing)} />
-                    <OverflowMenuItem itemText="Duplicar" />
+                    <OverflowMenuItem itemText="Duplicar" onClick={() => handleDuplicate(briefing)} />
                     <OverflowMenuItem itemText="Excluir" isDelete onClick={() => handleDelete(briefing.id)} />
                   </OverflowMenu>
                 </div>
@@ -359,7 +387,7 @@ export default function BriefingsPage() {
                 </div>
                 <div className="briefing-card__actions">
                   <Button kind="ghost" size="sm" onClick={() => setViewBriefingModal(briefing)}>Ver briefing</Button>
-                  <Button kind="tertiary" size="sm" renderIcon={Send}>Enviar</Button>
+                  <Button kind="tertiary" size="sm" renderIcon={Send} onClick={() => handleSend(briefing)}>Enviar</Button>
                 </div>
               </div>
             );
@@ -451,9 +479,9 @@ export default function BriefingsPage() {
             </div>
             {viewBriefingModal.description && <div className="briefing-view__description"><h4>Descrição</h4><p>{viewBriefingModal.description}</p></div>}
             <div className="briefing-view__actions">
-              <Button kind="tertiary" renderIcon={Copy}>Duplicar</Button>
+              <Button kind="tertiary" renderIcon={Copy} onClick={() => { handleDuplicate(viewBriefingModal!); setViewBriefingModal(null); }}>Duplicar</Button>
               <Button kind="tertiary" renderIcon={Download}>Exportar</Button>
-              <Button kind="primary" renderIcon={Send}>Enviar</Button>
+              <Button kind="primary" renderIcon={Send} onClick={() => { handleSend(viewBriefingModal!); setViewBriefingModal(null); }}>Enviar</Button>
             </div>
           </div>
         )}

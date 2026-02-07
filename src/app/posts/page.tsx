@@ -425,15 +425,24 @@ function PostsContent() {
   const handleSave = async () => {
     try {
       const supabase = createClient();
+
+      // Get current user session for org_id and user_id
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: userData } = await supabase
+        .from('users')
+        .select('id, organization_id')
+        .eq('auth_user_id', user?.id)
+        .single();
+
+      const orgId = userData?.organization_id;
+      const userId = userData?.id;
+
       const newPost = {
-        organization_id: '213247a0-ac0f-4a1f-b337-0c2d963f2c7c',
+        organization_id: orgId,
         brand_id: formData.brand_id,
-        client_id: 'user-1',
         project_id: formData.project_id || null,
-        created_by: 'user-1',
-        assigned_to: null,
+        created_by: userId,
         content_type_id: formData.content_type_id || null,
-        content_type_slug: null,
         platform: formData.platform,
         credits_consumed: 10,
         title: formData.title,
