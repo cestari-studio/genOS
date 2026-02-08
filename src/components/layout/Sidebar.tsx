@@ -26,6 +26,8 @@ import {
   Money,
   UserAdmin,
   Catalog,
+  ListBoxes,
+  Assembly,
 } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
 import { AILabel } from '@/components/ui';
@@ -115,6 +117,8 @@ export default function Sidebar({ collapsed: controlledCollapsed, onToggle }: Si
     { path: '/analytics', label: 'Analytics', icon: Analytics },
     { path: '/team', label: 'Equipe', icon: UserMultiple },
     { path: '/services', label: 'Serviços', icon: Catalog },
+    { path: '/page-manager', label: 'Páginas', icon: ListBoxes },
+    { path: '/builder', label: 'Page Builder', icon: Assembly },
     { path: '/admin', label: 'Admin', icon: UserAdmin },
   ];
 

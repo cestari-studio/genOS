@@ -6,14 +6,21 @@ import {
   Grid,
   Column,
   Tile,
+  ClickableTile,
   Button,
   Tag,
   SkeletonText,
   SkeletonPlaceholder,
   ProgressBar,
   InlineLoading,
-  IconButton,
-  Tooltip,
+  StructuredListWrapper,
+  StructuredListHead,
+  StructuredListRow,
+  StructuredListCell,
+  StructuredListBody,
+  Layer,
+  Section,
+  Heading,
 } from '@carbon/react';
 import {
   UserMultiple,
@@ -352,7 +359,7 @@ export default function DashboardPage() {
     },
     curve: 'curveMonotoneX',
     height: '240px',
-    theme: 'g100',
+    theme: 'g10',
     color: { scale: { 'Receita': '#0f62fe' } },
     grid: { x: { enabled: false }, y: { enabled: true } },
     toolbar: { enabled: false },
@@ -363,7 +370,7 @@ export default function DashboardPage() {
     title: '',
     resizable: true,
     height: '240px',
-    theme: 'g100',
+    theme: 'g10',
     donut: { center: { label: 'Projetos' }, alignment: 'center' },
     pie: { labels: { enabled: false } },
     toolbar: { enabled: false },
@@ -429,127 +436,137 @@ export default function DashboardPage() {
     return icons[type] || <Idea size={20} />;
   };
 
-  const getInsightColor = (type: string) => {
-    const colors: Record<string, string> = {
-      warning: 'danger',
-      opportunity: 'success',
-      trend: 'info',
+  const getInsightTagType = (type: string) => {
+    const types: Record<string, any> = {
+      warning: 'red',
+      opportunity: 'green',
+      trend: 'blue',
       suggestion: 'purple',
     };
-    return colors[type] || 'info';
+    return types[type] || 'blue';
   };
 
   return (
     <div className="dashboard-page">
       {/* Page Header */}
-      <div className="dashboard-header">
-        <div className="dashboard-header__content">
-          <div className="dashboard-header__greeting">
-            <h1>{getGreeting()}, {userName}</h1>
-            <p>Aqui está o resumo do seu dia.</p>
-          </div>
-          <div className="dashboard-header__actions">
-            <Button kind="tertiary" size="md" renderIcon={Renew} onClick={() => { setLoading(true); loadDashboardData(); }}>
-              Atualizar
-            </Button>
-            <Button kind="primary" size="md" renderIcon={Add} href="/projects?new=true">
-              Novo Projeto
-            </Button>
-          </div>
-        </div>
-      </div>
+      <Section level={1} className="dashboard-section dashboard-section--header">
+        <Grid>
+          <Column lg={16}>
+            <div className="dashboard-header__content">
+              <div className="dashboard-header__greeting">
+                <Heading>{getGreeting()}, {userName}</Heading>
+                <p className="dashboard-header__subtitle">Aqui está o resumo do seu dia.</p>
+              </div>
+              <div className="dashboard-header__actions">
+                <Button kind="tertiary" size="md" renderIcon={Renew} onClick={() => { setLoading(true); loadDashboardData(); }}>
+                  Atualizar
+                </Button>
+                <Button kind="primary" size="md" renderIcon={Add} href="/projects?new=true">
+                  Novo Projeto
+                </Button>
+              </div>
+            </div>
+          </Column>
+        </Grid>
+      </Section>
 
       {/* AI Insights Banner */}
-      <div className="ai-insights-section">
-        <div className="ai-insights-header">
-          <div className="ai-insights-header__title">
-            <IbmWatsonxCodeAssistant size={20} />
-            <span>Insights da IA</span>
-            <AILabel size="sm" textLabel="Helian" />
-          </div>
-          {visibleInsights.length > 0 && (
-            <span className="ai-insights-header__count">{visibleInsights.length} insights disponíveis</span>
-          )}
-        </div>
-
-        {visibleInsights.length > 0 ? (
-          <div className="ai-insights-grid">
-            {visibleInsights.slice(0, 3).map((insight) => (
-              <div key={insight.id} className={`ai-insight-card ai-insight-card--${getInsightColor(insight.type)}`}>
-                <div className="ai-insight-card__header">
-                  <div className={`ai-insight-card__icon ai-insight-card__icon--${getInsightColor(insight.type)}`}>
-                    {getInsightIcon(insight.type)}
-                  </div>
-                  <button
-                    className="ai-insight-card__dismiss"
-                    onClick={() => dismissInsight(insight.id)}
-                    aria-label="Dispensar"
-                  >
-                    <Close size={16} />
-                  </button>
+      {visibleInsights.length > 0 && (
+        <Section className="dashboard-section dashboard-section--insights">
+          <Grid>
+            <Column lg={16}>
+              <div className="ai-insights-header">
+                <div className="ai-insights-header__title">
+                  <IbmWatsonxCodeAssistant size={20} />
+                  <span>Insights da IA</span>
+                  <AILabel size="sm" textLabel="Helian" />
                 </div>
-                <h4 className="ai-insight-card__title">{insight.title}</h4>
-                <p className="ai-insight-card__description">{insight.description}</p>
-                {insight.action && (
-                  <Button
-                    kind="ghost"
-                    size="sm"
-                    href={insight.actionHref}
-                    renderIcon={ArrowRight}
-                    className="ai-insight-card__action"
-                  >
-                    {insight.action}
-                  </Button>
-                )}
+                <span className="ai-insights-header__count">{visibleInsights.length} insights disponíveis</span>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="ai-insights-empty">
-            <p>Insights serão gerados conforme dados são adicionados</p>
-          </div>
-        )}
-      </div>
+
+              <Grid>
+                {visibleInsights.slice(0, 3).map((insight) => (
+                  <Column key={insight.id} lg={5} md={4} sm={4}>
+                    <Tile className={`ai-insight-card ai-insight-card--${insight.type}`}>
+                      <Layer>
+                        <div className="ai-insight-card__header">
+                          <div className={`ai-insight-card__icon ai-insight-card__icon--${insight.type}`}>
+                            {getInsightIcon(insight.type)}
+                          </div>
+                          <button
+                            className="ai-insight-card__dismiss"
+                            onClick={() => dismissInsight(insight.id)}
+                            aria-label="Dispensar"
+                          >
+                            <Close size={16} />
+                          </button>
+                        </div>
+                        <h4 className="ai-insight-card__title">{insight.title}</h4>
+                        <p className="ai-insight-card__description">{insight.description}</p>
+                        <div className="ai-insight-card__footer">
+                          <Tag type={getInsightTagType(insight.type)} size="sm">
+                            {insight.priority === 'high' ? 'Alta' : insight.priority === 'medium' ? 'Média' : 'Baixa'}
+                          </Tag>
+                          {insight.action && (
+                            <Button
+                              kind="ghost"
+                              size="sm"
+                              href={insight.actionHref}
+                              renderIcon={ArrowRight}
+                              className="ai-insight-card__action"
+                            >
+                              {insight.action}
+                            </Button>
+                          )}
+                        </div>
+                      </Layer>
+                    </Tile>
+                  </Column>
+                ))}
+              </Grid>
+            </Column>
+          </Grid>
+        </Section>
+      )}
 
       {/* Stats Cards */}
-      <div className="stats-grid">
-        {statCards.map((stat, index) => (
-          <a key={index} href={stat.href} className={`stat-card stat-card--${stat.color}`}>
-            <div className="stat-card__header">
-              <div className="stat-card__icon">
-                <stat.icon size={20} />
-              </div>
-              <div className={`stat-card__trend ${stat.positive ? 'positive' : 'negative'}`}>
-                {stat.positive ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
-                <span>{stat.change}</span>
-              </div>
-            </div>
-            
-            <div className="stat-card__body">
-              {loading ? (
-                <SkeletonText heading width="60px" />
-              ) : (
-                <span className="stat-card__value">{stat.value}</span>
-              )}
-              <span className="stat-card__label">{stat.label}</span>
-            </div>
-            
-            <div className="stat-card__footer">
-              <span>vs. mês anterior</span>
-              <ArrowRight size={14} />
-            </div>
-          </a>
-        ))}
-      </div>
+      <Section className="dashboard-section dashboard-section--stats">
+        <Grid>
+          {statCards.map((stat, index) => (
+            <Column key={index} lg={4} md={4} sm={4}>
+              <ClickableTile href={stat.href} className={`stat-tile stat-tile--${stat.color}`}>
+                <div className="stat-tile__header">
+                  <div className={`stat-tile__icon stat-tile__icon--${stat.color}`}>
+                    <stat.icon size={20} />
+                  </div>
+                  <div className={`stat-tile__trend ${stat.positive ? 'positive' : 'negative'}`}>
+                    {stat.positive ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
+                    <span>{stat.change}</span>
+                  </div>
+                </div>
+
+                <div className="stat-tile__body">
+                  {loading ? (
+                    <SkeletonText heading width="60px" />
+                  ) : (
+                    <span className="stat-tile__value">{stat.value}</span>
+                  )}
+                  <span className="stat-tile__label">{stat.label}</span>
+                </div>
+              </ClickableTile>
+            </Column>
+          ))}
+        </Grid>
+      </Section>
 
       {/* Main Content Grid */}
-      <div className="dashboard-grid">
+      <Grid className="dashboard-section dashboard-section--main">
         {/* Left Column - Charts */}
-        <div className="dashboard-grid__main">
+        <Column lg={10} md={8} sm={4}>
           {/* Revenue Chart */}
-          <div className="dashboard-card">
-            <div className="dashboard-card__header">
-              <div className="dashboard-card__title">
+          <Tile className="dashboard-tile">
+            <div className="dashboard-tile__header">
+              <div className="dashboard-tile__title">
                 <ChartLine size={18} />
                 <h3>Receita Mensal</h3>
               </div>
@@ -557,21 +574,21 @@ export default function DashboardPage() {
                 Detalhes
               </Button>
             </div>
-            <div className="dashboard-card__body dashboard-card__body--chart">
+            <div className="dashboard-tile__body dashboard-tile__body--chart">
               {revenueChartData.length > 0 ? (
                 <LineChart data={revenueChartData} options={lineChartOptions} />
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '240px', color: 'var(--cds-text-secondary, #525252)', fontSize: '14px' }}>
+                <div className="chart-empty-state">
                   {loading ? <InlineLoading description="Carregando..." /> : 'Sem dados de receita'}
                 </div>
               )}
             </div>
-          </div>
+          </Tile>
 
           {/* Projects Distribution */}
-          <div className="dashboard-card">
-            <div className="dashboard-card__header">
-              <div className="dashboard-card__title">
+          <Tile className="dashboard-tile">
+            <div className="dashboard-tile__header">
+              <div className="dashboard-tile__title">
                 <Folder size={18} />
                 <h3>Distribuição de Projetos</h3>
               </div>
@@ -579,21 +596,21 @@ export default function DashboardPage() {
                 Ver todos
               </Button>
             </div>
-            <div className="dashboard-card__body dashboard-card__body--chart">
+            <div className="dashboard-tile__body dashboard-tile__body--chart">
               {projectsChartData.length > 0 ? (
                 <DonutChart data={projectsChartData} options={donutChartOptions} />
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '240px', color: 'var(--cds-text-secondary, #525252)', fontSize: '14px' }}>
+                <div className="chart-empty-state">
                   {loading ? <InlineLoading description="Carregando..." /> : 'Sem dados de projetos'}
                 </div>
               )}
             </div>
-          </div>
+          </Tile>
 
           {/* Recent Activity */}
-          <div className="dashboard-card">
-            <div className="dashboard-card__header">
-              <div className="dashboard-card__title">
+          <Tile className="dashboard-tile">
+            <div className="dashboard-tile__header">
+              <div className="dashboard-tile__title">
                 <Activity size={18} />
                 <h3>Atividade Recente</h3>
               </div>
@@ -601,52 +618,58 @@ export default function DashboardPage() {
                 Ver tudo
               </Button>
             </div>
-            <div className="dashboard-card__body">
-              <div className="activity-timeline">
-                {activities.length > 0 ? (
-                  activities.map((activity) => (
-                    <div key={activity.id} className="activity-item">
-                      <div className={`activity-item__icon activity-item__icon--${activity.type}`}>
-                        {getActivityIcon(activity.type)}
-                      </div>
-                      <div className="activity-item__content">
-                        <div className="activity-item__title">{activity.title}</div>
-                        <div className="activity-item__meta">
-                          <span>{activity.description}</span>
-                          <span className="activity-item__time">• {activity.time}</span>
-                        </div>
-                      </div>
-                      <Tag size="sm" type={activity.user === 'Você' ? 'blue' : 'gray'}>
-                        {activity.user}
-                      </Tag>
-                    </div>
-                  ))
-                ) : (
-                  <p style={{ color: '#525252', fontSize: '14px' }}>Nenhuma atividade recente</p>
-                )}
-              </div>
+            <div className="dashboard-tile__body">
+              {activities.length > 0 ? (
+                <StructuredListWrapper>
+                  <StructuredListBody>
+                    {activities.map((activity) => (
+                      <StructuredListRow key={activity.id} className="activity-row">
+                        <StructuredListCell className="activity-row__icon">
+                          <div className={`activity-icon activity-icon--${activity.type}`}>
+                            {getActivityIcon(activity.type)}
+                          </div>
+                        </StructuredListCell>
+                        <StructuredListCell className="activity-row__content">
+                          <div className="activity-row__title">{activity.title}</div>
+                          <div className="activity-row__meta">
+                            <span>{activity.description}</span>
+                            <span className="activity-row__time">• {activity.time}</span>
+                          </div>
+                        </StructuredListCell>
+                        <StructuredListCell className="activity-row__tag">
+                          <Tag size="sm" type={activity.user === 'Você' ? 'blue' : 'gray'}>
+                            {activity.user}
+                          </Tag>
+                        </StructuredListCell>
+                      </StructuredListRow>
+                    ))}
+                  </StructuredListBody>
+                </StructuredListWrapper>
+              ) : (
+                <p className="empty-state-text">Nenhuma atividade recente</p>
+              )}
             </div>
-          </div>
-        </div>
+          </Tile>
+        </Column>
 
         {/* Right Column - Sidebar */}
-        <div className="dashboard-grid__sidebar">
+        <Column lg={6} md={8} sm={4}>
           {/* Upcoming Deadlines */}
-          <div className="dashboard-card">
-            <div className="dashboard-card__header">
-              <div className="dashboard-card__title">
+          <Tile className="dashboard-tile">
+            <div className="dashboard-tile__header">
+              <div className="dashboard-tile__title">
                 <Calendar size={18} />
                 <h3>Próximos Prazos</h3>
               </div>
             </div>
-            <div className="dashboard-card__body">
-              <div className="deadlines-list">
-                {deadlines.length > 0 ? (
-                  deadlines.map((deadline) => {
+            <div className="dashboard-tile__body">
+              {deadlines.length > 0 ? (
+                <div className="deadlines-list">
+                  {deadlines.map((deadline) => {
                     const daysLeft = getDaysUntil(deadline.deadline);
                     return (
-                      <div key={deadline.id} className="deadline-item">
-                        <div className={`deadline-item__date ${daysLeft <= 3 ? 'urgent' : ''}`}>
+                      <div key={deadline.id} className={`deadline-item ${daysLeft <= 3 ? 'deadline-item--urgent' : ''}`}>
+                        <div className="deadline-item__date">
                           <span className="deadline-item__day">
                             {new Date(deadline.deadline).getDate()}
                           </span>
@@ -668,65 +691,72 @@ export default function DashboardPage() {
                         {daysLeft <= 3 && <WarningFilled size={16} className="deadline-item__warning" />}
                       </div>
                     );
-                  })
-                ) : (
-                  <p style={{ color: '#525252', fontSize: '14px' }}>Nenhum prazo pendente</p>
-                )}
-              </div>
+                  })}
+                </div>
+              ) : (
+                <p className="empty-state-text">Nenhum prazo pendente</p>
+              )}
             </div>
-          </div>
+          </Tile>
 
           {/* Quick Actions */}
-          <div className="dashboard-card">
-            <div className="dashboard-card__header">
-              <div className="dashboard-card__title">
+          <Tile className="dashboard-tile">
+            <div className="dashboard-tile__header">
+              <div className="dashboard-tile__title">
                 <Add size={18} />
                 <h3>Ações Rápidas</h3>
               </div>
             </div>
-            <div className="dashboard-card__body">
-              <div className="quick-actions">
-                <a href="/clients?new=true" className="quick-action">
-                  <UserMultiple size={20} />
-                  <span>Novo Cliente</span>
-                </a>
-                <a href="/projects?new=true" className="quick-action">
-                  <Folder size={20} />
-                  <span>Novo Projeto</span>
-                </a>
-                <a href="/briefings?new=true" className="quick-action">
-                  <TaskComplete size={20} />
-                  <span>Novo Briefing</span>
-                </a>
-                <a href="/documents?new=true" className="quick-action">
-                  <Document size={20} />
-                  <span>Novo Documento</span>
-                </a>
-              </div>
+            <div className="dashboard-tile__body">
+              <Grid className="quick-actions-grid">
+                <Column lg={8} md={4} sm={4}>
+                  <a href="/clients?new=true" className="quick-action">
+                    <UserMultiple size={20} />
+                    <span>Novo Cliente</span>
+                  </a>
+                </Column>
+                <Column lg={8} md={4} sm={4}>
+                  <a href="/projects?new=true" className="quick-action">
+                    <Folder size={20} />
+                    <span>Novo Projeto</span>
+                  </a>
+                </Column>
+                <Column lg={8} md={4} sm={4}>
+                  <a href="/briefings?new=true" className="quick-action">
+                    <TaskComplete size={20} />
+                    <span>Novo Briefing</span>
+                  </a>
+                </Column>
+                <Column lg={8} md={4} sm={4}>
+                  <a href="/documents?new=true" className="quick-action">
+                    <Document size={20} />
+                    <span>Novo Documento</span>
+                  </a>
+                </Column>
+              </Grid>
             </div>
-          </div>
+          </Tile>
 
           {/* AI Assistant Card */}
-          <div className="dashboard-card dashboard-card--ai">
-            <div className="dashboard-card__ai-glow"></div>
-            <div className="dashboard-card__header">
-              <div className="dashboard-card__title">
+          <Tile className="dashboard-tile dashboard-tile--ai">
+            <div className="dashboard-tile__header">
+              <div className="dashboard-tile__title">
                 <Chat size={18} />
                 <h3>IA Helian</h3>
                 <AILabel size="mini" />
               </div>
             </div>
-            <div className="dashboard-card__body">
-              <p className="ai-card__description">
+            <div className="dashboard-tile__body">
+              <p className="ai-tile__description">
                 Precisa de ajuda? Analise dados, crie propostas ou gere conteúdo automaticamente.
               </p>
-              <Button kind="primary" size="md" href="/helian" renderIcon={ArrowRight} className="ai-card__button">
+              <Button kind="primary" size="md" href="/helian" renderIcon={ArrowRight} className="ai-tile__button">
                 Iniciar conversa
               </Button>
             </div>
-          </div>
-        </div>
-      </div>
+          </Tile>
+        </Column>
+      </Grid>
     </div>
   );
 }

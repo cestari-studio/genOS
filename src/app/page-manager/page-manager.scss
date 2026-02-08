@@ -1,0 +1,66 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/type' as *;
+
+.page-manager {
+  padding: $spacing-07;
+
+  &__grid {
+    width: 100%;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-07;
+  }
+
+  &__header-tile {
+    background-color: var(--cds-layer);
+    border: 1px solid var(--cds-border-subtle);
+  }
+
+  &__title {
+    @include type-style('productive-heading-03');
+    margin: 0;
+    margin-bottom: $spacing-03;
+    color: var(--cds-text-primary);
+  }
+
+  &__subtitle {
+    @include type-style('body-01');
+    margin: 0;
+    color: var(--cds-text-secondary);
+  }
+
+  &__table-wrapper {
+    background-color: var(--cds-layer);
+    border: 1px solid var(--cds-border-subtle);
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-03;
+    align-items: center;
+  }
+
+  &__expansion {
+    padding: $spacing-05;
+    background-color: var(--cds-layer-hover);
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-03;
+  }
+
+  &__expansion-label {
+    @include type-style('label-01');
+    color: var(--cds-text-primary);
+    display: block;
+  }
+
+  &__modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-05;
+    padding: $spacing-05 0;
+  }
+}
