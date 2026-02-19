@@ -4,6 +4,8 @@ export const ContentTypeEnum = z.enum([
   'post', 'caption', 'blog', 'email', 'hashtags', 'title', 'story', 'reel',
 ]);
 
+export const AIProviderEnum = z.enum(['claude', 'gemini', 'granite', 'watsonx']);
+
 export const GenerateRequestSchema = z.object({
   prompt: z.string().min(1).max(5000),
   content_type: ContentTypeEnum,
@@ -11,6 +13,8 @@ export const GenerateRequestSchema = z.object({
   tone: z.string().optional(),
   language: z.string().optional(),
   brand_id: z.string().uuid(),
+  provider: AIProviderEnum.optional(),
+  use_rag: z.boolean().optional(),
 });
 
 export const ImproveRequestSchema = z.object({

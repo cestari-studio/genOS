@@ -42,4 +42,10 @@ export interface AIGenerationResponse {
   generatedAt: string;
 }
 
-export type AIProvider = 'claude' | 'gemini';
+export type AIProvider = 'claude' | 'gemini' | 'granite' | 'watsonx';
+
+export interface RAGAugmentedRequest extends AIGenerationRequest {
+  ragContext?: string;
+  ragDocumentIds?: string[];
+}
+

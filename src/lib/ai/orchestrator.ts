@@ -5,13 +5,55 @@ type AnySupabaseClient = import('@supabase/supabase-js').SupabaseClient<any, any
 import type {
   AIGenerationRequest,
   AIGenerationResponse,
+  AIProvider,
   BrandIdentityPackage,
   ContentType,
 } from './types';
 import { generateWithClaude } from './providers/claude';
 import { generateWithGemini } from './providers/gemini';
+import { generateWithGranite, type GraniteModel } from './providers/granite';
+import { retrieveContext } from './rag';
+
+/**
+ * Provider routing strategy:
+ *
+ * - Gemini: hashtags, title, caption (fast, cheap micro-content)
+ * - Granite 8B: story, reel (IBM-optimized for structured short content)
+ * - Granite 128K: blog, email (long-form, large context window)
+ * - Claude: post (default, highest quality for general content)
+ *
+ * Provider can be overridden via `preferred_provider` parameter.
+ */
 
 const GEMINI_CONTENT_TYPES: ContentType[] = ['hashtags', 'title', 'caption'];
+const GRANITE_CONTENT_TYPES: ContentType[] = ['story', 'reel'];
+const GRANITE_LONG_CONTENT_TYPES: ContentType[] = ['blog', 'email'];
+
+function selectProvider(contentType: ContentType, preferred?: AIProvider): { provider: AIProvider; graniteModel?: GraniteModel } {
+  if (preferred) {
+    if (preferred === 'granite') {
+      const model = GRANITE_LONG_CONTENT_TYPES.includes(contentType)
+        ? 'ibm/granite-3.1-dense-128k' as GraniteModel
+        : 'ibm/granite-3.1-8b-instruct' as GraniteModel;
+      return { provider: 'granite', graniteModel: model };
+    }
+    return { provider: preferred };
+  }
+
+  if (GEMINI_CONTENT_TYPES.includes(contentType)) {
+    return { provider: 'gemini' };
+  }
+
+  if (GRANITE_LONG_CONTENT_TYPES.includes(contentType)) {
+    return { provider: 'granite', graniteModel: 'ibm/granite-3.1-dense-128k' };
+  }
+
+  if (GRANITE_CONTENT_TYPES.includes(contentType)) {
+    return { provider: 'granite', graniteModel: 'ibm/granite-3.1-8b-instruct' };
+  }
+
+  return { provider: 'claude' };
+}
 
 async function fetchBrandPackage(
   supabase: AnySupabaseClient,
@@ -54,6 +96,8 @@ export async function orchestrateGeneration(
     tone?: string;
     language?: string;
     brandId: string;
+    preferredProvider?: AIProvider;
+    useRAG?: boolean;
   },
   userId: string,
   orgId: string
@@ -66,8 +110,30 @@ export async function orchestrateGeneration(
     throw new Error('Brand não encontrada ou não pertence à sua organização');
   }
 
+  // RAG: retrieve relevant context if enabled and watsonx embeddings are available
+  let ragContext = '';
+  const shouldUseRAG = input.useRAG !== false && !!process.env.WATSONX_API_KEY;
+
+  if (shouldUseRAG) {
+    try {
+      const rag = await retrieveContext(supabase, orgId, input.prompt, {
+        topK: 5,
+        similarityThreshold: 0.3,
+        sourceTypes: ['brand', 'content_item'],
+      });
+      ragContext = rag.contextText;
+    } catch (e) {
+      console.warn('RAG retrieval failed, continuing without context:', (e as Error).message);
+    }
+  }
+
+  // Augment prompt with RAG context
+  const augmentedPrompt = ragContext
+    ? `${ragContext}\n\n--- SOLICITAÇÃO DO USUÁRIO ---\n${input.prompt}`
+    : input.prompt;
+
   const request: AIGenerationRequest = {
-    prompt: input.prompt,
+    prompt: augmentedPrompt,
     contentType: input.contentType,
     platform: input.platform,
     tone: input.tone,
@@ -78,11 +144,35 @@ export async function orchestrateGeneration(
     orgId,
   };
 
-  // Route to provider
-  const useGemini = GEMINI_CONTENT_TYPES.includes(input.contentType);
-  const response = useGemini
-    ? await generateWithGemini(request)
-    : await generateWithClaude(request);
+  // Select provider based on content type and preference
+  const { provider, graniteModel } = selectProvider(input.contentType, input.preferredProvider);
+
+  let response: AIGenerationResponse;
+
+  // Route to provider with fallback chain
+  try {
+    switch (provider) {
+      case 'granite':
+      case 'watsonx':
+        response = await generateWithGranite(request, graniteModel);
+        break;
+      case 'gemini':
+        response = await generateWithGemini(request);
+        break;
+      case 'claude':
+      default:
+        response = await generateWithClaude(request);
+        break;
+    }
+  } catch (providerError) {
+    // Fallback: if preferred provider fails, try Claude
+    if (provider !== 'claude') {
+      console.warn(`Provider ${provider} failed, falling back to Claude:`, (providerError as Error).message);
+      response = await generateWithClaude(request);
+    } else {
+      throw providerError;
+    }
+  }
 
   // Audit log via admin client (bypasses RLS for write)
   await adminSupabase.from('audit_log').insert({
@@ -93,6 +183,9 @@ export async function orchestrateGeneration(
       platform: input.platform,
       brand_id: input.brandId,
       prompt_length: input.prompt.length,
+      provider,
+      rag_enabled: shouldUseRAG,
+      rag_context_length: ragContext.length,
     },
     ai_model: response.model,
     tokens_used: response.tokensUsed,

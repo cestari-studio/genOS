@@ -5,7 +5,7 @@ import { validateTenant, TenantViolationError } from '@/lib/auth/validateTenant'
 import { orchestrateGeneration } from '@/lib/ai/orchestrator';
 import { GenerateRequestSchema } from '@/lib/validations/ai';
 import { apiSuccess, apiError, apiForbidden, apiValidationError } from '@/lib/validations/response';
-import type { ContentType } from '@/lib/ai/types';
+import type { AIProvider, ContentType } from '@/lib/ai/types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,6 +44,8 @@ export async function POST(request: NextRequest) {
         tone: parsed.data.tone,
         language: parsed.data.language,
         brandId: parsed.data.brand_id,
+        preferredProvider: (body.provider as AIProvider) ?? undefined,
+        useRAG: body.use_rag !== false,
       },
       userId,
       orgId

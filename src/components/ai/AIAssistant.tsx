@@ -10,6 +10,7 @@ import {
   InlineNotification,
   Select,
   SelectItem,
+  Toggle,
   Toggletip,
   ToggletipButton,
   ToggletipContent,
@@ -27,6 +28,7 @@ import {
   RecentlyViewed,
   ChevronDown,
   ChevronUp,
+  Analytics,
 } from '@carbon/icons-react';
 import AIContentLabel from '@/components/ai/AIContentLabel';
 import { useTranslation } from '@/lib/i18n/context';
@@ -80,8 +82,12 @@ export default function AIAssistant({
   const [brands, setBrands] = useState<Brand[]>([]);
   const [selectedBrandId, setSelectedBrandId] = useState(initialBrandId ?? '');
   const [selectedContentType, setSelectedContentType] = useState(initialContentType ?? 'post');
+  const [selectedProvider, setSelectedProvider] = useState('');
+  const [ragEnabled, setRagEnabled] = useState(true);
   const [history, setHistory] = useState<HistoryThread[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<Record<string, unknown> | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -132,6 +138,8 @@ export default function AIAssistant({
           prompt: text,
           content_type: selectedContentType,
           brand_id: selectedBrandId || undefined,
+          provider: selectedProvider || undefined,
+          use_rag: ragEnabled,
           ...(context ? { tone: context } : {}),
         }),
       });
@@ -155,6 +163,27 @@ export default function AIAssistant({
       setError(err instanceof Error ? err.message : t('ai.unexpectedError'));
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleAnalyze = async (text: string) => {
+    setAnalyzing(true);
+    setAnalysisResult(null);
+    try {
+      const res = await fetch('/api/ai/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: text,
+          brand_id: selectedBrandId || undefined,
+        }),
+      });
+      const json = await res.json();
+      if (json.data) setAnalysisResult(json.data);
+    } catch {
+      // Analysis is optional
+    } finally {
+      setAnalyzing(false);
     }
   };
 
@@ -255,6 +284,7 @@ export default function AIAssistant({
         padding: '0.5rem 1rem',
         borderBottom: '1px solid var(--cds-border-subtle-01)',
         alignItems: 'flex-end',
+        flexWrap: 'wrap',
       }}>
         <Select
           id="ai-brand-select"
@@ -262,7 +292,7 @@ export default function AIAssistant({
           size="sm"
           value={selectedBrandId}
           onChange={(e) => setSelectedBrandId(e.target.value)}
-          style={{ flex: 1 }}
+          style={{ flex: 1, minWidth: '120px' }}
         >
           <SelectItem value="" text="--" />
           {brands.map(b => (
@@ -275,7 +305,7 @@ export default function AIAssistant({
           size="sm"
           value={selectedContentType}
           onChange={(e) => setSelectedContentType(e.target.value)}
-          style={{ flex: 1 }}
+          style={{ flex: 1, minWidth: '100px' }}
         >
           <SelectItem value="post" text="Post" />
           <SelectItem value="caption" text="Caption" />
@@ -284,6 +314,46 @@ export default function AIAssistant({
           <SelectItem value="hashtags" text="Hashtags" />
           <SelectItem value="title" text="Title" />
         </Select>
+        <Select
+          id="ai-provider-select"
+          labelText={t('ai.provider')}
+          size="sm"
+          value={selectedProvider}
+          onChange={(e) => setSelectedProvider(e.target.value)}
+          style={{ flex: 1, minWidth: '120px' }}
+        >
+          <SelectItem value="" text={t('ai.providerAuto')} />
+          <SelectItem value="claude" text={t('ai.providerClaude')} />
+          <SelectItem value="granite" text={t('ai.providerGranite')} />
+          <SelectItem value="gemini" text={t('ai.providerGemini')} />
+        </Select>
+      </div>
+
+      {/* RAG toggle row */}
+      <div style={{
+        display: 'flex',
+        gap: '0.75rem',
+        padding: '0.25rem 1rem',
+        borderBottom: '1px solid var(--cds-border-subtle-01)',
+        alignItems: 'center',
+      }}>
+        <Toggle
+          id="rag-toggle"
+          labelText={t('ai.ragEnabled')}
+          labelA=""
+          labelB=""
+          size="sm"
+          toggled={ragEnabled}
+          onToggle={(checked) => setRagEnabled(checked)}
+        />
+        <Toggletip align="bottom">
+          <ToggletipButton label={t('ai.ragTooltip')}>
+            <Information size={14} />
+          </ToggletipButton>
+          <ToggletipContent>
+            <p style={{ fontSize: '0.75rem', margin: 0 }}>{t('ai.ragTooltip')}</p>
+          </ToggletipContent>
+        </Toggletip>
       </div>
 
       {/* History sidebar overlay */}
@@ -473,6 +543,17 @@ export default function AIAssistant({
                   <ThumbsDown size={16} />
                 </IconButton>
 
+                {/* Watson Analyze */}
+                <IconButton
+                  kind="ghost"
+                  size="sm"
+                  label={analyzing ? t('ai.analyzing') : t('ai.analyze')}
+                  disabled={analyzing}
+                  onClick={() => handleAnalyze(msg.content)}
+                >
+                  <Analytics size={16} />
+                </IconButton>
+
                 {/* Explainability */}
                 <Toggletip align="bottom-left">
                   <ToggletipButton label={t('ai.howGenerated')}>
@@ -515,6 +596,59 @@ export default function AIAssistant({
         )}
         <div ref={messagesEndRef} />
       </div>
+
+      {/* Watson Analysis Results */}
+      {analysisResult && (
+        <div style={{
+          padding: '0.5rem 1rem',
+          borderTop: '1px solid var(--cds-border-subtle-01)',
+          background: 'var(--cds-layer-01)',
+          fontSize: '0.75rem',
+          maxHeight: '120px',
+          overflowY: 'auto',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+            <span style={{ fontWeight: 600 }}>{t('ai.analyze')}</span>
+            <Button kind="ghost" size="sm" onClick={() => setAnalysisResult(null)}>✕</Button>
+          </div>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            {(analysisResult.sentiment as { label: string; score: number }) && (
+              <div>
+                <span style={{ color: 'var(--cds-text-helper)' }}>{t('ai.sentiment')}:</span>{' '}
+                <Tag size="sm" type={(analysisResult.sentiment as { label: string }).label === 'positive' ? 'green' : (analysisResult.sentiment as { label: string }).label === 'negative' ? 'red' : 'gray'}>
+                  {(analysisResult.sentiment as { label: string }).label} ({Math.round(Math.abs((analysisResult.sentiment as { score: number }).score) * 100)}%)
+                </Tag>
+              </div>
+            )}
+            {typeof analysisResult.brandAlignmentScore === 'number' && (
+              <div>
+                <span style={{ color: 'var(--cds-text-helper)' }}>{t('ai.brandAlignment')}:</span>{' '}
+                <Tag size="sm" type={(analysisResult.brandAlignmentScore as number) >= 70 ? 'green' : (analysisResult.brandAlignmentScore as number) >= 50 ? 'teal' : 'red'}>
+                  {analysisResult.brandAlignmentScore as number}%
+                </Tag>
+              </div>
+            )}
+            {typeof analysisResult.readabilityScore === 'number' && (
+              <div>
+                <span style={{ color: 'var(--cds-text-helper)' }}>{t('ai.readability')}:</span>{' '}
+                <Tag size="sm" type={(analysisResult.readabilityScore as number) >= 60 ? 'green' : 'teal'}>
+                  {analysisResult.readabilityScore as number}%
+                </Tag>
+              </div>
+            )}
+          </div>
+          {Array.isArray(analysisResult.suggestions) && (analysisResult.suggestions as string[]).length > 0 && (
+            <div style={{ marginTop: '0.25rem' }}>
+              <span style={{ color: 'var(--cds-text-helper)' }}>{t('ai.suggestions')}:</span>
+              <ul style={{ margin: '0.25rem 0 0', paddingLeft: '1rem' }}>
+                {(analysisResult.suggestions as string[]).map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Input */}
       <div style={{
