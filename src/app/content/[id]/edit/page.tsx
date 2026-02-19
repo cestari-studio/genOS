@@ -39,6 +39,8 @@ import {
   Quotes,
   Code,
 } from '@carbon/icons-react';
+import AIChat from '@/components/ai/AIChat';
+import AIContentLabel from '@/components/ai/AIContentLabel';
 
 // TODO: Integrar @tiptap/react para editor rico
 
@@ -61,6 +63,7 @@ export default function EditContentPage() {
   const contentId = params.id as string;
 
   const [saved, setSaved] = useState(false);
+  const [aiMeta, setAiMeta] = useState<{ model: string; threadId: string } | null>(null);
   const [content, setContent] = useState<ContentData>({
     id: contentId,
     title: 'Como aumentar o engajamento nas redes sociais',
@@ -113,7 +116,7 @@ Analise quando seu público está mais ativo e programe seus posts.`,
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Editor de Conteúdo</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>
             {content.status === 'draft' && 'Rascunho'}
             {content.status === 'review' && 'Aguardando revisão'}
             {content.status === 'approved' && 'Aprovado'}
@@ -168,19 +171,19 @@ Analise quando seu público está mais ativo e programe seus posts.`,
               display: 'flex',
               gap: '0.25rem',
               padding: '0.5rem',
-              borderBottom: '1px solid #e0e0e0',
+              borderBottom: '1px solid var(--cds-border-subtle-01)',
               marginBottom: '1rem',
               flexWrap: 'wrap',
             }}>
               <Button kind="ghost" size="sm" hasIconOnly iconDescription="Negrito" renderIcon={TextBold} />
               <Button kind="ghost" size="sm" hasIconOnly iconDescription="Itálico" renderIcon={TextItalic} />
-              <div style={{ width: '1px', background: '#e0e0e0', margin: '0 0.5rem' }} />
+              <div style={{ width: '1px', background: 'var(--cds-layer-accent-01)', margin: '0 0.5rem' }} />
               <Button kind="ghost" size="sm" hasIconOnly iconDescription="Lista" renderIcon={ListBulleted} />
               <Button kind="ghost" size="sm" hasIconOnly iconDescription="Lista Numerada" renderIcon={ListNumbered} />
-              <div style={{ width: '1px', background: '#e0e0e0', margin: '0 0.5rem' }} />
+              <div style={{ width: '1px', background: 'var(--cds-layer-accent-01)', margin: '0 0.5rem' }} />
               <Button kind="ghost" size="sm" hasIconOnly iconDescription="Citação" renderIcon={Quotes} />
               <Button kind="ghost" size="sm" hasIconOnly iconDescription="Código" renderIcon={Code} />
-              <div style={{ width: '1px', background: '#e0e0e0', margin: '0 0.5rem' }} />
+              <div style={{ width: '1px', background: 'var(--cds-layer-accent-01)', margin: '0 0.5rem' }} />
               <Button kind="ghost" size="sm" hasIconOnly iconDescription="Imagem" renderIcon={Image} />
               <Button kind="ghost" size="sm" hasIconOnly iconDescription="Link" renderIcon={LinkIcon} />
             </div>
@@ -196,9 +199,16 @@ Analise quando seu público está mais ativo e programe seus posts.`,
               style={{ fontFamily: 'monospace' }}
             />
 
-            <p style={{ fontSize: '0.75rem', color: '#525252', marginTop: '0.5rem' }}>
-              Suporta Markdown. {content.content.length} caracteres
-            </p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+              <p style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)', margin: 0 }}>
+                Suporta Markdown. {content.content.length} caracteres
+              </p>
+              <AIContentLabel
+                size="mini"
+                onRegenerate={() => {/* TODO: regenerate via API */}}
+                onCopy={() => navigator.clipboard.writeText(content.content)}
+              />
+            </div>
           </Tile>
 
           {/* Mídia */}
@@ -360,7 +370,18 @@ Analise quando seu público está mais ativo e programe seus posts.`,
             />
           </Tile>
 
-          <Button kind="danger--ghost" renderIcon={TrashCan} style={{ width: '100%' }}>
+          {/* AI Assistant */}
+          <AIChat
+            brandId={undefined /* TODO: load brandId from project/post data */}
+            context={`Tipo: ${content.type}, Plataformas: ${content.platform.join(', ')}, Tags: ${content.tags.join(', ')}`}
+            placeholder="Peça para a IA gerar ou melhorar o conteúdo..."
+            onContentGenerated={(generated, meta) => {
+              setContent(prev => ({ ...prev, content: prev.content + '\n\n' + generated }));
+              if (meta) setAiMeta(meta);
+            }}
+          />
+
+          <Button kind="danger--ghost" renderIcon={TrashCan} style={{ width: '100%', marginTop: '1rem' }}>
             Excluir Conteúdo
           </Button>
         </Column>

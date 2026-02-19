@@ -51,7 +51,18 @@ import {
   Calendar,
 } from '@carbon/icons-react';
 
-// TODO: Integrar com Supabase
+// Stripe checkout helper
+async function handleCheckout(priceId: string) {
+  const res = await fetch('/api/stripe/create-checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ price_id: priceId }),
+  });
+  const json = await res.json();
+  if (json.data?.url) {
+    window.location.href = json.data.url;
+  }
+}
 
 interface Invoice {
   id: string;
@@ -132,7 +143,7 @@ export default function BillingPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Faturamento</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>Gerencie faturas e recebimentos</p>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Gerencie faturas e recebimentos</p>
         </div>
         <Button size="sm" renderIcon={Add} onClick={() => setIsNewInvoiceModalOpen(true)}>
           Nova Fatura
@@ -154,13 +165,13 @@ export default function BillingPage() {
         <Column lg={4} md={4} sm={4}>
           <Tile>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-              <Checkmark size={20} style={{ color: '#24a148' }} />
-              <h4 style={{ color: '#525252', margin: 0 }}>Recebido</h4>
+              <Checkmark size={20} style={{ color: 'var(--cds-support-success)' }} />
+              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>Recebido</h4>
             </div>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#24a148' }}>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-success)' }}>
               R$ {totalReceived.toLocaleString('pt-BR')}
             </p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               {invoices.filter(i => i.status === 'paid').length} faturas pagas
             </p>
           </Tile>
@@ -168,13 +179,13 @@ export default function BillingPage() {
         <Column lg={4} md={4} sm={4}>
           <Tile>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-              <Time size={20} style={{ color: '#0f62fe' }} />
-              <h4 style={{ color: '#525252', margin: 0 }}>A Receber</h4>
+              <Time size={20} style={{ color: 'var(--cds-link-primary)' }} />
+              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>A Receber</h4>
             </div>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#0f62fe' }}>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-link-primary)' }}>
               R$ {totalPending.toLocaleString('pt-BR')}
             </p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               {invoices.filter(i => i.status === 'sent').length} faturas pendentes
             </p>
           </Tile>
@@ -182,13 +193,13 @@ export default function BillingPage() {
         <Column lg={4} md={4} sm={4}>
           <Tile>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-              <Warning size={20} style={{ color: '#da1e28' }} />
-              <h4 style={{ color: '#525252', margin: 0 }}>Vencido</h4>
+              <Warning size={20} style={{ color: 'var(--cds-support-error)' }} />
+              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>Vencido</h4>
             </div>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#da1e28' }}>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-error)' }}>
               R$ {totalOverdue.toLocaleString('pt-BR')}
             </p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               {overdueCount} faturas vencidas
             </p>
           </Tile>
@@ -196,13 +207,13 @@ export default function BillingPage() {
         <Column lg={4} md={4} sm={4}>
           <Tile>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-              <Receipt size={20} style={{ color: '#525252' }} />
-              <h4 style={{ color: '#525252', margin: 0 }}>Total Faturado</h4>
+              <Receipt size={20} style={{ color: 'var(--cds-text-secondary)' }} />
+              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>Total Faturado</h4>
             </div>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>
               R$ {invoices.reduce((acc, i) => acc + i.value, 0).toLocaleString('pt-BR')}
             </p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               {invoices.length} faturas emitidas
             </p>
           </Tile>
@@ -284,11 +295,11 @@ export default function BillingPage() {
                             </TableCell>
                             <TableCell>
                               {invoice.paidAt ? (
-                                <span style={{ color: '#24a148' }}>
+                                <span style={{ color: 'var(--cds-support-success)' }}>
                                   Pago em {new Date(invoice.paidAt).toLocaleDateString('pt-BR')}
                                 </span>
                               ) : (
-                                <span style={{ color: new Date(invoice.dueAt) < new Date() ? '#da1e28' : '#525252' }}>
+                                <span style={{ color: new Date(invoice.dueAt) < new Date() ? 'var(--cds-support-error)' : 'var(--cds-text-secondary)' }}>
                                   {new Date(invoice.dueAt).toLocaleDateString('pt-BR')}
                                 </span>
                               )}
@@ -328,12 +339,12 @@ export default function BillingPage() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                       <strong>{invoice.number}</strong> - {invoice.client}
-                      <div style={{ fontSize: '0.875rem', color: '#525252' }}>{invoice.project}</div>
+                      <div style={{ fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>{invoice.project}</div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                       <div style={{ textAlign: 'right' }}>
                         <strong>R$ {invoice.value.toLocaleString('pt-BR')}</strong>
-                        <div style={{ fontSize: '0.75rem', color: '#525252' }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>
                           Vence em {new Date(invoice.dueAt).toLocaleDateString('pt-BR')}
                         </div>
                       </div>
@@ -348,16 +359,16 @@ export default function BillingPage() {
             <div style={{ marginTop: '1rem' }}>
               {/* Faturas vencidas */}
               {invoices.filter(i => i.status === 'overdue').map(invoice => (
-                <Tile key={invoice.id} style={{ marginBottom: '0.5rem', borderLeft: '4px solid #da1e28' }}>
+                <Tile key={invoice.id} style={{ marginBottom: '0.5rem', borderLeft: '4px solid var(--cds-support-error)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                       <strong>{invoice.number}</strong> - {invoice.client}
-                      <div style={{ fontSize: '0.875rem', color: '#525252' }}>{invoice.project}</div>
+                      <div style={{ fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>{invoice.project}</div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                       <div style={{ textAlign: 'right' }}>
-                        <strong style={{ color: '#da1e28' }}>R$ {invoice.value.toLocaleString('pt-BR')}</strong>
-                        <div style={{ fontSize: '0.75rem', color: '#da1e28' }}>
+                        <strong style={{ color: 'var(--cds-support-error)' }}>R$ {invoice.value.toLocaleString('pt-BR')}</strong>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--cds-support-error)' }}>
                           Vencida em {new Date(invoice.dueAt).toLocaleDateString('pt-BR')}
                         </div>
                       </div>
@@ -377,12 +388,12 @@ export default function BillingPage() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                       <strong>{invoice.number}</strong> - {invoice.client}
-                      <div style={{ fontSize: '0.875rem', color: '#525252' }}>{invoice.project}</div>
+                      <div style={{ fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>{invoice.project}</div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                       <div style={{ textAlign: 'right' }}>
-                        <strong style={{ color: '#24a148' }}>R$ {invoice.value.toLocaleString('pt-BR')}</strong>
-                        <div style={{ fontSize: '0.75rem', color: '#24a148' }}>
+                        <strong style={{ color: 'var(--cds-support-success)' }}>R$ {invoice.value.toLocaleString('pt-BR')}</strong>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--cds-support-success)' }}>
                           Pago em {new Date(invoice.paidAt!).toLocaleDateString('pt-BR')}
                         </div>
                       </div>

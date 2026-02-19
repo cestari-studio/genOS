@@ -1,0 +1,49 @@
+import { NextRequest } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
+import { ClientSchema } from '@/lib/validations/crud';
+import { apiSuccess, apiError, apiValidationError } from '@/lib/validations/response';
+
+export async function GET() {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.from('clients').select('*').order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return apiSuccess(data);
+  } catch (error) {
+    console.error('List clients error:', error);
+    return apiError('Erro ao listar clientes');
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const supabase = await createClient();
+    const body = await request.json();
+    const parsed = ClientSchema.safeParse(body);
+
+    if (!parsed.success) {
+      const errors: Record<string, string[]> = {};
+      for (const issue of parsed.error.issues) {
+        const path = issue.path.join('.');
+        errors[path] = errors[path] ?? [];
+        errors[path].push(issue.message);
+      }
+      return apiValidationError(errors);
+    }
+
+    const { data: orgId } = await supabase.rpc('get_user_org_id');
+
+    const { data, error } = await supabase
+      .from('clients')
+      .insert({ ...parsed.data, organization_id: orgId })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return apiSuccess(data, 201);
+  } catch (error) {
+    console.error('Create client error:', error);
+    return apiError('Erro ao criar cliente');
+  }
+}

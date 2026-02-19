@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet: CookieOptions[]) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
           supabaseResponse = NextResponse.next({
@@ -35,20 +35,64 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Rotas públicas
-  const publicRoutes = ['/login'];
+  const pathname = request.nextUrl.pathname;
+  const isApiRoute = pathname.startsWith('/api/');
+  const isAiRoute = pathname.startsWith('/api/ai/');
+
+  // API routes: return JSON errors instead of HTML redirects
+  if (isApiRoute) {
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Não autenticado' },
+        { status: 401 }
+      );
+    }
+
+    // AI routes: resolve org_id and pass as header
+    if (isAiRoute) {
+      const { data: orgId, error: orgError } = await supabase.rpc('get_user_org_id');
+
+      if (orgError || !orgId) {
+        console.error(`TENTATIVA DE VIOLAÇÃO: user ${user.id} sem organização tentou acessar ${pathname}`);
+        return NextResponse.json(
+          { error: 'Usuário sem organização vinculada' },
+          { status: 403 }
+        );
+      }
+
+      // Clone the request headers and add org context
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set('x-org-id', orgId as string);
+      requestHeaders.set('x-user-id', user.id);
+
+      supabaseResponse = NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
+
+      // Re-apply cookie changes
+      const cookieStore = request.cookies.getAll();
+      cookieStore.forEach(cookie => {
+        supabaseResponse.cookies.set(cookie.name, cookie.value);
+      });
+    }
+
+    return supabaseResponse;
+  }
+
+  // Page routes: existing redirect behavior
+  const publicRoutes = ['/login', '/forgot-password', '/reset-password'];
   const isPublicRoute = publicRoutes.some(route =>
-    request.nextUrl.pathname.startsWith(route)
+    pathname.startsWith(route)
   );
 
-  // Se não está logado e não é rota pública, redireciona para login
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
   }
 
-  // Se está logado e tenta acessar login, redireciona para dashboard
   if (user && isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
