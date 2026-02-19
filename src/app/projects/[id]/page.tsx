@@ -174,7 +174,7 @@ export default function ProjectDetailsPage() {
             <span>Progresso do Projeto</span>
             <strong>{progress}%</strong>
           </div>
-          <ProgressBar value={progress} max={100} />
+          <ProgressBar label="Progresso do Projeto" value={progress} max={100} />
           <p style={{ fontSize: '0.75rem', color: '#8d8d8d', marginTop: '0.5rem' }}>
             {completedTasks} de {tasks.length} tarefas concluídas
           </p>

@@ -30,7 +30,6 @@ import {
   LogoLinkedin,
   LogoFacebook,
   LogoTwitter,
-  LogoGoogle,
   LogoSlack,
   Api,
   Cloud,
@@ -56,7 +55,7 @@ const integrations: Integration[] = [
   { id: '2', name: 'LinkedIn', description: 'Publicação em perfil e company page', category: 'social', status: 'connected', icon: LogoLinkedin, connectedAt: '2024-01-15', lastSync: '2024-02-19 10:00' },
   { id: '3', name: 'Facebook', description: 'Publicação em páginas', category: 'social', status: 'disconnected', icon: LogoFacebook },
   { id: '4', name: 'X (Twitter)', description: 'Publicação de tweets', category: 'social', status: 'disconnected', icon: LogoTwitter },
-  { id: '5', name: 'Google Drive', description: 'Sincronização de arquivos', category: 'storage', status: 'connected', icon: LogoGoogle, connectedAt: '2024-01-20', lastSync: '2024-02-19 09:30' },
+  { id: '5', name: 'Google Drive', description: 'Sincronização de arquivos', category: 'storage', status: 'connected', icon: Cloud, connectedAt: '2024-01-20', lastSync: '2024-02-19 09:30' },
   { id: '6', name: 'Slack', description: 'Notificações e alertas', category: 'communication', status: 'connected', icon: LogoSlack, connectedAt: '2024-02-01', lastSync: '2024-02-19 10:15' },
   { id: '7', name: 'Google Calendar', description: 'Sincronização de eventos', category: 'calendar', status: 'disconnected', icon: Calendar },
   { id: '8', name: 'Zapier', description: 'Automações personalizadas', category: 'other', status: 'disconnected', icon: Api },
@@ -287,6 +286,8 @@ export default function IntegrationsPage() {
                       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
                         <TextInput
                           id="public-key"
+                          labelText="Chave Pública"
+                          hideLabel
                           value="pk_live_xxxxxxxxxxxxxxxxxxxxx"
                           readOnly
                           style={{ fontFamily: 'monospace' }}
@@ -300,6 +301,8 @@ export default function IntegrationsPage() {
                       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
                         <TextInput
                           id="secret-key"
+                          labelText="Chave Secreta"
+                          hideLabel
                           type="password"
                           value="sk_live_xxxxxxxxxxxxxxxxxxxxx"
                           readOnly

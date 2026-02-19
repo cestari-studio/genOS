@@ -297,7 +297,8 @@ export default function QuotesPage() {
             </div>
           </div>
 
-          <Accordion style={{ marginTop: '1rem' }}>
+          <div style={{ marginTop: '1rem' }}>
+          <Accordion>
             <AccordionItem title={`${quote.items.length} itens`}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
@@ -337,6 +338,7 @@ export default function QuotesPage() {
               </table>
             </AccordionItem>
           </Accordion>
+          </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem' }}>
             <Button kind="ghost" size="sm" renderIcon={Copy}>Duplicar</Button>
