@@ -636,6 +636,43 @@ const ptBR: Record<string, string> = {
   'content.type.page': 'Página',
   'content.type.story': 'Story',
   'content.type.reel': 'Reel',
+
+  // ── Onboarding ──────────────────────────────────
+  'onboarding.title': 'Bem-vindo ao genOS',
+  'onboarding.step0': 'Boas-vindas',
+  'onboarding.step1': 'Marca',
+  'onboarding.step2': 'Equipe',
+  'onboarding.step3': 'Primeiro Cliente',
+  'onboarding.step4': 'Escolher Plano',
+  'onboarding.orgName': 'Nome da Organização',
+  'onboarding.industry': 'Setor',
+  'onboarding.teamSize': 'Tamanho da Equipe',
+  'onboarding.brandName': 'Nome da Marca',
+  'onboarding.brandColor': 'Cor da Marca (hex)',
+  'onboarding.brandDescription': 'Descrição da Marca',
+  'onboarding.inviteEmails': 'Convidar Membros da Equipe',
+  'onboarding.emailPlaceholder': 'colega@email.com',
+  'onboarding.addAnother': 'Adicionar Outro',
+  'onboarding.clientName': 'Nome do Cliente',
+  'onboarding.clientEmail': 'Email do Cliente',
+  'onboarding.clientCompany': 'Empresa',
+  'onboarding.optionalStep': 'Este passo é opcional',
+  'onboarding.completeSetup': 'Concluir Configuração',
+  'onboarding.industryTech': 'Tecnologia',
+  'onboarding.industryMarketing': 'Marketing',
+  'onboarding.industryFinance': 'Finanças',
+  'onboarding.industryHealthcare': 'Saúde',
+  'onboarding.industryEducation': 'Educação',
+  'onboarding.industryOther': 'Outro',
+
+  // ── Pricing ─────────────────────────────────────
+  'pricing.starter': 'Starter',
+  'pricing.professional': 'Professional',
+  'pricing.enterprise': 'Enterprise',
+  'pricing.recommended': 'Recomendado',
+  'pricing.perMonth': '/mês',
+  'pricing.selectPlan': 'Escolher Plano',
+  'pricing.currentPlan': 'Plano Atual',
 };
 
 export default ptBR;

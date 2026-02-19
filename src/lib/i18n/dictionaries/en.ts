@@ -636,6 +636,43 @@ const en: Record<string, string> = {
   'content.type.page': 'Page',
   'content.type.story': 'Story',
   'content.type.reel': 'Reel',
+
+  // ── Onboarding ──────────────────────────────────
+  'onboarding.title': 'Welcome to genOS',
+  'onboarding.step0': 'Welcome',
+  'onboarding.step1': 'Brand',
+  'onboarding.step2': 'Team',
+  'onboarding.step3': 'First Client',
+  'onboarding.step4': 'Choose Plan',
+  'onboarding.orgName': 'Organization Name',
+  'onboarding.industry': 'Industry',
+  'onboarding.teamSize': 'Team Size',
+  'onboarding.brandName': 'Brand Name',
+  'onboarding.brandColor': 'Brand Color (hex)',
+  'onboarding.brandDescription': 'Brand Description',
+  'onboarding.inviteEmails': 'Invite Team Members',
+  'onboarding.emailPlaceholder': 'colleague@email.com',
+  'onboarding.addAnother': 'Add Another',
+  'onboarding.clientName': 'Client Name',
+  'onboarding.clientEmail': 'Client Email',
+  'onboarding.clientCompany': 'Company',
+  'onboarding.optionalStep': 'This step is optional',
+  'onboarding.completeSetup': 'Complete Setup',
+  'onboarding.industryTech': 'Technology',
+  'onboarding.industryMarketing': 'Marketing',
+  'onboarding.industryFinance': 'Finance',
+  'onboarding.industryHealthcare': 'Healthcare',
+  'onboarding.industryEducation': 'Education',
+  'onboarding.industryOther': 'Other',
+
+  // ── Pricing ─────────────────────────────────────
+  'pricing.starter': 'Starter',
+  'pricing.professional': 'Professional',
+  'pricing.enterprise': 'Enterprise',
+  'pricing.recommended': 'Recommended',
+  'pricing.perMonth': '/month',
+  'pricing.selectPlan': 'Select Plan',
+  'pricing.currentPlan': 'Current Plan',
 };
 
 export default en;

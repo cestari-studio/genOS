@@ -99,6 +99,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Onboarding redirect for first-time users
+  if (user && !pathname.startsWith('/onboarding')) {
+    const onboardingComplete = user.user_metadata?.onboarding_complete;
+    if (onboardingComplete === false) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/onboarding';
+      return NextResponse.redirect(url);
+    }
+  }
+
   return supabaseResponse;
 }
 
