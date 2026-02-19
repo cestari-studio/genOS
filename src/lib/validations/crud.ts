@@ -30,6 +30,17 @@ export const BrandSchema = z.object({
   regional_expertise: z.record(z.string(), z.unknown()).optional(),
 });
 
+export const ContentSchema = z.object({
+  title: z.string().min(1),
+  type: z.enum(['post', 'page', 'story', 'reel']),
+  platform: z.array(z.string()),
+  content: z.string(),
+  excerpt: z.string().optional(),
+  status: z.enum(['draft', 'review', 'approved', 'published']).optional(),
+  scheduled_at: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+});
+
 export const MediaUploadSchema = z.object({
   folder: z.string().optional().default('uploads'),
 });

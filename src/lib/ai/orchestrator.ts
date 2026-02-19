@@ -99,20 +99,7 @@ export async function orchestrateGeneration(
     thread_id: threadId,
   });
 
-  // Debit token balance
-  const { data: org } = await adminSupabase
-    .from('organizations')
-    .select('token_balance, token_multiplier')
-    .eq('id', orgId)
-    .single();
-
-  if (org) {
-    const cost = Math.ceil(response.tokensUsed * (org.token_multiplier ?? 2.5));
-    await adminSupabase
-      .from('organizations')
-      .update({ token_balance: Math.max(0, (org.token_balance ?? 0) - cost) })
-      .eq('id', orgId);
-  }
+  // Token debit is handled by fn_debit_tokens trigger on audit_log insert
 
   return response;
 }

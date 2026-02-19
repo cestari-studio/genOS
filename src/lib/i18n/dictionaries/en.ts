@@ -826,6 +826,20 @@ const en: Record<string, string> = {
   'ai.confidence': 'Confidence: {value}%',
   'ai.helpful': 'Helpful',
   'ai.notHelpful': 'Not helpful',
+  'ai.assistant': 'AI Assistant',
+  'ai.howGenerated': 'How was this generated?',
+  'ai.explainability': 'This content was generated using your brand voice settings, content pillars, and the selected platform guidelines.',
+  'ai.promptTemplates': 'Quick prompts',
+  'ai.templatePost': 'Write a social media post',
+  'ai.templateCaption': 'Create a caption',
+  'ai.templateBriefing': 'Generate a briefing',
+  'ai.templateIdeas': 'Suggest content ideas',
+  'ai.selectBrand': 'Select brand',
+  'ai.selectContentType': 'Content type',
+  'ai.feedbackThanks': 'Thanks for your feedback!',
+  'ai.threadHistory': 'History',
+  'ai.noHistory': 'No previous conversations',
+  'ai.loadingHistory': 'Loading history...',
 };
 
 export default en;

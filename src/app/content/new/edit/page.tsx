@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   Grid,
@@ -17,17 +17,11 @@ import {
   BreadcrumbItem,
   InlineNotification,
   Toggle,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
   FileUploader,
 } from '@carbon/react';
 import {
   Save,
   ArrowLeft,
-  TrashCan,
   View,
   Send,
   Image,
@@ -39,14 +33,11 @@ import {
   Quotes,
   Code,
 } from '@carbon/icons-react';
-import AIAssistant from '@/components/ai/AIAssistant';
+import AIChat from '@/components/ai/AIChat';
 import AIContentLabel from '@/components/ai/AIContentLabel';
 import { useTranslation } from '@/lib/i18n/context';
 
-// TODO: Integrar @tiptap/react para editor rico
-
 interface ContentData {
-  id: string;
   title: string;
   type: 'post' | 'page' | 'story' | 'reel';
   status: 'draft' | 'review' | 'approved' | 'published';
@@ -58,80 +49,90 @@ interface ContentData {
   media: string[];
 }
 
-export default function EditContentPage() {
-  const params = useParams();
+export default function NewContentPage() {
   const router = useRouter();
   const { t } = useTranslation();
-  const contentId = params.id as string;
 
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [aiMeta, setAiMeta] = useState<{ model: string; threadId: string } | null>(null);
   const [content, setContent] = useState<ContentData>({
-    id: contentId,
-    title: 'Como aumentar o engajamento nas redes sociais',
+    title: '',
     type: 'post',
     status: 'draft',
-    platform: ['instagram', 'linkedin'],
-    content: `# Introdução
-
-O engajamento nas redes sociais é fundamental para o sucesso da sua marca. Neste post, vamos explorar 5 estratégias comprovadas para aumentar suas interações.
-
-## 1. Conheça seu público
-
-Entender quem são seus seguidores é o primeiro passo. Analise os dados demográficos e comportamentais.
-
-## 2. Crie conteúdo de valor
-
-Ofereça informações úteis, entretenimento ou inspiração. Seu conteúdo deve resolver problemas ou atender necessidades.
-
-## 3. Use CTAs claros
-
-Peça para seu público interagir: curta, comente, compartilhe, salve.
-
-## 4. Responda comentários
-
-Engajamento é uma via de mão dupla. Responda seus seguidores.
-
-## 5. Poste nos melhores horários
-
-Analise quando seu público está mais ativo e programe seus posts.`,
-    excerpt: 'Descubra 5 estratégias comprovadas para aumentar o engajamento nas suas redes sociais.',
-    scheduledAt: '2024-02-20T10:00',
-    tags: ['marketing', 'redes sociais', 'engajamento'],
+    platform: [],
+    content: '',
+    excerpt: '',
+    scheduledAt: '',
+    tags: [],
     media: [],
   });
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const handleSave = async () => {
+    if (!content.title.trim()) return;
+
+    setSaving(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: content.title,
+          type: content.type,
+          platform: content.platform,
+          status: content.status,
+          body: content.content,
+          metadata: {
+            excerpt: content.excerpt,
+            scheduled_at: content.scheduledAt || null,
+            tags: content.tags,
+          },
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(json.error || 'Failed to create content');
+      }
+
+      setSaved(true);
+      setTimeout(() => {
+        router.push(`/content/${json.data.id}/edit`);
+      }, 1000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unexpected error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div>
-      {/* Breadcrumb */}
       <Breadcrumb noTrailingSlash style={{ marginBottom: '1rem' }}>
         <BreadcrumbItem href="/content">{t('content.title')}</BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>{t('common.edit')}</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>{t('common.create')}</BreadcrumbItem>
       </Breadcrumb>
 
-      {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>{t('editor.title')}</h1>
           <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>
-            {content.status === 'draft' && t('content.status.draft')}
-            {content.status === 'review' && t('editor.awaitingReview')}
-            {content.status === 'approved' && t('content.status.approved')}
-            {content.status === 'published' && t('content.status.published')}
+            {t('content.status.draft')}
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Link href="/content">
             <Button kind="secondary" size="sm" renderIcon={ArrowLeft}>{t('common.back')}</Button>
           </Link>
-          <Button kind="secondary" size="sm" renderIcon={View}>{t('common.view')}</Button>
-          <Button kind="secondary" size="sm" renderIcon={Send}>{t('editor.sendToReview')}</Button>
-          <Button size="sm" renderIcon={Save} onClick={handleSave}>{t('common.save')}</Button>
+          <Button kind="secondary" size="sm" renderIcon={View} disabled>{t('common.view')}</Button>
+          <Button kind="secondary" size="sm" renderIcon={Send} disabled>{t('editor.sendToReview')}</Button>
+          <Button size="sm" renderIcon={Save} onClick={handleSave} disabled={saving || !content.title.trim()}>
+            {saving ? t('common.saving') : t('common.save')}
+          </Button>
         </div>
       </div>
 
@@ -145,8 +146,17 @@ Analise quando seu público está mais ativo e programe seus posts.`,
         />
       )}
 
+      {error && (
+        <InlineNotification
+          kind="error"
+          title={t('common.error')}
+          subtitle={error}
+          onClose={() => setError(null)}
+          style={{ marginBottom: '1rem' }}
+        />
+      )}
+
       <Grid>
-        {/* Editor Principal */}
         <Column lg={10} md={8} sm={4}>
           <Tile style={{ marginBottom: '1rem' }}>
             <TextInput
@@ -166,9 +176,7 @@ Analise quando seu público está mais ativo e programe seus posts.`,
             />
           </Tile>
 
-          {/* Editor de Texto Rico */}
           <Tile>
-            {/* Toolbar do Editor */}
             <div style={{
               display: 'flex',
               gap: '0.25rem',
@@ -190,7 +198,6 @@ Analise quando seu público está mais ativo e programe seus posts.`,
               <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('editor.link')} renderIcon={LinkIcon} />
             </div>
 
-            {/* Área de edição */}
             <TextArea
               id="content"
               labelText=""
@@ -207,13 +214,12 @@ Analise quando seu público está mais ativo e programe seus posts.`,
               </p>
               <AIContentLabel
                 size="mini"
-                onRegenerate={() => {/* TODO: regenerate via API */}}
+                onRegenerate={() => {}}
                 onCopy={() => navigator.clipboard.writeText(content.content)}
               />
             </div>
           </Tile>
 
-          {/* Mídia */}
           <Tile style={{ marginTop: '1rem' }}>
             <h3 style={{ marginBottom: '1rem' }}>{t('editor.media')}</h3>
             <FileUploader
@@ -227,7 +233,6 @@ Analise quando seu público está mais ativo e programe seus posts.`,
           </Tile>
         </Column>
 
-        {/* Sidebar */}
         <Column lg={6} md={8} sm={4}>
           <Tile style={{ marginBottom: '1rem' }}>
             <h3 style={{ marginBottom: '1rem' }}>{t('editor.publication')}</h3>
@@ -271,71 +276,22 @@ Analise quando seu público está mais ativo e programe seus posts.`,
           <Tile style={{ marginBottom: '1rem' }}>
             <h3 style={{ marginBottom: '1rem' }}>{t('editor.platforms')}</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <Toggle
-                id="platform-instagram"
-                labelText="Instagram"
-                labelA=""
-                labelB=""
-                toggled={content.platform.includes('instagram')}
-                onToggle={(checked) => {
-                  const platforms = checked
-                    ? [...content.platform, 'instagram']
-                    : content.platform.filter(p => p !== 'instagram');
-                  setContent({ ...content, platform: platforms });
-                }}
-              />
-              <Toggle
-                id="platform-linkedin"
-                labelText="LinkedIn"
-                labelA=""
-                labelB=""
-                toggled={content.platform.includes('linkedin')}
-                onToggle={(checked) => {
-                  const platforms = checked
-                    ? [...content.platform, 'linkedin']
-                    : content.platform.filter(p => p !== 'linkedin');
-                  setContent({ ...content, platform: platforms });
-                }}
-              />
-              <Toggle
-                id="platform-facebook"
-                labelText="Facebook"
-                labelA=""
-                labelB=""
-                toggled={content.platform.includes('facebook')}
-                onToggle={(checked) => {
-                  const platforms = checked
-                    ? [...content.platform, 'facebook']
-                    : content.platform.filter(p => p !== 'facebook');
-                  setContent({ ...content, platform: platforms });
-                }}
-              />
-              <Toggle
-                id="platform-twitter"
-                labelText="X (Twitter)"
-                labelA=""
-                labelB=""
-                toggled={content.platform.includes('twitter')}
-                onToggle={(checked) => {
-                  const platforms = checked
-                    ? [...content.platform, 'twitter']
-                    : content.platform.filter(p => p !== 'twitter');
-                  setContent({ ...content, platform: platforms });
-                }}
-              />
-              <Toggle
-                id="platform-blog"
-                labelText="Blog"
-                labelA=""
-                labelB=""
-                toggled={content.platform.includes('blog')}
-                onToggle={(checked) => {
-                  const platforms = checked
-                    ? [...content.platform, 'blog']
-                    : content.platform.filter(p => p !== 'blog');
-                  setContent({ ...content, platform: platforms });
-                }}
-              />
+              {['instagram', 'linkedin', 'facebook', 'twitter', 'blog'].map((p) => (
+                <Toggle
+                  key={p}
+                  id={`platform-${p}`}
+                  labelText={p === 'twitter' ? 'X (Twitter)' : p.charAt(0).toUpperCase() + p.slice(1)}
+                  labelA=""
+                  labelB=""
+                  toggled={content.platform.includes(p)}
+                  onToggle={(checked) => {
+                    const platforms = checked
+                      ? [...content.platform, p]
+                      : content.platform.filter(x => x !== p);
+                    setContent({ ...content, platform: platforms });
+                  }}
+                />
+              ))}
             </div>
           </Tile>
 
@@ -372,20 +328,15 @@ Analise quando seu público está mais ativo e programe seus posts.`,
             />
           </Tile>
 
-          {/* AI Assistant */}
-          <AIAssistant
+          <AIChat
+            brandId={undefined}
             context={t('editor.aiContext', { type: content.type, platforms: content.platform.join(', '), tags: content.tags.join(', ') })}
             placeholder={t('editor.aiPlaceholder')}
-            contentType={content.type}
             onContentGenerated={(generated, meta) => {
               setContent(prev => ({ ...prev, content: prev.content + '\n\n' + generated }));
               if (meta) setAiMeta(meta);
             }}
           />
-
-          <Button kind="danger--ghost" renderIcon={TrashCan} style={{ width: '100%', marginTop: '1rem' }}>
-            {t('editor.deleteContent')}
-          </Button>
         </Column>
       </Grid>
     </div>

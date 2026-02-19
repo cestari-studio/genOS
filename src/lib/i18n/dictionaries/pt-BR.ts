@@ -826,6 +826,20 @@ const ptBR: Record<string, string> = {
   'ai.confidence': 'Confiança: {value}%',
   'ai.helpful': 'Útil',
   'ai.notHelpful': 'Não útil',
+  'ai.assistant': 'AI Assistant',
+  'ai.howGenerated': 'Como isso foi gerado?',
+  'ai.explainability': 'Este conteúdo foi gerado usando as configurações de voz da marca, pilares de conteúdo e as diretrizes da plataforma selecionada.',
+  'ai.promptTemplates': 'Prompts rápidos',
+  'ai.templatePost': 'Escrever um post para redes sociais',
+  'ai.templateCaption': 'Criar uma legenda',
+  'ai.templateBriefing': 'Gerar um briefing',
+  'ai.templateIdeas': 'Sugerir ideias de conteúdo',
+  'ai.selectBrand': 'Selecionar marca',
+  'ai.selectContentType': 'Tipo de conteúdo',
+  'ai.feedbackThanks': 'Obrigado pelo feedback!',
+  'ai.threadHistory': 'Histórico',
+  'ai.noHistory': 'Nenhuma conversa anterior',
+  'ai.loadingHistory': 'Carregando histórico...',
 };
 
 export default ptBR;
