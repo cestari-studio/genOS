@@ -35,8 +35,9 @@ import {
   Filter,
   Calendar,
 } from '@carbon/icons-react';
+import { SimpleBarChart, LineChart } from '@carbon/charts-react';
+import { ScaleTypes } from '@carbon/charts';
 
-// TODO: Integrar com @carbon/charts-react para gráficos reais
 
 const mockReportData = [
   { id: '1', period: 'Janeiro 2025', clients: 12, projects: 8, revenue: 'R$ 45.000', status: 'completed' },
@@ -52,6 +53,59 @@ const headers = [
   { key: 'status', header: 'Status' },
   { key: 'actions', header: 'Ações' },
 ];
+
+const barChartData = [
+  { group: 'Janeiro', value: 45000 },
+  { group: 'Fevereiro', value: 52000 },
+  { group: 'Março', value: 68000 },
+  { group: 'Abril', value: 61000 },
+  { group: 'Maio', value: 73000 },
+  { group: 'Junho', value: 82000 },
+];
+
+const barChartOptions = {
+  title: 'Receita Mensal',
+  axes: {
+    bottom: {
+      mapsTo: 'group',
+      scaleType: ScaleTypes.LABELS,
+    },
+    left: {
+      mapsTo: 'value',
+    },
+  },
+  height: '300px',
+};
+
+const lineChartData = [
+  { group: 'Receita', date: 'Jan', value: 45000 },
+  { group: 'Receita', date: 'Fev', value: 52000 },
+  { group: 'Receita', date: 'Mar', value: 68000 },
+  { group: 'Receita', date: 'Abr', value: 61000 },
+  { group: 'Receita', date: 'Mai', value: 73000 },
+  { group: 'Receita', date: 'Jun', value: 82000 },
+  { group: 'Despesas', date: 'Jan', value: 32000 },
+  { group: 'Despesas', date: 'Fev', value: 35000 },
+  { group: 'Despesas', date: 'Mar', value: 41000 },
+  { group: 'Despesas', date: 'Abr', value: 38000 },
+  { group: 'Despesas', date: 'Mai', value: 44000 },
+  { group: 'Despesas', date: 'Jun', value: 47000 },
+];
+
+const lineChartOptions = {
+  title: 'Tendência Financeira',
+  axes: {
+    bottom: {
+      mapsTo: 'date',
+      scaleType: ScaleTypes.LABELS,
+    },
+    left: {
+      mapsTo: 'value',
+    },
+  },
+  curve: 'curveMonotoneX' as const,
+  height: '300px',
+};
 
 export default function ReportsPage() {
   const [reportType, setReportType] = useState('monthly');
@@ -79,7 +133,7 @@ export default function ReportsPage() {
 
       {/* Filtros */}
       <Column lg={16} md={8} sm={4}>
-        <Tile style={{ marginBottom: '1rem' }}>
+        <Tile className="cds--mb-05">
           <Grid narrow>
             <Column lg={4} md={2} sm={4}>
               <Select
@@ -130,7 +184,7 @@ export default function ReportsPage() {
           <TabPanels>
             {/* Visão Geral */}
             <TabPanel>
-              <Grid style={{ marginTop: '1rem' }}>
+              <Grid className="cds--mt-05">
                 <Column lg={4} md={2} sm={4}>
                   <Tile className="stat-card">
                     <span className="stat-label">Total Clientes</span>
@@ -161,24 +215,21 @@ export default function ReportsPage() {
                 </Column>
               </Grid>
 
-              {/* Placeholder para gráfico */}
-              <Tile style={{ marginTop: '1rem', height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ textAlign: 'center', color: '#8d8d8d' }}>
-                  <ChartBar size={48} style={{ marginBottom: '1rem' }} />
-                  <p>Gráfico de Visão Geral</p>
-                  <p style={{ fontSize: '0.75rem' }}>Integrar @carbon/charts-react</p>
-                </div>
+              <Tile className="cds--mt-05">
+                <SimpleBarChart
+                  data={barChartData}
+                  options={barChartOptions}
+                />
               </Tile>
             </TabPanel>
 
             {/* Financeiro */}
             <TabPanel>
-              <Tile style={{ marginTop: '1rem', height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ textAlign: 'center', color: '#8d8d8d' }}>
-                  <ChartLine size={48} style={{ marginBottom: '1rem' }} />
-                  <p>Gráfico Financeiro</p>
-                  <p style={{ fontSize: '0.75rem' }}>Receitas vs Despesas</p>
-                </div>
+              <Tile className="cds--mt-05">
+                <LineChart
+                  data={lineChartData}
+                  options={lineChartOptions}
+                />
               </Tile>
             </TabPanel>
 
@@ -186,7 +237,7 @@ export default function ReportsPage() {
             <TabPanel>
               <DataTable rows={rows} headers={headers}>
                 {({ rows, headers, getTableProps, getHeaderProps, getRowProps }) => (
-                  <TableContainer style={{ marginTop: '1rem' }}>
+                  <TableContainer className="cds--mt-05">
                     <TableToolbar>
                       <TableToolbarContent>
                         <Button renderIcon={Download} kind="primary">

@@ -57,7 +57,7 @@ export default function ForgotPasswordPage() {
               subtitle="Verifique sua caixa de entrada para redefinir sua senha."
               hideCloseButton
             />
-            <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', color: '#0f62fe', textDecoration: 'none' }}>
+            <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', color: 'var(--cds-link-primary)', textDecoration: 'none' }}>
               <ArrowLeft size={16} /> Voltar ao login
             </Link>
           </div>
@@ -73,7 +73,7 @@ export default function ForgotPasswordPage() {
                 />
               )}
 
-              <p style={{ color: '#525252', fontSize: '0.875rem' }}>
+              <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem' }}>
                 Digite seu email e enviaremos um link para redefinir sua senha.
               </p>
 
@@ -95,7 +95,7 @@ export default function ForgotPasswordPage() {
                 {loading ? 'Enviando...' : 'Enviar Link'}
               </Button>
 
-              <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#0f62fe', textDecoration: 'none', fontSize: '0.875rem' }}>
+              <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--cds-link-primary)', textDecoration: 'none', fontSize: '0.875rem' }}>
                 <ArrowLeft size={16} /> Voltar ao login
               </Link>
             </Stack>
@@ -109,7 +109,7 @@ export default function ForgotPasswordPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #161616 0%, #262626 100%);
+          background: linear-gradient(135deg, var(--cds-background-inverse) 0%, #262626 100%);
         }
         .login-container {
           background: white;
@@ -126,11 +126,11 @@ export default function ForgotPasswordPage() {
         .login-header h1 {
           font-size: 2.5rem;
           font-weight: 600;
-          color: #161616;
+          color: var(--cds-text-primary);
           margin: 0;
         }
         .login-header p {
-          color: #525252;
+          color: var(--cds-text-secondary);
           margin: 0.5rem 0 0;
           font-size: 0.875rem;
         }

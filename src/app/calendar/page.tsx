@@ -123,7 +123,7 @@ export default function CalendarPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Calendário Editorial</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>Planeje e agende seus conteúdos</p>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Planeje e agende seus conteúdos</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Button size="sm" renderIcon={Add} onClick={() => setIsModalOpen(true)}>
@@ -146,23 +146,23 @@ export default function CalendarPage() {
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <Tag type="blue" size="sm">
-                <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#0f62fe', marginRight: 4 }} />
+                <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--cds-link-primary)', marginRight: 4 }} />
                 Conteúdo
               </Tag>
               <Tag type="purple" size="sm">
-                <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#8a3ffc', marginRight: 4 }} />
+                <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--cds-support-info)', marginRight: 4 }} />
                 Reunião
               </Tag>
               <Tag type="red" size="sm">
-                <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#da1e28', marginRight: 4 }} />
+                <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--cds-support-error)', marginRight: 4 }} />
                 Prazo
               </Tag>
               <Tag type="green" size="sm">
-                <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#24a148', marginRight: 4 }} />
+                <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--cds-support-success)', marginRight: 4 }} />
                 Marco
               </Tag>
             </div>
-            <div style={{ display: 'flex', border: '1px solid #e0e0e0', borderRadius: '4px' }}>
+            <div style={{ display: 'flex', border: '1px solid var(--cds-border-subtle-01)', borderRadius: '4px' }}>
               <Button
                 kind={viewMode === 'month' ? 'secondary' : 'ghost'}
                 size="sm"
@@ -188,7 +188,7 @@ export default function CalendarPage() {
       {viewMode === 'month' && (
         <Tile style={{ padding: 0 }}>
           {/* Weekday Headers */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '1px solid #e0e0e0' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
             {weekDays.map(day => (
               <div
                 key={day}
@@ -196,8 +196,8 @@ export default function CalendarPage() {
                   padding: '0.75rem',
                   textAlign: 'center',
                   fontWeight: 600,
-                  background: '#f4f4f4',
-                  borderRight: '1px solid #e0e0e0',
+                  background: 'var(--cds-background)',
+                  borderRight: '1px solid var(--cds-border-subtle-01)',
                 }}
               >
                 {day}
@@ -217,9 +217,9 @@ export default function CalendarPage() {
                   style={{
                     minHeight: '120px',
                     padding: '0.5rem',
-                    borderRight: '1px solid #e0e0e0',
-                    borderBottom: '1px solid #e0e0e0',
-                    background: day ? 'white' : '#f4f4f4',
+                    borderRight: '1px solid var(--cds-border-subtle-01)',
+                    borderBottom: '1px solid var(--cds-border-subtle-01)',
+                    background: day ? 'var(--cds-layer-01)' : 'var(--cds-background)',
                     cursor: day ? 'pointer' : 'default',
                   }}
                   onClick={() => day && handleDateClick(day)}
@@ -233,7 +233,7 @@ export default function CalendarPage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: isToday ? '#0f62fe' : 'transparent',
+                        background: isToday ? 'var(--cds-link-primary)' : 'transparent',
                         color: isToday ? 'white' : 'inherit',
                         fontWeight: isToday ? 600 : 400,
                         marginBottom: '0.5rem',
@@ -263,7 +263,7 @@ export default function CalendarPage() {
                           </div>
                         ))}
                         {dayEvents.length > 3 && (
-                          <div style={{ fontSize: '0.75rem', color: '#525252' }}>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>
                             +{dayEvents.length - 3} mais
                           </div>
                         )}
@@ -291,14 +291,14 @@ export default function CalendarPage() {
                   alignItems: 'center',
                   gap: '1rem',
                   padding: '1rem',
-                  borderBottom: '1px solid #e0e0e0',
+                  borderBottom: '1px solid var(--cds-border-subtle-01)',
                 }}
               >
                 <div style={{ width: '80px', textAlign: 'center' }}>
                   <div style={{ fontSize: '1.5rem', fontWeight: 600 }}>
                     {new Date(event.date).getDate()}
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: '#525252' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>
                     {weekDays[new Date(event.date).getDay()]}
                   </div>
                 </div>
@@ -308,7 +308,7 @@ export default function CalendarPage() {
                     <Tag type={typeColors[event.type]} size="sm">{typeLabels[event.type]}</Tag>
                     {event.platform && <Tag type="gray" size="sm">{event.platform}</Tag>}
                   </div>
-                  <div style={{ fontSize: '0.875rem', color: '#525252' }}>
+                  <div style={{ fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>
                     {event.time || 'Dia todo'}
                   </div>
                 </div>

@@ -79,7 +79,7 @@ export default function ResetPasswordPage() {
 
         {success ? (
           <div style={{ textAlign: 'center' }}>
-            <Checkmark size={48} style={{ color: '#24a148', marginBottom: '1rem' }} />
+            <Checkmark size={48} style={{ color: 'var(--cds-support-success)', marginBottom: '1rem' }} />
             <InlineNotification
               kind="success"
               title="Senha alterada!"
@@ -134,7 +134,7 @@ export default function ResetPasswordPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #161616 0%, #262626 100%);
+          background: linear-gradient(135deg, var(--cds-background-inverse) 0%, #262626 100%);
         }
         .login-container {
           background: white;
@@ -151,11 +151,11 @@ export default function ResetPasswordPage() {
         .login-header h1 {
           font-size: 2.5rem;
           font-weight: 600;
-          color: #161616;
+          color: var(--cds-text-primary);
           margin: 0;
         }
         .login-header p {
-          color: #525252;
+          color: var(--cds-text-secondary);
           margin: 0.5rem 0 0;
           font-size: 0.875rem;
         }

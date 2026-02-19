@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Content } from '@carbon/react';
+import { Content, Theme } from '@carbon/react';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
 import './globals.scss';
@@ -17,15 +17,19 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        <div className="app-container">
-          <Sidebar />
-          <div className="main-wrapper">
-            <Header />
-            <Content className="main-content">
-              {children}
-            </Content>
+        <Theme theme="g10">
+          <div className="app-container">
+            <Theme theme="g100">
+              <Sidebar />
+            </Theme>
+            <div className="main-wrapper">
+              <Header />
+              <Content className="main-content">
+                {children}
+              </Content>
+            </div>
           </div>
-        </div>
+        </Theme>
       </body>
     </html>
   );

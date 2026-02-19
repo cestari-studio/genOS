@@ -122,14 +122,14 @@ export default function ApprovalsPage() {
           <div style={{
             width: '100px',
             height: '100px',
-            background: '#f4f4f4',
+            background: 'var(--cds-background)',
             borderRadius: '4px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
           }}>
-            <TypeIcon size={32} style={{ color: '#525252' }} />
+            <TypeIcon size={32} style={{ color: 'var(--cds-text-secondary)' }} />
           </div>
 
           {/* Content */}
@@ -137,7 +137,7 @@ export default function ApprovalsPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
               <div>
                 <h4 style={{ margin: 0, marginBottom: '0.25rem' }}>{item.title}</h4>
-                <p style={{ margin: 0, fontSize: '0.875rem', color: '#525252' }}>
+                <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>
                   {item.project} • {item.client}
                 </p>
               </div>
@@ -154,7 +154,7 @@ export default function ApprovalsPage() {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ fontSize: '0.75rem', color: '#525252' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>
                 <span>Por {item.submittedBy} • {item.submittedAt}</span>
                 {item.comments > 0 && (
                   <span style={{ marginLeft: '1rem' }}>
@@ -211,7 +211,7 @@ export default function ApprovalsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Central de Aprovações</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>
             {pendingItems.length} itens pendentes de aprovação
           </p>
         </div>
@@ -267,9 +267,9 @@ export default function ApprovalsPage() {
             <div style={{ marginTop: '1rem' }}>
               {pendingItems.length === 0 ? (
                 <Tile style={{ textAlign: 'center', padding: '3rem' }}>
-                  <Checkmark size={48} style={{ color: '#24a148', marginBottom: '1rem' }} />
+                  <Checkmark size={48} style={{ color: 'var(--cds-support-success)', marginBottom: '1rem' }} />
                   <h3>Tudo em dia!</h3>
-                  <p style={{ color: '#525252' }}>Não há itens pendentes de aprovação.</p>
+                  <p style={{ color: 'var(--cds-text-secondary)' }}>Não há itens pendentes de aprovação.</p>
                 </Tile>
               ) : (
                 pendingItems.map(renderApprovalCard)
@@ -282,9 +282,9 @@ export default function ApprovalsPage() {
             <div style={{ marginTop: '1rem' }}>
               {inRevisionItems.length === 0 ? (
                 <Tile style={{ textAlign: 'center', padding: '3rem' }}>
-                  <Time size={48} style={{ color: '#8d8d8d', marginBottom: '1rem' }} />
+                  <Time size={48} style={{ color: 'var(--cds-text-helper)', marginBottom: '1rem' }} />
                   <h3>Nenhum item em revisão</h3>
-                  <p style={{ color: '#525252' }}>Itens solicitados para revisão aparecerão aqui.</p>
+                  <p style={{ color: 'var(--cds-text-secondary)' }}>Itens solicitados para revisão aparecerão aqui.</p>
                 </Tile>
               ) : (
                 inRevisionItems.map(renderApprovalCard)

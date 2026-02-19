@@ -151,7 +151,7 @@ export default function EditBriefingPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Editar Briefing</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>Atualize as informações do briefing</p>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Atualize as informações do briefing</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Link href={`/briefings/${briefingId}`}>
@@ -288,7 +288,7 @@ export default function EditBriefingPage() {
                   </div>
                   <Stack gap={4}>
                     {deliverables.map((d, index) => (
-                      <div key={d.id} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end', padding: '1rem', background: '#f4f4f4', borderRadius: '4px' }}>
+                      <div key={d.id} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end', padding: '1rem', background: 'var(--cds-background)', borderRadius: '4px' }}>
                         <div style={{ flex: 2 }}>
                           <TextInput
                             id={`del-name-${index}`}
@@ -417,7 +417,7 @@ export default function EditBriefingPage() {
                 <div style={{ padding: '1rem 0' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                     <div>
-                      <span style={{ color: '#525252' }}>Total Calculado: </span>
+                      <span style={{ color: 'var(--cds-text-secondary)' }}>Total Calculado: </span>
                       <strong style={{ fontSize: '1.25rem' }}>R$ {calculatedTotal.toLocaleString('pt-BR')}</strong>
                     </div>
                     <Button kind="ghost" size="sm" renderIcon={Add} onClick={addBudgetItem}>
@@ -472,7 +472,7 @@ export default function EditBriefingPage() {
           <Column lg={4} md={8} sm={4}>
             <Tile style={{ position: 'sticky', top: '1rem' }}>
               <h3 style={{ marginBottom: '1rem' }}>Salvar Briefing</h3>
-              <p style={{ color: '#525252', fontSize: '0.875rem', marginBottom: '1rem' }}>
+              <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', marginBottom: '1rem' }}>
                 Revise todas as seções antes de salvar. Você pode enviar ao cliente após salvar.
               </p>
               <Button type="submit" renderIcon={Save} style={{ width: '100%' }}>

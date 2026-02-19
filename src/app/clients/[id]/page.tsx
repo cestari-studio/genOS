@@ -126,7 +126,7 @@ export default function ClientProfilePage() {
       <Column lg={16} md={8} sm={4}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '1rem', marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--cds-layer-accent-01)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <UserAvatar size={32} />
             </div>
             <div>
@@ -199,7 +199,7 @@ export default function ClientProfilePage() {
                 <Column lg={8} md={4} sm={4}>
                   <Tile>
                     <h4 style={{ marginBottom: '1rem' }}>Observações</h4>
-                    <p style={{ color: '#525252' }}>{client.notes || 'Nenhuma observação registrada.'}</p>
+                    <p style={{ color: 'var(--cds-text-secondary)' }}>{client.notes || 'Nenhuma observação registrada.'}</p>
                   </Tile>
                 </Column>
               </Grid>
@@ -210,8 +210,8 @@ export default function ClientProfilePage() {
               <div style={{ marginTop: '1rem' }}>
                 {projects.length === 0 ? (
                   <Tile style={{ textAlign: 'center', padding: '2rem' }}>
-                    <Folder size={48} style={{ color: '#8d8d8d', marginBottom: '1rem' }} />
-                    <p style={{ color: '#8d8d8d' }}>Nenhum projeto encontrado</p>
+                    <Folder size={48} style={{ color: 'var(--cds-text-helper)', marginBottom: '1rem' }} />
+                    <p style={{ color: 'var(--cds-text-helper)' }}>Nenhum projeto encontrado</p>
                     <Button kind="primary" style={{ marginTop: '1rem' }}>Criar Projeto</Button>
                   </Tile>
                 ) : (
@@ -235,8 +235,8 @@ export default function ClientProfilePage() {
             {/* Documentos */}
             <TabPanel>
               <Tile style={{ marginTop: '1rem', textAlign: 'center', padding: '2rem' }}>
-                <Document size={48} style={{ color: '#8d8d8d', marginBottom: '1rem' }} />
-                <p style={{ color: '#8d8d8d' }}>Nenhum documento encontrado</p>
+                <Document size={48} style={{ color: 'var(--cds-text-helper)', marginBottom: '1rem' }} />
+                <p style={{ color: 'var(--cds-text-helper)' }}>Nenhum documento encontrado</p>
                 <Button kind="primary" style={{ marginTop: '1rem' }}>Upload Documento</Button>
               </Tile>
             </TabPanel>
@@ -244,9 +244,9 @@ export default function ClientProfilePage() {
             {/* Timeline */}
             <TabPanel>
               <Tile style={{ marginTop: '1rem', textAlign: 'center', padding: '2rem' }}>
-                <Chat size={48} style={{ color: '#8d8d8d', marginBottom: '1rem' }} />
-                <p style={{ color: '#8d8d8d' }}>Histórico de atividades</p>
-                <p style={{ color: '#8d8d8d', fontSize: '0.75rem' }}>Em desenvolvimento</p>
+                <Chat size={48} style={{ color: 'var(--cds-text-helper)', marginBottom: '1rem' }} />
+                <p style={{ color: 'var(--cds-text-helper)' }}>Histórico de atividades</p>
+                <p style={{ color: 'var(--cds-text-helper)', fontSize: '0.75rem' }}>Em desenvolvimento</p>
               </Tile>
             </TabPanel>
           </TabPanels>

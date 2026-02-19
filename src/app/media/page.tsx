@@ -86,10 +86,10 @@ const typeIcons = {
 };
 
 const typeColors = {
-  image: '#0f62fe',
-  video: '#8a3ffc',
-  document: '#da1e28',
-  audio: '#24a148',
+  image: 'var(--cds-link-primary)',
+  video: 'var(--cds-support-info)',
+  document: 'var(--cds-support-error)',
+  audio: 'var(--cds-support-success)',
 };
 
 export default function MediaPage() {
@@ -126,7 +126,7 @@ export default function MediaPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Biblioteca de Mídia</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>{files.length} arquivos • 185 MB utilizados</p>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>{files.length} arquivos • 185 MB utilizados</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Button kind="secondary" size="sm" renderIcon={FolderAdd} onClick={() => setIsNewFolderModalOpen(true)}>
@@ -153,7 +153,7 @@ export default function MediaPage() {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     padding: '0.5rem 0.75rem',
-                    background: selectedFolder === folder.id ? '#e0e0e0' : 'transparent',
+                    background: selectedFolder === folder.id ? 'var(--cds-layer-accent-01)' : 'transparent',
                     border: 'none',
                     borderRadius: '4px',
                     cursor: 'pointer',
@@ -193,7 +193,7 @@ export default function MediaPage() {
                 <SelectItem value="document" text="Documentos" />
                 <SelectItem value="audio" text="Áudio" />
               </Select>
-              <div style={{ display: 'flex', border: '1px solid #e0e0e0', borderRadius: '4px' }}>
+              <div style={{ display: 'flex', border: '1px solid var(--cds-border-subtle-01)', borderRadius: '4px' }}>
                 <Button
                   kind={viewMode === 'grid' ? 'secondary' : 'ghost'}
                   size="sm"
@@ -216,7 +216,7 @@ export default function MediaPage() {
 
           {/* Selected Actions */}
           {selectedFiles.length > 0 && (
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', padding: '0.75rem', background: '#e0e0e0', borderRadius: '4px' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', padding: '0.75rem', background: 'var(--cds-layer-accent-01)', borderRadius: '4px' }}>
               <span style={{ display: 'flex', alignItems: 'center', marginRight: '1rem' }}>
                 {selectedFiles.length} selecionado(s)
               </span>
@@ -238,14 +238,14 @@ export default function MediaPage() {
                         padding: 0,
                         marginBottom: '1rem',
                         cursor: 'pointer',
-                        border: selectedFiles.includes(file.id) ? '2px solid #0f62fe' : '2px solid transparent',
+                        border: selectedFiles.includes(file.id) ? '2px solid var(--cds-focus)' : '2px solid transparent',
                       }}
                       onClick={() => toggleFileSelection(file.id)}
                     >
                       {/* Preview */}
                       <div style={{
                         height: '120px',
-                        background: '#f4f4f4',
+                        background: 'var(--cds-background)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -259,7 +259,7 @@ export default function MediaPage() {
                             <p style={{ margin: 0, fontSize: '0.875rem', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                               {file.name}
                             </p>
-                            <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#525252' }}>
+                            <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>
                               {file.size} • {file.uploadedAt}
                             </p>
                           </div>
@@ -283,7 +283,7 @@ export default function MediaPage() {
             <Tile style={{ padding: 0 }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid #e0e0e0', background: '#f4f4f4' }}>
+                  <tr style={{ borderBottom: '1px solid var(--cds-border-subtle-01)', background: '#f4f4f4' }}>
                     <th style={{ padding: '0.75rem', textAlign: 'left', width: '40px' }}></th>
                     <th style={{ padding: '0.75rem', textAlign: 'left' }}>Nome</th>
                     <th style={{ padding: '0.75rem', textAlign: 'left' }}>Tipo</th>
@@ -297,7 +297,7 @@ export default function MediaPage() {
                   {filteredFiles.map(file => {
                     const IconComponent = typeIcons[file.type];
                     return (
-                      <tr key={file.id} style={{ borderBottom: '1px solid #e0e0e0' }}>
+                      <tr key={file.id} style={{ borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
                         <td style={{ padding: '0.75rem' }}>
                           <Checkbox
                             id={`select-${file.id}`}
@@ -315,9 +315,9 @@ export default function MediaPage() {
                         <td style={{ padding: '0.75rem' }}>
                           <Tag type="gray" size="sm">{file.type}</Tag>
                         </td>
-                        <td style={{ padding: '0.75rem', color: '#525252' }}>{file.size}</td>
-                        <td style={{ padding: '0.75rem', color: '#525252' }}>{file.uploadedAt}</td>
-                        <td style={{ padding: '0.75rem', color: '#525252' }}>{file.uploadedBy}</td>
+                        <td style={{ padding: '0.75rem', color: 'var(--cds-text-secondary)' }}>{file.size}</td>
+                        <td style={{ padding: '0.75rem', color: 'var(--cds-text-secondary)' }}>{file.uploadedAt}</td>
+                        <td style={{ padding: '0.75rem', color: 'var(--cds-text-secondary)' }}>{file.uploadedBy}</td>
                         <td style={{ padding: '0.75rem' }}>
                           <OverflowMenu size="sm" flipped>
                             <OverflowMenuItem itemText="Download" />

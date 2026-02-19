@@ -1,15 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Grid, Column, Tile } from '@carbon/react';
+import Link from 'next/link';
+import {
+  Grid,
+  Column,
+  Tile,
+  Breadcrumb,
+  BreadcrumbItem,
+  Loading,
+} from '@carbon/react';
 import {
   UserMultiple,
   Folder,
   Document,
   TaskComplete,
-  Growth,
-  Activity,
 } from '@carbon/icons-react';
+import { DonutChart } from '@carbon/charts-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface Stats {
@@ -83,25 +90,36 @@ export default function AnalyticsContent() {
   }, []);
 
   if (loading) {
-    return <div className="page-header"><h1>Carregando...</h1></div>;
+    return (
+      <div className="page-header">
+        <Loading description="Carregando analytics..." withOverlay={false} />
+      </div>
+    );
   }
 
   return (
     <div>
+      <Breadcrumb noTrailingSlash style={{ marginBottom: '1rem' }}>
+        <BreadcrumbItem>
+          <Link href="/dashboard">Dashboard</Link>
+        </BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>Analytics</BreadcrumbItem>
+      </Breadcrumb>
+
       <div className="page-header">
         <h1>Analytics</h1>
-        <p>Métricas e estatísticas do sistema</p>
+        <p>Metricas e estatisticas do sistema</p>
       </div>
 
       <Grid>
         <Column lg={4} md={4} sm={4}>
           <Tile className="stat-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#0f62fe' }}>
+            <div className="stat-card__header" style={{ color: 'var(--cds-link-primary, #0f62fe)' }}>
               <UserMultiple size={24} />
               <span>Total de Clientes</span>
             </div>
             <div className="stat-value">{stats?.totalClients}</div>
-            <div style={{ fontSize: '0.875rem', color: '#24a148' }}>
+            <div className="stat-change positive">
               {stats?.activeClients} ativos
             </div>
           </Tile>
@@ -109,20 +127,20 @@ export default function AnalyticsContent() {
 
         <Column lg={4} md={4} sm={4}>
           <Tile className="stat-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#8a3ffc' }}>
+            <div className="stat-card__header" style={{ color: 'var(--cds-support-info, #8a3ffc)' }}>
               <Folder size={24} />
               <span>Total de Projetos</span>
             </div>
             <div className="stat-value">{stats?.totalProjects}</div>
-            <div style={{ fontSize: '0.875rem', color: '#24a148' }}>
-              {stats?.completedProjects} concluídos
+            <div className="stat-change positive">
+              {stats?.completedProjects} concluidos
             </div>
           </Tile>
         </Column>
 
         <Column lg={4} md={4} sm={4}>
           <Tile className="stat-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#007d79' }}>
+            <div className="stat-card__header" style={{ color: 'var(--cds-support-success, #007d79)' }}>
               <TaskComplete size={24} />
               <span>Briefings</span>
             </div>
@@ -132,7 +150,7 @@ export default function AnalyticsContent() {
 
         <Column lg={4} md={4} sm={4}>
           <Tile className="stat-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#fa4d56' }}>
+            <div className="stat-card__header" style={{ color: 'var(--cds-support-error, #fa4d56)' }}>
               <Document size={24} />
               <span>Documentos</span>
             </div>
@@ -143,39 +161,45 @@ export default function AnalyticsContent() {
 
       <Grid style={{ marginTop: '2rem' }}>
         <Column lg={8} md={4} sm={4}>
-          <div className="content-card">
-            <div className="card-header">
-              <h2>Clientes por Status</h2>
-            </div>
-            <div className="card-body">
-              {stats?.clientsByStatus.map((item) => (
-                <div key={item.status} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #e0e0e0' }}>
-                  <span style={{ textTransform: 'capitalize' }}>{item.status}</span>
-                  <strong>{item.count}</strong>
-                </div>
-              ))}
-            </div>
-          </div>
+          <Tile>
+            <DonutChart
+              data={stats?.clientsByStatus.map((s) => ({
+                group: s.status,
+                value: s.count,
+              })) || []}
+              options={{
+                title: 'Clientes por Status',
+                resizable: true,
+                height: '300px',
+                donut: {
+                  center: {
+                    label: 'Clientes',
+                  },
+                },
+              }}
+            />
+          </Tile>
         </Column>
 
         <Column lg={8} md={4} sm={4}>
-          <div className="content-card">
-            <div className="card-header">
-              <h2>Projetos por Status</h2>
-            </div>
-            <div className="card-body">
-              {stats?.projectsByStatus.length === 0 ? (
-                <p style={{ color: '#8d8d8d', textAlign: 'center' }}>Nenhum projeto cadastrado</p>
-              ) : (
-                stats?.projectsByStatus.map((item) => (
-                  <div key={item.status} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #e0e0e0' }}>
-                    <span style={{ textTransform: 'capitalize' }}>{item.status.replace('_', ' ')}</span>
-                    <strong>{item.count}</strong>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+          <Tile>
+            <DonutChart
+              data={stats?.projectsByStatus.map((s) => ({
+                group: s.status,
+                value: s.count,
+              })) || []}
+              options={{
+                title: 'Projetos por Status',
+                resizable: true,
+                height: '300px',
+                donut: {
+                  center: {
+                    label: 'Projetos',
+                  },
+                },
+              }}
+            />
+          </Tile>
         </Column>
       </Grid>
     </div>

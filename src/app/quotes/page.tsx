@@ -197,7 +197,7 @@ export default function QuotesPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Orçamentos</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>Crie e gerencie propostas comerciais</p>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Crie e gerencie propostas comerciais</p>
         </div>
         <Button size="sm" renderIcon={Calculator} onClick={() => setIsBuilderModalOpen(true)}>
           Novo Orçamento
@@ -208,40 +208,40 @@ export default function QuotesPage() {
       <Grid style={{ marginBottom: '1.5rem' }}>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Aceitos</h4>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#24a148' }}>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Aceitos</h4>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-success)' }}>
               R$ {totalAccepted.toLocaleString('pt-BR')}
             </p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               {quotes.filter(q => q.status === 'accepted').length} orçamentos
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Aguardando</h4>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#0f62fe' }}>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Aguardando</h4>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-link-primary)' }}>
               R$ {totalPending.toLocaleString('pt-BR')}
             </p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               {quotes.filter(q => q.status === 'sent').length} orçamentos
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Taxa de Conversão</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Taxa de Conversão</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>{conversionRate}%</p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               orçamentos aceitos
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Total Criados</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Total Criados</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>{quotes.length}</p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               neste período
             </p>
           </Tile>
@@ -283,7 +283,7 @@ export default function QuotesPage() {
                 </Tag>
               </div>
               <p style={{ margin: 0, fontWeight: 500 }}>{quote.title}</p>
-              <p style={{ margin: '0.25rem 0 0', fontSize: '0.875rem', color: '#525252' }}>
+              <p style={{ margin: '0.25rem 0 0', fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>
                 {quote.client} • Criado em {new Date(quote.createdAt).toLocaleDateString('pt-BR')}
               </p>
             </div>
@@ -291,7 +291,7 @@ export default function QuotesPage() {
               <p style={{ fontSize: '1.5rem', fontWeight: 600, margin: 0 }}>
                 R$ {quote.total.toLocaleString('pt-BR')}
               </p>
-              <p style={{ fontSize: '0.75rem', color: '#525252', margin: '0.25rem 0 0' }}>
+              <p style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>
                 Válido até {new Date(quote.validUntil).toLocaleDateString('pt-BR')}
               </p>
             </div>
@@ -302,7 +302,7 @@ export default function QuotesPage() {
             <AccordionItem title={`${quote.items.length} itens`}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                  <tr style={{ borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
                     <th style={{ padding: '0.5rem', textAlign: 'left' }}>Descrição</th>
                     <th style={{ padding: '0.5rem', textAlign: 'center', width: '80px' }}>Qtd.</th>
                     <th style={{ padding: '0.5rem', textAlign: 'right', width: '120px' }}>Valor Unit.</th>
@@ -311,7 +311,7 @@ export default function QuotesPage() {
                 </thead>
                 <tbody>
                   {quote.items.map(item => (
-                    <tr key={item.id} style={{ borderBottom: '1px solid #e0e0e0' }}>
+                    <tr key={item.id} style={{ borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
                       <td style={{ padding: '0.5rem' }}>{item.description}</td>
                       <td style={{ padding: '0.5rem', textAlign: 'center' }}>{item.quantity}</td>
                       <td style={{ padding: '0.5rem', textAlign: 'right' }}>R$ {item.unitPrice.toLocaleString('pt-BR')}</td>
@@ -326,8 +326,8 @@ export default function QuotesPage() {
                   </tr>
                   {quote.discount > 0 && (
                     <tr>
-                      <td colSpan={3} style={{ padding: '0.5rem', textAlign: 'right', color: '#24a148' }}>Desconto:</td>
-                      <td style={{ padding: '0.5rem', textAlign: 'right', color: '#24a148' }}>-R$ {quote.discount.toLocaleString('pt-BR')}</td>
+                      <td colSpan={3} style={{ padding: '0.5rem', textAlign: 'right', color: 'var(--cds-support-success)' }}>Desconto:</td>
+                      <td style={{ padding: '0.5rem', textAlign: 'right', color: 'var(--cds-support-success)' }}>-R$ {quote.discount.toLocaleString('pt-BR')}</td>
                     </tr>
                   )}
                   <tr>
@@ -435,7 +435,7 @@ export default function QuotesPage() {
           Adicionar Item
         </Button>
 
-        <div style={{ marginTop: '1.5rem', padding: '1rem', background: '#f4f4f4', borderRadius: '4px' }}>
+        <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'var(--cds-background)', borderRadius: '4px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
             <span>Subtotal:</span>
             <strong>R$ {calculateSubtotal().toLocaleString('pt-BR')}</strong>
@@ -452,9 +452,9 @@ export default function QuotesPage() {
               />
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.5rem', borderTop: '1px solid #e0e0e0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.5rem', borderTop: '1px solid var(--cds-border-subtle-01)' }}>
             <strong>Total:</strong>
-            <strong style={{ fontSize: '1.25rem', color: '#0f62fe' }}>R$ {calculateTotal().toLocaleString('pt-BR')}</strong>
+            <strong style={{ fontSize: '1.25rem', color: 'var(--cds-link-primary)' }}>R$ {calculateTotal().toLocaleString('pt-BR')}</strong>
           </div>
         </div>
 

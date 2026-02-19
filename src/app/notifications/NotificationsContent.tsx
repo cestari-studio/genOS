@@ -59,9 +59,9 @@ const mockNotifications: NotificationItem[] = [
 ];
 
 const iconMap = {
-  info: <InformationFilled size={20} style={{ color: '#0f62fe' }} />,
-  success: <CheckmarkFilled size={20} style={{ color: '#24a148' }} />,
-  warning: <WarningFilled size={20} style={{ color: '#f1c21b' }} />,
+  info: <InformationFilled size={20} style={{ color: 'var(--cds-link-primary)' }} />,
+  success: <CheckmarkFilled size={20} style={{ color: 'var(--cds-support-success)' }} />,
+  warning: <WarningFilled size={20} style={{ color: 'var(--cds-support-warning)' }} />,
 };
 
 export default function NotificationsContent() {
@@ -106,8 +106,8 @@ export default function NotificationsContent() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         {notifications.length === 0 ? (
           <Tile style={{ textAlign: 'center', padding: '3rem' }}>
-            <Notification size={48} style={{ color: '#8d8d8d', marginBottom: '1rem' }} />
-            <p style={{ color: '#8d8d8d' }}>Nenhuma notificação</p>
+            <Notification size={48} style={{ color: 'var(--cds-text-helper)', marginBottom: '1rem' }} />
+            <p style={{ color: 'var(--cds-text-helper)' }}>Nenhuma notificação</p>
           </Tile>
         ) : (
           notifications.map((notification) => (
@@ -115,7 +115,7 @@ export default function NotificationsContent() {
               key={notification.id}
               style={{
                 opacity: notification.read ? 0.7 : 1,
-                borderLeft: notification.read ? 'none' : '3px solid #0f62fe',
+                borderLeft: notification.read ? 'none' : '3px solid var(--cds-link-primary)',
                 cursor: 'pointer',
               }}
               onClick={() => markAsRead(notification.id)}
@@ -127,10 +127,10 @@ export default function NotificationsContent() {
                     <strong style={{ display: 'block', marginBottom: '0.25rem' }}>
                       {notification.title}
                     </strong>
-                    <p style={{ margin: 0, color: '#525252', fontSize: '0.875rem' }}>
+                    <p style={{ margin: 0, color: 'var(--cds-text-secondary)', fontSize: '0.875rem' }}>
                       {notification.message}
                     </p>
-                    <span style={{ fontSize: '0.75rem', color: '#8d8d8d', marginTop: '0.5rem', display: 'block' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--cds-text-helper)', marginTop: '0.5rem', display: 'block' }}>
                       {notification.time}
                     </span>
                   </div>

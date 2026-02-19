@@ -114,7 +114,7 @@ export default function UsersPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Gerenciar Usuários</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>Gerencie sua equipe e permissões</p>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Gerencie sua equipe e permissões</p>
         </div>
         <Button size="sm" renderIcon={Add} onClick={() => setIsInviteModalOpen(true)}>
           Convidar Usuário
@@ -135,25 +135,25 @@ export default function UsersPage() {
       <Grid style={{ marginBottom: '1.5rem' }}>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Total de Usuários</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Total de Usuários</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>{users.length}</p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Ativos</h4>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#24a148' }}>{activeUsers}</p>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Ativos</h4>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-success)' }}>{activeUsers}</p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Convites Pendentes</h4>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#ff832b' }}>{pendingUsers}</p>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Convites Pendentes</h4>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-warning)' }}>{pendingUsers}</p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Administradores</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Administradores</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>
               {users.filter(u => u.role === 'admin').length}
             </p>
@@ -187,7 +187,7 @@ export default function UsersPage() {
       <Tile style={{ padding: 0 }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid #e0e0e0', background: '#f4f4f4' }}>
+            <tr style={{ borderBottom: '1px solid var(--cds-border-subtle-01)', background: 'var(--cds-background)' }}>
               <th style={{ padding: '1rem', textAlign: 'left' }}>Usuário</th>
               <th style={{ padding: '1rem', textAlign: 'left' }}>Função</th>
               <th style={{ padding: '1rem', textAlign: 'left' }}>Status</th>
@@ -197,14 +197,14 @@ export default function UsersPage() {
           </thead>
           <tbody>
             {filteredUsers.map(user => (
-              <tr key={user.id} style={{ borderBottom: '1px solid #e0e0e0' }}>
+              <tr key={user.id} style={{ borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
                 <td style={{ padding: '1rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div style={{
                       width: '40px',
                       height: '40px',
                       borderRadius: '50%',
-                      background: '#e0e0e0',
+                      background: 'var(--cds-layer-accent-01)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -213,7 +213,7 @@ export default function UsersPage() {
                     </div>
                     <div>
                       <strong>{user.name}</strong>
-                      <div style={{ fontSize: '0.875rem', color: '#525252' }}>{user.email}</div>
+                      <div style={{ fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>{user.email}</div>
                     </div>
                   </div>
                 </td>
@@ -227,7 +227,7 @@ export default function UsersPage() {
                     {statusConfig[user.status].label}
                   </Tag>
                 </td>
-                <td style={{ padding: '1rem', color: '#525252' }}>
+                <td style={{ padding: '1rem', color: 'var(--cds-text-secondary)' }}>
                   {user.lastActive === '-' ? 'Nunca' : user.lastActive}
                 </td>
                 <td style={{ padding: '1rem' }}>
@@ -273,9 +273,9 @@ export default function UsersPage() {
             <SelectItem value="viewer" text="Visualizador" />
             <SelectItem value="admin" text="Administrador" />
           </Select>
-          <div style={{ background: '#f4f4f4', padding: '1rem', borderRadius: '4px' }}>
+          <div style={{ background: 'var(--cds-background)', padding: '1rem', borderRadius: '4px' }}>
             <h5 style={{ margin: '0 0 0.5rem' }}>Permissões:</h5>
-            <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#525252', fontSize: '0.875rem' }}>
+            <ul style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--cds-text-secondary)', fontSize: '0.875rem' }}>
               <li>Administrador: Acesso total ao sistema</li>
               <li>Gerente: Gerencia projetos e equipe</li>
               <li>Membro: Acesso a projetos atribuídos</li>

@@ -19,7 +19,7 @@ export default function LoginPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #161616 0%, #262626 100%);
+          background: linear-gradient(135deg, var(--cds-background-inverse) 0%, #262626 100%);
         }
         .login-container {
           background: white;
@@ -36,11 +36,11 @@ export default function LoginPage() {
         .login-header h1 {
           font-size: 2.5rem;
           font-weight: 600;
-          color: #161616;
+          color: var(--cds-text-primary);
           margin: 0;
         }
         .login-header p {
-          color: #525252;
+          color: var(--cds-text-secondary);
           margin: 0.5rem 0 0;
           font-size: 0.875rem;
         }

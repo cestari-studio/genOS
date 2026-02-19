@@ -64,9 +64,9 @@ const weeks = [
 ];
 
 const statusColors = {
-  pending: '#8d8d8d',
-  in_progress: '#0f62fe',
-  completed: '#24a148',
+  pending: 'var(--cds-text-helper)',
+  in_progress: 'var(--cds-link-primary)',
+  completed: 'var(--cds-support-success)',
 };
 
 export default function TimelinePage() {
@@ -106,7 +106,7 @@ export default function TimelinePage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Timeline do Projeto</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>Visualização de Gantt das tarefas</p>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Visualização de Gantt das tarefas</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
           <Link href={`/projects/${projectId}`}>
@@ -162,12 +162,12 @@ export default function TimelinePage() {
       <Tile style={{ padding: 0, overflow: 'hidden' }}>
         <div style={{ display: 'flex' }}>
           {/* Lista de Tarefas */}
-          <div style={{ width: '280px', borderRight: '1px solid #e0e0e0', flexShrink: 0 }}>
+          <div style={{ width: '280px', borderRight: '1px solid var(--cds-border-subtle-01)', flexShrink: 0 }}>
             {/* Header */}
             <div style={{
               padding: '0.75rem 1rem',
-              borderBottom: '1px solid #e0e0e0',
-              background: '#f4f4f4',
+              borderBottom: '1px solid var(--cds-border-subtle-01)',
+              background: 'var(--cds-background)',
               fontWeight: 600,
             }}>
               Tarefa
@@ -178,7 +178,7 @@ export default function TimelinePage() {
                 key={task.id}
                 style={{
                   padding: '0.75rem 1rem',
-                  borderBottom: '1px solid #e0e0e0',
+                  borderBottom: '1px solid var(--cds-border-subtle-01)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
@@ -196,7 +196,7 @@ export default function TimelinePage() {
                   <div style={{ fontSize: '0.875rem', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {task.name}
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: '#525252' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>
                     {task.assignee}
                   </div>
                 </div>
@@ -207,7 +207,7 @@ export default function TimelinePage() {
           {/* Área do Gantt */}
           <div style={{ flex: 1, overflow: 'auto' }}>
             {/* Header com meses/semanas */}
-            <div style={{ display: 'flex', borderBottom: '1px solid #e0e0e0', background: '#f4f4f4' }}>
+            <div style={{ display: 'flex', borderBottom: '1px solid var(--cds-border-subtle-01)', background: 'var(--cds-background)' }}>
               {months.map((month) => (
                 <div
                   key={month}
@@ -216,14 +216,14 @@ export default function TimelinePage() {
                     padding: '0.5rem',
                     textAlign: 'center',
                     fontWeight: 600,
-                    borderRight: '1px solid #e0e0e0',
+                    borderRight: '1px solid var(--cds-border-subtle-01)',
                   }}
                 >
                   {month} 2024
                 </div>
               ))}
             </div>
-            <div style={{ display: 'flex', borderBottom: '1px solid #e0e0e0', background: '#f4f4f4' }}>
+            <div style={{ display: 'flex', borderBottom: '1px solid var(--cds-border-subtle-01)', background: 'var(--cds-background)' }}>
               {weeks.map((week, i) => (
                 <div
                   key={i}
@@ -232,8 +232,8 @@ export default function TimelinePage() {
                     padding: '0.25rem',
                     textAlign: 'center',
                     fontSize: '0.75rem',
-                    color: '#525252',
-                    borderRight: '1px solid #e0e0e0',
+                    color: 'var(--cds-text-secondary)',
+                    borderRight: '1px solid var(--cds-border-subtle-01)',
                   }}
                 >
                   {week.label}
@@ -250,7 +250,7 @@ export default function TimelinePage() {
                     key={task.id}
                     style={{
                       height: '52px',
-                      borderBottom: '1px solid #e0e0e0',
+                      borderBottom: '1px solid var(--cds-border-subtle-01)',
                       position: 'relative',
                       display: 'flex',
                       alignItems: 'center',
@@ -271,7 +271,7 @@ export default function TimelinePage() {
                           key={i}
                           style={{
                             flex: 1,
-                            borderRight: '1px dashed #e0e0e0',
+                            borderRight: '1px dashed var(--cds-border-subtle-01)',
                           }}
                         />
                       ))}
@@ -310,7 +310,7 @@ export default function TimelinePage() {
                       <span style={{
                         position: 'relative',
                         fontSize: '0.75rem',
-                        color: 'white',
+                        color: 'var(--cds-text-inverse)',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
@@ -330,30 +330,30 @@ export default function TimelinePage() {
       <Grid style={{ marginTop: '1rem' }}>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Total de Tarefas</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Total de Tarefas</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>{tasks.length}</p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Concluídas</h4>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#24a148' }}>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Concluídas</h4>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-success)' }}>
               {tasks.filter(t => t.status === 'completed').length}
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Em Progresso</h4>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#0f62fe' }}>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Em Progresso</h4>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-link-primary)' }}>
               {tasks.filter(t => t.status === 'in_progress').length}
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Pendentes</h4>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#8d8d8d' }}>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Pendentes</h4>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-text-helper)' }}>
               {tasks.filter(t => t.status === 'pending').length}
             </p>
           </Tile>

@@ -175,7 +175,7 @@ export default function ProjectDetailsPage() {
             <strong>{progress}%</strong>
           </div>
           <ProgressBar label="Progresso do Projeto" value={progress} max={100} />
-          <p style={{ fontSize: '0.75rem', color: '#8d8d8d', marginTop: '0.5rem' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--cds-text-helper)', marginTop: '0.5rem' }}>
             {completedTasks} de {tasks.length} tarefas concluídas
           </p>
         </Tile>
@@ -207,7 +207,7 @@ export default function ProjectDetailsPage() {
                           </StructuredListCell>
                           <StructuredListCell>
                             {project.client ? (
-                              <Link href={`/clients/${project.client.id}`} style={{ color: '#0f62fe' }}>
+                              <Link href={`/clients/${project.client.id}`} style={{ color: 'var(--cds-link-primary)' }}>
                                 {project.client.name}
                               </Link>
                             ) : '-'}
@@ -240,7 +240,7 @@ export default function ProjectDetailsPage() {
                 <Column lg={8} md={4} sm={4}>
                   <Tile>
                     <h4 style={{ marginBottom: '1rem' }}>Descrição</h4>
-                    <p style={{ color: '#525252' }}>{project.description || 'Sem descrição.'}</p>
+                    <p style={{ color: 'var(--cds-text-secondary)' }}>{project.description || 'Sem descrição.'}</p>
                   </Tile>
                 </Column>
               </Grid>
@@ -276,8 +276,8 @@ export default function ProjectDetailsPage() {
             {/* Arquivos */}
             <TabPanel>
               <Tile style={{ marginTop: '1rem', textAlign: 'center', padding: '2rem' }}>
-                <Document size={48} style={{ color: '#8d8d8d', marginBottom: '1rem' }} />
-                <p style={{ color: '#8d8d8d' }}>Nenhum arquivo anexado</p>
+                <Document size={48} style={{ color: 'var(--cds-text-helper)', marginBottom: '1rem' }} />
+                <p style={{ color: 'var(--cds-text-helper)' }}>Nenhum arquivo anexado</p>
                 <Button kind="primary" style={{ marginTop: '1rem' }} renderIcon={Add}>Upload Arquivo</Button>
               </Tile>
             </TabPanel>
@@ -285,8 +285,8 @@ export default function ProjectDetailsPage() {
             {/* Equipe */}
             <TabPanel>
               <Tile style={{ marginTop: '1rem', textAlign: 'center', padding: '2rem' }}>
-                <User size={48} style={{ color: '#8d8d8d', marginBottom: '1rem' }} />
-                <p style={{ color: '#8d8d8d' }}>Nenhum membro atribuído</p>
+                <User size={48} style={{ color: 'var(--cds-text-helper)', marginBottom: '1rem' }} />
+                <p style={{ color: 'var(--cds-text-helper)' }}>Nenhum membro atribuído</p>
                 <Button kind="primary" style={{ marginTop: '1rem' }} renderIcon={Add}>Adicionar Membro</Button>
               </Tile>
             </TabPanel>

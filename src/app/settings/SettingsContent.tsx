@@ -195,8 +195,8 @@ export default function SettingsContent() {
             </Tile>
 
             <Tile style={{ marginTop: '1rem' }}>
-              <h3 style={{ marginBottom: '1rem', color: '#da1e28' }}>Zona de Perigo</h3>
-              <p style={{ color: '#525252', marginBottom: '1rem' }}>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--cds-support-error)' }}>Zona de Perigo</h3>
+              <p style={{ color: 'var(--cds-text-secondary)', marginBottom: '1rem' }}>
                 Ações irreversíveis para sua conta.
               </p>
               <Button kind="danger">Excluir Conta</Button>

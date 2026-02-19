@@ -127,7 +127,7 @@ export default function DocumentViewPage() {
               {statusConfig[documentData.status].label}
             </Tag>
           </div>
-          <p style={{ margin: 0, fontSize: '0.875rem', color: '#525252' }}>
+          <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>
             {typeLabels[documentData.type]} • {documentData.client} • {documentData.pages} páginas
           </p>
         </div>
@@ -156,8 +156,8 @@ export default function DocumentViewPage() {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '0.5rem 1rem',
-              borderBottom: '1px solid #e0e0e0',
-              background: '#f4f4f4',
+              borderBottom: '1px solid var(--cds-border-subtle-01)',
+              background: 'var(--cds-background)',
             }}>
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                 <Button kind="ghost" size="sm" hasIconOnly iconDescription="Página anterior" renderIcon={ChevronLeft} onClick={handlePrevPage} disabled={currentPage === 1} />
@@ -170,7 +170,7 @@ export default function DocumentViewPage() {
                 <Button kind="ghost" size="sm" hasIconOnly iconDescription="Diminuir zoom" renderIcon={ZoomOut} onClick={handleZoomOut} />
                 <span style={{ minWidth: '60px', textAlign: 'center' }}>{zoom}%</span>
                 <Button kind="ghost" size="sm" hasIconOnly iconDescription="Aumentar zoom" renderIcon={ZoomIn} onClick={handleZoomIn} />
-                <div style={{ width: '1px', height: '20px', background: '#e0e0e0', margin: '0 0.5rem' }} />
+                <div style={{ width: '1px', height: '20px', background: 'var(--cds-layer-accent-01)', margin: '0 0.5rem' }} />
                 <Button
                   kind={showComments ? 'secondary' : 'ghost'}
                   size="sm"
@@ -186,7 +186,7 @@ export default function DocumentViewPage() {
             <div style={{
               height: 'calc(100vh - 300px)',
               minHeight: '500px',
-              background: '#525252',
+              background: 'var(--cds-text-secondary)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -196,7 +196,7 @@ export default function DocumentViewPage() {
               <div style={{
                 width: `${(595 * zoom) / 100}px`,
                 height: `${(842 * zoom) / 100}px`,
-                background: 'white',
+                background: 'var(--cds-layer-01)',
                 boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
                 display: 'flex',
                 flexDirection: 'column',
@@ -204,10 +204,10 @@ export default function DocumentViewPage() {
               }}>
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                   <h2 style={{ margin: 0 }}>PROPOSTA COMERCIAL</h2>
-                  <p style={{ color: '#525252' }}>{documentData.client}</p>
+                  <p style={{ color: 'var(--cds-text-secondary)' }}>{documentData.client}</p>
                 </div>
                 <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ textAlign: 'center', color: '#8d8d8d' }}>
+                  <div style={{ textAlign: 'center', color: 'var(--cds-text-helper)' }}>
                     <p style={{ fontSize: '1.25rem' }}>Página {currentPage}</p>
                     <p style={{ fontSize: '0.875rem' }}>Pré-visualização do documento</p>
                     <p style={{ fontSize: '0.75rem', marginTop: '1rem' }}>
@@ -215,7 +215,7 @@ export default function DocumentViewPage() {
                     </p>
                   </div>
                 </div>
-                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: '#8d8d8d' }}>
+                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--cds-text-helper)' }}>
                   Página {currentPage} de {documentData.pages}
                 </div>
               </div>
@@ -236,7 +236,7 @@ export default function DocumentViewPage() {
                     key={comment.id}
                     style={{
                       padding: '0.75rem',
-                      background: '#f4f4f4',
+                      background: 'var(--cds-background)',
                       borderRadius: '4px',
                       marginBottom: '0.5rem',
                     }}
@@ -247,8 +247,8 @@ export default function DocumentViewPage() {
                         <Tag type="gray" size="sm">Pág. {comment.page}</Tag>
                       )}
                     </div>
-                    <p style={{ margin: 0, fontSize: '0.875rem', color: '#525252' }}>{comment.text}</p>
-                    <p style={{ margin: '0.5rem 0 0', fontSize: '0.75rem', color: '#8d8d8d' }}>{comment.date}</p>
+                    <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>{comment.text}</p>
+                    <p style={{ margin: '0.5rem 0 0', fontSize: '0.75rem', color: 'var(--cds-text-helper)' }}>{comment.date}</p>
                   </div>
                 ))}
               </div>
@@ -264,7 +264,7 @@ export default function DocumentViewPage() {
                   rows={3}
                 />
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#525252' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>
                     Na página {currentPage}
                   </span>
                   <Button size="sm" renderIcon={Send} onClick={handleAddComment} disabled={!newComment.trim()}>
@@ -292,7 +292,7 @@ export default function DocumentViewPage() {
         <p>
           Você está prestes a aprovar o documento <strong>{documentData.name}</strong>.
         </p>
-        <p style={{ color: '#525252', marginTop: '1rem' }}>
+        <p style={{ color: 'var(--cds-text-secondary)', marginTop: '1rem' }}>
           Após a aprovação, o cliente será notificado e poderá prosseguir com a assinatura.
         </p>
       </Modal>

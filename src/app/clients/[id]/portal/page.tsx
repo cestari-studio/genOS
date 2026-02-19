@@ -120,13 +120,13 @@ export default function ClientPortalPage() {
           <Column lg={4} md={2} sm={2}>
             <Tile className="stat-card">
               <span className="stat-label">Aguardando Aprovação</span>
-              <div className="stat-value" style={{ color: '#0f62fe' }}>{pendingCount}</div>
+              <div className="stat-value" style={{ color: 'var(--cds-link-primary)' }}>{pendingCount}</div>
             </Tile>
           </Column>
           <Column lg={4} md={2} sm={2}>
             <Tile className="stat-card">
               <span className="stat-label">Aprovados</span>
-              <div className="stat-value" style={{ color: '#24a148' }}>{approvedCount}</div>
+              <div className="stat-value" style={{ color: 'var(--cds-support-success)' }}>{approvedCount}</div>
             </Tile>
           </Column>
           <Column lg={4} md={2} sm={2}>
@@ -158,20 +158,20 @@ export default function ClientPortalPage() {
                         {/* Thumbnail */}
                         <div style={{
                           height: '150px',
-                          background: '#e0e0e0',
+                          background: 'var(--cds-layer-accent-01)',
                           borderRadius: '4px',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           marginBottom: '1rem',
                         }}>
-                          <Icon size={48} style={{ color: '#8d8d8d' }} />
+                          <Icon size={48} style={{ color: 'var(--cds-text-helper)' }} />
                         </div>
 
                         {/* Info */}
                         <div style={{ marginBottom: '1rem' }}>
                           <strong style={{ display: 'block', marginBottom: '0.25rem' }}>{item.title}</strong>
-                          <span style={{ fontSize: '0.75rem', color: '#8d8d8d' }}>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--cds-text-helper)' }}>
                             {new Date(item.created_at).toLocaleDateString('pt-BR')}
                           </span>
                           <Tag type={statusConfig[item.status].color} size="sm" style={{ marginLeft: '0.5rem' }}>
@@ -206,9 +206,9 @@ export default function ClientPortalPage() {
                   const Icon = typeIcons[item.type];
                   return (
                     <Column lg={4} md={4} sm={4} key={item.id}>
-                      <Tile style={{ marginBottom: '1rem', borderLeft: '3px solid #0f62fe' }}>
-                        <div style={{ height: '150px', background: '#e0e0e0', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                          <Icon size={48} style={{ color: '#8d8d8d' }} />
+                      <Tile style={{ marginBottom: '1rem', borderLeft: '3px solid var(--cds-link-primary)' }}>
+                        <div style={{ height: '150px', background: 'var(--cds-layer-accent-01)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                          <Icon size={48} style={{ color: 'var(--cds-text-helper)' }} />
                         </div>
                         <strong style={{ display: 'block', marginBottom: '0.5rem' }}>{item.title}</strong>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -229,9 +229,9 @@ export default function ClientPortalPage() {
                   const Icon = typeIcons[item.type];
                   return (
                     <Column lg={4} md={4} sm={4} key={item.id}>
-                      <Tile style={{ marginBottom: '1rem', borderLeft: '3px solid #24a148' }}>
-                        <div style={{ height: '150px', background: '#e0e0e0', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                          <Icon size={48} style={{ color: '#8d8d8d' }} />
+                      <Tile style={{ marginBottom: '1rem', borderLeft: '3px solid var(--cds-support-success)' }}>
+                        <div style={{ height: '150px', background: 'var(--cds-layer-accent-01)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                          <Icon size={48} style={{ color: 'var(--cds-text-helper)' }} />
                         </div>
                         <strong style={{ display: 'block', marginBottom: '0.5rem' }}>{item.title}</strong>
                         <Tag type="green" size="sm">Aprovado</Tag>

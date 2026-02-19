@@ -171,7 +171,7 @@ export default function BriefingDetailPage() {
               {statusConfig[briefingData.status].label}
             </Tag>
           </div>
-          <p style={{ color: '#525252', margin: 0 }}>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>
             {briefingData.client} • Atualizado em {new Date(briefingData.updatedAt).toLocaleDateString('pt-BR')}
           </p>
         </div>
@@ -212,17 +212,17 @@ export default function BriefingDetailPage() {
               <TabPanel>
                 <Tile style={{ marginTop: '1rem' }}>
                   <h3 style={{ marginBottom: '1rem' }}>Objetivo</h3>
-                  <p style={{ color: '#525252', lineHeight: 1.6 }}>{briefingData.sections.overview.objective}</p>
+                  <p style={{ color: 'var(--cds-text-secondary)', lineHeight: 1.6 }}>{briefingData.sections.overview.objective}</p>
                 </Tile>
                 <Tile style={{ marginTop: '1rem' }}>
                   <h3 style={{ marginBottom: '1rem' }}>Público-Alvo</h3>
-                  <p style={{ color: '#525252', lineHeight: 1.6 }}>{briefingData.sections.overview.targetAudience}</p>
+                  <p style={{ color: 'var(--cds-text-secondary)', lineHeight: 1.6 }}>{briefingData.sections.overview.targetAudience}</p>
                 </Tile>
                 <Grid style={{ marginTop: '1rem' }}>
                   <Column lg={6} md={4} sm={4}>
                     <Tile>
                       <h3 style={{ marginBottom: '1rem' }}>Concorrentes</h3>
-                      <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#525252' }}>
+                      <ul style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--cds-text-secondary)' }}>
                         {briefingData.sections.overview.competitors.map((c, i) => (
                           <li key={i} style={{ marginBottom: '0.5rem' }}>{c}</li>
                         ))}
@@ -232,7 +232,7 @@ export default function BriefingDetailPage() {
                   <Column lg={6} md={4} sm={4}>
                     <Tile>
                       <h3 style={{ marginBottom: '1rem' }}>Referências</h3>
-                      <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#525252' }}>
+                      <ul style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--cds-text-secondary)' }}>
                         {briefingData.sections.overview.references.map((r, i) => (
                           <li key={i} style={{ marginBottom: '0.5rem' }}>{r}</li>
                         ))}
@@ -256,19 +256,19 @@ export default function BriefingDetailPage() {
                   <Column lg={6} md={4} sm={4}>
                     <Tile>
                       <h3 style={{ marginBottom: '1rem' }}>Cores</h3>
-                      <p style={{ color: '#525252' }}>{briefingData.sections.brand.colors}</p>
+                      <p style={{ color: 'var(--cds-text-secondary)' }}>{briefingData.sections.brand.colors}</p>
                     </Tile>
                   </Column>
                   <Column lg={6} md={4} sm={4}>
                     <Tile>
                       <h3 style={{ marginBottom: '1rem' }}>Tipografia</h3>
-                      <p style={{ color: '#525252' }}>{briefingData.sections.brand.fonts}</p>
+                      <p style={{ color: 'var(--cds-text-secondary)' }}>{briefingData.sections.brand.fonts}</p>
                     </Tile>
                   </Column>
                 </Grid>
                 <Tile style={{ marginTop: '1rem' }}>
                   <h3 style={{ marginBottom: '1rem' }}>Diretrizes</h3>
-                  <p style={{ color: '#525252', lineHeight: 1.6 }}>{briefingData.sections.brand.guidelines}</p>
+                  <p style={{ color: 'var(--cds-text-secondary)', lineHeight: 1.6 }}>{briefingData.sections.brand.guidelines}</p>
                 </Tile>
               </TabPanel>
 
@@ -302,7 +302,7 @@ export default function BriefingDetailPage() {
                   <Column lg={6} md={4} sm={4}>
                     <Tile>
                       <h3 style={{ marginBottom: '1rem' }}>Período</h3>
-                      <p style={{ color: '#525252' }}>
+                      <p style={{ color: 'var(--cds-text-secondary)' }}>
                         <strong>Início:</strong> {new Date(briefingData.sections.timeline.startDate).toLocaleDateString('pt-BR')}<br />
                         <strong>Prazo:</strong> {new Date(briefingData.sections.timeline.deadline).toLocaleDateString('pt-BR')}
                       </p>
@@ -313,9 +313,9 @@ export default function BriefingDetailPage() {
                       <h3 style={{ marginBottom: '1rem' }}>Marcos</h3>
                       <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
                         {briefingData.sections.timeline.milestones.map((m, i) => (
-                          <li key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #e0e0e0' }}>
+                          <li key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
                             <span>{m.name}</span>
-                            <span style={{ color: '#525252' }}>{new Date(m.date).toLocaleDateString('pt-BR')}</span>
+                            <span style={{ color: 'var(--cds-text-secondary)' }}>{new Date(m.date).toLocaleDateString('pt-BR')}</span>
                           </li>
                         ))}
                       </ul>
@@ -330,7 +330,7 @@ export default function BriefingDetailPage() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                     <h3 style={{ margin: 0 }}>Detalhamento</h3>
                     <div>
-                      <span style={{ color: '#525252' }}>Total: </span>
+                      <span style={{ color: 'var(--cds-text-secondary)' }}>Total: </span>
                       <strong style={{ fontSize: '1.5rem' }}>
                         R$ {briefingData.sections.budget.total.toLocaleString('pt-BR')}
                       </strong>
@@ -379,12 +379,12 @@ export default function BriefingDetailPage() {
             <h3 style={{ marginBottom: '1rem' }}>Comentários</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {briefingData.comments.map((comment) => (
-                <div key={comment.id} style={{ padding: '0.75rem', background: '#f4f4f4', borderRadius: '4px' }}>
+                <div key={comment.id} style={{ padding: '0.75rem', background: 'var(--cds-background)', borderRadius: '4px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                     <strong style={{ fontSize: '0.875rem' }}>{comment.author}</strong>
-                    <span style={{ fontSize: '0.75rem', color: '#525252' }}>{comment.date}</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>{comment.date}</span>
                   </div>
-                  <p style={{ margin: 0, fontSize: '0.875rem', color: '#525252' }}>{comment.text}</p>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>{comment.text}</p>
                 </div>
               ))}
             </div>

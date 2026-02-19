@@ -124,7 +124,7 @@ export default function EditProjectPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Editar Projeto</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>Atualize as informações do projeto</p>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Atualize as informações do projeto</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Link href={`/projects/${projectId}`}>

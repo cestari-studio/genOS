@@ -144,7 +144,7 @@ export default function ContractsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Contratos e Propostas</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>Gerencie documentos comerciais</p>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Gerencie documentos comerciais</p>
         </div>
         <Button size="sm" renderIcon={Add} onClick={() => setIsNewModalOpen(true)}>
           Novo Documento
@@ -155,42 +155,42 @@ export default function ContractsPage() {
       <Grid style={{ marginBottom: '1.5rem' }}>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Valor Assinado</h4>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#24a148' }}>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Valor Assinado</h4>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-success)' }}>
               R$ {totalValue.toLocaleString('pt-BR')}
             </p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               {signedCount} contratos
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Aguardando Assinatura</h4>
-            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: '#0f62fe' }}>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Aguardando Assinatura</h4>
+            <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-link-primary)' }}>
               R$ {pendingValue.toLocaleString('pt-BR')}
             </p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               {pendingCount} documentos
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Taxa de Conversão</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Taxa de Conversão</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>
               {contracts.length > 0 ? Math.round((signedCount / contracts.length) * 100) : 0}%
             </p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               propostas convertidas
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: '#525252', marginBottom: '0.5rem' }}>Total de Documentos</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Total de Documentos</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>{contracts.length}</p>
-            <p style={{ color: '#525252', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
+            <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
               neste período
             </p>
           </Tile>
@@ -251,7 +251,7 @@ export default function ContractsPage() {
                       <TableCell>
                         <div>
                           <strong>{contract.title}</strong>
-                          <div style={{ fontSize: '0.75rem', color: '#525252' }}>{contract.project}</div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>{contract.project}</div>
                         </div>
                       </TableCell>
                       <TableCell>{contract.client}</TableCell>
@@ -269,11 +269,11 @@ export default function ContractsPage() {
                       </TableCell>
                       <TableCell>
                         {contract.signedAt ? (
-                          <span style={{ color: '#24a148' }}>
+                          <span style={{ color: 'var(--cds-support-success)' }}>
                             Assinado em {new Date(contract.signedAt).toLocaleDateString('pt-BR')}
                           </span>
                         ) : (
-                          <span style={{ color: new Date(contract.expiresAt) < new Date() ? '#da1e28' : '#525252' }}>
+                          <span style={{ color: new Date(contract.expiresAt) < new Date() ? 'var(--cds-support-error)' : 'var(--cds-text-secondary)' }}>
                             {new Date(contract.expiresAt).toLocaleDateString('pt-BR')}
                           </span>
                         )}

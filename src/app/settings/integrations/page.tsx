@@ -112,7 +112,7 @@ export default function IntegrationsPage() {
               width: '48px',
               height: '48px',
               borderRadius: '8px',
-              background: '#f4f4f4',
+              background: 'var(--cds-background)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -129,14 +129,14 @@ export default function IntegrationsPage() {
                   {isConnected ? 'Conectado' : 'Desconectado'}
                 </Tag>
               </div>
-              <p style={{ margin: '0.25rem 0 0', fontSize: '0.875rem', color: '#525252' }}>
+              <p style={{ margin: '0.25rem 0 0', fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>
                 {integration.description}
               </p>
             </div>
           </div>
 
           {isConnected && (
-            <div style={{ fontSize: '0.75rem', color: '#525252', marginBottom: '1rem' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)', marginBottom: '1rem' }}>
               Última sincronização: {integration.lastSync}
             </div>
           )}
@@ -170,7 +170,7 @@ export default function IntegrationsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Integrações</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>
             {connectedCount} de {integrations.length} integrações ativas
           </p>
         </div>
@@ -226,7 +226,7 @@ export default function IntegrationsPage() {
           <TabPanel>
             <div style={{ marginTop: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <p style={{ margin: 0, color: '#525252' }}>
+                <p style={{ margin: 0, color: 'var(--cds-text-secondary)' }}>
                   Configure webhooks para receber notificações em tempo real.
                 </p>
                 <Button size="sm" renderIcon={Api} onClick={() => setIsWebhookModalOpen(true)}>
@@ -244,7 +244,7 @@ export default function IntegrationsPage() {
                           {webhook.active ? 'Ativo' : 'Inativo'}
                         </Tag>
                       </div>
-                      <p style={{ margin: '0.25rem 0 0', fontSize: '0.875rem', color: '#525252' }}>
+                      <p style={{ margin: '0.25rem 0 0', fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>
                         {webhook.url}
                       </p>
                       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
@@ -277,12 +277,12 @@ export default function IntegrationsPage() {
                 <Column lg={8} md={8} sm={4}>
                   <Tile>
                     <h3 style={{ marginBottom: '1rem' }}>Chaves de API</h3>
-                    <p style={{ color: '#525252', marginBottom: '1.5rem' }}>
+                    <p style={{ color: 'var(--cds-text-secondary)', marginBottom: '1.5rem' }}>
                       Use estas chaves para integrar com a API do genOS.
                     </p>
 
                     <div style={{ marginBottom: '1.5rem' }}>
-                      <label style={{ fontSize: '0.75rem', color: '#525252' }}>Chave Pública</label>
+                      <label style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>Chave Pública</label>
                       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
                         <TextInput
                           id="public-key"
@@ -297,7 +297,7 @@ export default function IntegrationsPage() {
                     </div>
 
                     <div style={{ marginBottom: '1.5rem' }}>
-                      <label style={{ fontSize: '0.75rem', color: '#525252' }}>Chave Secreta</label>
+                      <label style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>Chave Secreta</label>
                       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
                         <TextInput
                           id="secret-key"
@@ -319,7 +319,7 @@ export default function IntegrationsPage() {
                 <Column lg={8} md={8} sm={4}>
                   <Tile>
                     <h3 style={{ marginBottom: '1rem' }}>Documentação</h3>
-                    <p style={{ color: '#525252', marginBottom: '1rem' }}>
+                    <p style={{ color: 'var(--cds-text-secondary)', marginBottom: '1rem' }}>
                       Acesse a documentação completa da API para começar a integrar.
                     </p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -341,32 +341,32 @@ export default function IntegrationsPage() {
                 <h3 style={{ marginBottom: '1rem' }}>Endpoints Disponíveis</h3>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
-                    <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                    <tr style={{ borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
                       <th style={{ padding: '0.75rem', textAlign: 'left' }}>Método</th>
                       <th style={{ padding: '0.75rem', textAlign: 'left' }}>Endpoint</th>
                       <th style={{ padding: '0.75rem', textAlign: 'left' }}>Descrição</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                    <tr style={{ borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
                       <td style={{ padding: '0.75rem' }}><Tag type="green" size="sm">GET</Tag></td>
                       <td style={{ padding: '0.75rem', fontFamily: 'monospace' }}>/api/v1/clients</td>
-                      <td style={{ padding: '0.75rem', color: '#525252' }}>Listar clientes</td>
+                      <td style={{ padding: '0.75rem', color: 'var(--cds-text-secondary)' }}>Listar clientes</td>
                     </tr>
-                    <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                    <tr style={{ borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
                       <td style={{ padding: '0.75rem' }}><Tag type="blue" size="sm">POST</Tag></td>
                       <td style={{ padding: '0.75rem', fontFamily: 'monospace' }}>/api/v1/clients</td>
-                      <td style={{ padding: '0.75rem', color: '#525252' }}>Criar cliente</td>
+                      <td style={{ padding: '0.75rem', color: 'var(--cds-text-secondary)' }}>Criar cliente</td>
                     </tr>
-                    <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                    <tr style={{ borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
                       <td style={{ padding: '0.75rem' }}><Tag type="green" size="sm">GET</Tag></td>
                       <td style={{ padding: '0.75rem', fontFamily: 'monospace' }}>/api/v1/projects</td>
-                      <td style={{ padding: '0.75rem', color: '#525252' }}>Listar projetos</td>
+                      <td style={{ padding: '0.75rem', color: 'var(--cds-text-secondary)' }}>Listar projetos</td>
                     </tr>
-                    <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                    <tr style={{ borderBottom: '1px solid var(--cds-border-subtle-01)' }}>
                       <td style={{ padding: '0.75rem' }}><Tag type="green" size="sm">GET</Tag></td>
                       <td style={{ padding: '0.75rem', fontFamily: 'monospace' }}>/api/v1/invoices</td>
-                      <td style={{ padding: '0.75rem', color: '#525252' }}>Listar faturas</td>
+                      <td style={{ padding: '0.75rem', color: 'var(--cds-text-secondary)' }}>Listar faturas</td>
                     </tr>
                   </tbody>
                 </table>
@@ -393,12 +393,12 @@ export default function IntegrationsPage() {
             <p style={{ marginBottom: '1rem' }}>
               Ao conectar com {selectedIntegration.name}, você autoriza o genOS a:
             </p>
-            <ul style={{ paddingLeft: '1.25rem', color: '#525252' }}>
+            <ul style={{ paddingLeft: '1.25rem', color: 'var(--cds-text-secondary)' }}>
               <li>Acessar informações da sua conta</li>
               <li>Publicar conteúdo em seu nome</li>
               <li>Ler dados de engajamento e métricas</li>
             </ul>
-            <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#525252' }}>
+            <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>
               Você pode revogar este acesso a qualquer momento.
             </p>
           </div>
@@ -425,7 +425,7 @@ export default function IntegrationsPage() {
             placeholder="https://seu-servidor.com/webhook"
           />
           <div>
-            <label style={{ fontSize: '0.75rem', color: '#525252', marginBottom: '0.5rem', display: 'block' }}>
+            <label style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)', marginBottom: '0.5rem', display: 'block' }}>
               Eventos
             </label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

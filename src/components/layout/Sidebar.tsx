@@ -214,41 +214,6 @@ export default function Sidebar() {
         </SideNavMenu>
       </SideNavItems>
 
-      <style jsx>{`
-        .sidebar-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 1rem;
-          border-bottom: 1px solid #393939;
-        }
-        .logo {
-          display: flex;
-          flex-direction: column;
-        }
-        .logo-text {
-          font-size: 1.25rem;
-          font-weight: 600;
-          color: white;
-        }
-        .logo-sub {
-          font-size: 0.75rem;
-          color: #8d8d8d;
-        }
-        .collapse-btn {
-          background: transparent;
-          border: none;
-          color: #8d8d8d;
-          cursor: pointer;
-          padding: 0.5rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .collapse-btn:hover {
-          color: white;
-        }
-      `}</style>
     </SideNav>
   );
 }

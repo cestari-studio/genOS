@@ -49,7 +49,7 @@ const initialColumns: Column[] = [
   {
     id: 'backlog',
     title: 'Backlog',
-    color: '#8d8d8d',
+    color: 'var(--cds-text-helper)',
     tasks: [
       { id: '1', title: 'Pesquisa de mercado', priority: 'low' },
       { id: '2', title: 'Análise de concorrência', priority: 'medium' },
@@ -58,7 +58,7 @@ const initialColumns: Column[] = [
   {
     id: 'todo',
     title: 'A Fazer',
-    color: '#0f62fe',
+    color: 'var(--cds-link-primary)',
     tasks: [
       { id: '3', title: 'Criar wireframes', priority: 'high' },
       { id: '4', title: 'Definir paleta de cores', priority: 'medium' },
@@ -67,7 +67,7 @@ const initialColumns: Column[] = [
   {
     id: 'in_progress',
     title: 'Em Progresso',
-    color: '#8a3ffc',
+    color: 'var(--cds-support-info)',
     tasks: [
       { id: '5', title: 'Desenvolver layout principal', priority: 'high', description: 'Implementar o layout responsivo da página inicial' },
     ],
@@ -75,7 +75,7 @@ const initialColumns: Column[] = [
   {
     id: 'review',
     title: 'Revisão',
-    color: '#007d79',
+    color: 'var(--cds-support-success)',
     tasks: [
       { id: '6', title: 'Revisar textos', priority: 'medium' },
     ],
@@ -83,7 +83,7 @@ const initialColumns: Column[] = [
   {
     id: 'done',
     title: 'Concluído',
-    color: '#24a148',
+    color: 'var(--cds-support-success)',
     tasks: [
       { id: '7', title: 'Briefing inicial', priority: 'high' },
       { id: '8', title: 'Contrato assinado', priority: 'high' },
@@ -175,7 +175,7 @@ export default function KanbanPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ margin: 0 }}>Kanban Board</h1>
-          <p style={{ color: '#525252', margin: '0.25rem 0 0' }}>{totalTasks} tarefas no total</p>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>{totalTasks} tarefas no total</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Link href={`/projects/${projectId}`}>
@@ -197,7 +197,7 @@ export default function KanbanPage() {
             style={{
               minWidth: '280px',
               maxWidth: '280px',
-              background: '#f4f4f4',
+              background: 'var(--cds-background)',
               borderRadius: '8px',
               padding: '1rem',
             }}
@@ -233,17 +233,17 @@ export default function KanbanPage() {
                   style={{
                     cursor: 'grab',
                     padding: '0.75rem',
-                    background: 'white',
+                    background: 'var(--cds-layer-01)',
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                        <Draggable size={16} style={{ color: '#8d8d8d' }} />
+                        <Draggable size={16} style={{ color: 'var(--cds-text-helper)' }} />
                         <strong style={{ fontSize: '0.875rem' }}>{task.title}</strong>
                       </div>
                       {task.description && (
-                        <p style={{ fontSize: '0.75rem', color: '#525252', margin: '0 0 0.5rem 1.5rem' }}>
+                        <p style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)', margin: '0 0 0.5rem 1.5rem' }}>
                           {task.description}
                         </p>
                       )}
@@ -279,8 +279,8 @@ export default function KanbanPage() {
                 <div style={{
                   padding: '2rem 1rem',
                   textAlign: 'center',
-                  color: '#8d8d8d',
-                  border: '2px dashed #e0e0e0',
+                  color: 'var(--cds-text-helper)',
+                  border: '2px dashed var(--cds-border-subtle-01)',
                   borderRadius: '4px',
                 }}>
                   <p style={{ fontSize: '0.875rem', margin: 0 }}>Nenhuma tarefa</p>

@@ -3,15 +3,13 @@
 @use '@carbon/react/scss/themes';
 @use '@carbon/react/scss/components';
 
-:root {
-  --genos-primary: #0f62fe;
-  --genos-success: #24a148;
-  --genos-warning: #f1c21b;
-  --genos-danger: #da1e28;
-  --genos-bg: #f4f4f4;
-  --genos-sidebar: #161616;
-}
+// Carbon Charts styles
+@import '@carbon/charts-react/styles.css';
 
+// IBM Plex font
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+// ── Base ───────────────────────────────────────────────
 html, body {
   height: 100%;
   margin: 0;
@@ -19,10 +17,12 @@ html, body {
 }
 
 body {
-  background-color: var(--genos-bg);
-  font-family: 'IBM Plex Sans', sans-serif;
+  background-color: var(--cds-background, #f4f4f4);
+  font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--cds-text-primary, #161616);
 }
 
+// ── Layout ─────────────────────────────────────────────
 .app-container {
   display: flex;
   min-height: 100vh;
@@ -32,28 +32,35 @@ body {
   flex: 1;
   margin-left: 256px;
   padding: 2rem;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 150ms cubic-bezier(0.2, 0, 0.38, 0.9);
 }
 
 .main-content.collapsed {
   margin-left: 48px;
 }
 
+// ── Page Header (Carbon heading-04 + body-01) ──────────
 .page-header {
   margin-bottom: 2rem;
-  
+
   h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 400;
-    margin: 0 0 0.5rem 0;
+    line-height: 2.25rem;
+    letter-spacing: 0;
+    margin: 0 0 0.25rem 0;
+    color: var(--cds-text-primary, #161616);
   }
-  
+
   p {
-    color: #525252;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--cds-text-secondary, #525252);
     margin: 0;
   }
 }
 
+// ── Stats Grid ─────────────────────────────────────────
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -62,70 +69,146 @@ body {
 }
 
 .stat-card {
-  background: white;
+  background-color: var(--cds-layer-01, #ffffff);
   padding: 1.5rem;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  
-  .stat-label {
-    font-size: 0.875rem;
-    color: #525252;
+  border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+
+  .stat-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     margin-bottom: 0.5rem;
   }
-  
-  .stat-value {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #161616;
+
+  .stat-label {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    letter-spacing: 0.32px;
+    color: var(--cds-text-secondary, #525252);
+    margin-bottom: 0.5rem;
   }
-  
+
+  .stat-value {
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 2.25rem;
+    color: var(--cds-text-primary, #161616);
+  }
+
   .stat-change {
     font-size: 0.75rem;
+    line-height: 1rem;
     margin-top: 0.25rem;
-    
-    &.positive { color: var(--genos-success); }
-    &.negative { color: var(--genos-danger); }
+
+    &.positive { color: var(--cds-support-success, #24a148); }
+    &.negative { color: var(--cds-support-error, #da1e28); }
   }
 }
 
+// ── Content Card ───────────────────────────────────────
 .content-card {
-  background: white;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  background-color: var(--cds-layer-01, #ffffff);
+  border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
   margin-bottom: 1rem;
-  
+
   .card-header {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--cds-border-subtle-01, #e0e0e0);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
+
     h2 {
-      font-size: 1.125rem;
+      font-size: 1rem;
       font-weight: 600;
+      line-height: 1.375rem;
       margin: 0;
+      color: var(--cds-text-primary, #161616);
     }
   }
-  
+
   .card-body {
     padding: 1.5rem;
   }
 }
 
+// ── Status Badges (Carbon semantic colors) ─────────────
 .status-badge {
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.32px;
   font-weight: 500;
-  
-  &.active { background: #defbe6; color: #0e6027; }
-  &.inactive { background: #f2f4f8; color: #525252; }
-  &.prospect { background: #d0e2ff; color: #0043ce; }
-  &.in_progress { background: #fff8e1; color: #8a6d3b; }
-  &.review { background: #e1d5e7; color: #6a1b9a; }
-  &.approved { background: #defbe6; color: #0e6027; }
+
+  &.active    { background: #defbe6; color: #0e6027; }
+  &.inactive  { background: var(--cds-layer-02, #e0e0e0); color: var(--cds-text-secondary, #525252); }
+  &.prospect  { background: #d0e2ff; color: #0043ce; }
+  &.in_progress { background: #fddc69; color: #483900; }
+  &.review    { background: #e8daff; color: #6929c4; }
+  &.approved  { background: #defbe6; color: #0e6027; }
   &.delivered { background: #d0e2ff; color: #0043ce; }
+}
+
+// ── Sidebar ────────────────────────────────────────────
+.genos-sidebar {
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #393939;
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo-text {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.375rem;
+    color: #f4f4f4;
+  }
+
+  .logo-sub {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    letter-spacing: 0.32px;
+    color: #8d8d8d;
+  }
+
+  .collapse-btn {
+    background: transparent;
+    border: none;
+    color: #8d8d8d;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: #f4f4f4;
+    }
+  }
+}
+
+// ── AI indicator gradient (Carbon for AI) ───────────────
+.ai-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(#0f62fe, 0.08) 0%,
+    rgba(#8a3ffc, 0.08) 100%
+  );
+}
+
+// ── Reduced motion (accessibility compliance) ───────────
+@media (prefers-reduced-motion: reduce) {
+  .main-content {
+    transition: none;
+  }
 }
