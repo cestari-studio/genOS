@@ -81,6 +81,11 @@ const en: Record<string, string> = {
   'dashboard.recentProjects': 'Recent Projects',
   'dashboard.noClients': 'No clients registered',
   'dashboard.noProjects': 'No projects registered',
+  'dashboard.charts.title': 'Performance Charts',
+  'dashboard.charts.contentVolume': 'Content Volume',
+  'dashboard.charts.revenue': 'Monthly Revenue',
+  'dashboard.charts.engagementRate': 'Engagement Rate',
+  'dashboard.charts.posts': 'Posts',
 
   // ── Analytics ───────────────────────────────────────
   'analytics.title': 'Analytics',
@@ -549,6 +554,26 @@ const en: Record<string, string> = {
   'resetPassword.stepLinkSent': 'Link sent',
   'resetPassword.stepNewPassword': 'New password',
   'resetPassword.stepCompleted': 'Completed',
+
+  // ── Trends ────────────────────────────────────────
+  'trends.title': 'Social Trends',
+  'trends.subtitle': 'Platform engagement radar and performance analysis',
+  'trends.platform': 'Platform',
+  'trends.allPlatforms': 'All Platforms',
+  'trends.radarTitle': 'Platform Performance Radar',
+  'trends.avgScore': 'avg. score',
+
+  // ── GEO Metrics ───────────────────────────────────
+  'geo.title': 'GEO Metrics',
+  'geo.subtitle': 'Geographic performance and audience distribution',
+  'geo.region': 'Region',
+  'geo.impressions': 'Impressions',
+  'geo.engagement': 'Engagement',
+  'geo.engagementLabel': 'engagement',
+  'geo.reach': 'Reach',
+  'geo.revenue': 'Revenue',
+  'geo.performanceByRegion': 'Performance by Region',
+  'geo.detailedBreakdown': 'Detailed Regional Breakdown',
 };
 
 export default en;

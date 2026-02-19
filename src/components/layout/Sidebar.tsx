@@ -32,6 +32,8 @@ import {
   UserAdmin,
   Connect,
   Report,
+  ChartRadar,
+  Earth,
 } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
 
@@ -71,6 +73,8 @@ export default function Sidebar() {
 
   const systemItems = [
     { href: '/analytics', icon: Analytics, label: t('sidebar.analytics') },
+    { href: '/trends', icon: ChartRadar, label: t('sidebar.trends') },
+    { href: '/geo', icon: Earth, label: t('sidebar.geo') },
     { href: '/notifications', icon: Notification, label: t('sidebar.notificationsLabel') },
   ];
 

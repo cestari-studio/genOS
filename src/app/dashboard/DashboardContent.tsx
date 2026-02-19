@@ -17,7 +17,10 @@ import {
   ArrowRight,
 } from '@carbon/icons-react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useTranslation } from '@/lib/i18n/context';
+
+const DashboardCharts = dynamic(() => import('./DashboardCharts'), { ssr: false });
 
 interface DashboardData {
   stats: {
@@ -207,6 +210,8 @@ export default function DashboardContent({ data }: { data: DashboardData }) {
           </div>
         </Column>
       </Grid>
+
+      <DashboardCharts />
     </div>
   );
 }
