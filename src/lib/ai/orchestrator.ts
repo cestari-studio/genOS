@@ -13,6 +13,8 @@ import { generateWithClaude } from './providers/claude';
 import { generateWithGemini } from './providers/gemini';
 import { generateWithGranite, type GraniteModel } from './providers/granite';
 import { retrieveContext } from './rag';
+import { isProviderAvailable, recordSuccess, recordFailure } from './circuit-breaker';
+import { trackLatency, trackTokenUsage, trackError } from '../observability';
 
 /**
  * Provider routing strategy:
@@ -145,9 +147,16 @@ export async function orchestrateGeneration(
   };
 
   // Select provider based on content type and preference
-  const { provider, graniteModel } = selectProvider(input.contentType, input.preferredProvider);
+  let { provider, graniteModel } = selectProvider(input.contentType, input.preferredProvider);
+
+  // Circuit breaker: skip unavailable providers
+  if (!isProviderAvailable(provider) && provider !== 'claude') {
+    console.warn(`Circuit breaker OPEN for ${provider}, falling back to Claude`);
+    provider = 'claude';
+  }
 
   let response: AIGenerationResponse;
+  const generationStart = Date.now();
 
   // Route to provider with fallback chain
   try {
@@ -164,15 +173,30 @@ export async function orchestrateGeneration(
         response = await generateWithClaude(request);
         break;
     }
+    recordSuccess(provider);
   } catch (providerError) {
+    recordFailure(provider);
+    trackError('ai.generate', { provider, error: (providerError as Error).message });
     // Fallback: if preferred provider fails, try Claude
     if (provider !== 'claude') {
       console.warn(`Provider ${provider} failed, falling back to Claude:`, (providerError as Error).message);
-      response = await generateWithClaude(request);
+      try {
+        response = await generateWithClaude(request);
+        recordSuccess('claude');
+      } catch (fallbackError) {
+        recordFailure('claude');
+        trackError('ai.generate', { provider: 'claude', error: (fallbackError as Error).message });
+        throw fallbackError;
+      }
     } else {
       throw providerError;
     }
   }
+
+  // Track observability metrics
+  const generationMs = Date.now() - generationStart;
+  trackLatency('ai.generate', generationMs, { provider, contentType: input.contentType });
+  trackTokenUsage(provider, response.tokensUsed, { contentType: input.contentType });
 
   // Audit log via admin client (bypasses RLS for write)
   await adminSupabase.from('audit_log').insert({

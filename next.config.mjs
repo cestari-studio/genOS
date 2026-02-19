@@ -15,6 +15,14 @@ const nextConfig = {
       { protocol: 'https', hostname: '*.supabase.co' },
     ],
   },
+  headers: async () => [
+    {
+      source: '/api/:path*',
+      headers: [
+        { key: 'X-DNS-Prefetch-Control', value: 'on' },
+      ],
+    },
+  ],
 };
 
 export default nextConfig;

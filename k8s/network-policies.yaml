@@ -1,0 +1,148 @@
+# ═══════════════════════════════════════════════════════════════
+# genOS v4.5.0 — Kubernetes Network Policies
+# Zero-trust network segmentation for multi-tenant security
+# ═══════════════════════════════════════════════════════════════
+
+# Default deny all ingress and egress in genos namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: genos
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# Allow web pods to receive traffic from ingress controller only
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-web-ingress
+  namespace: genos
+spec:
+  podSelector:
+    matchLabels:
+      app: genos-web
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3000
+
+---
+# Allow web pods to talk to Supabase, Stripe, and AI providers
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-web-egress
+  namespace: genos
+spec:
+  podSelector:
+    matchLabels:
+      app: genos-web
+  policyTypes:
+    - Egress
+  egress:
+    # DNS resolution
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # HTTPS to external services (Supabase, Stripe, AI APIs)
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    # Internal pod-to-pod (AI workers)
+    - to:
+        - podSelector:
+            matchLabels:
+              app: genos-ai-worker
+      ports:
+        - protocol: TCP
+          port: 8080
+
+---
+# AI workers can only reach external AI APIs (HTTPS) and internal web
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ai-worker-egress
+  namespace: genos
+spec:
+  podSelector:
+    matchLabels:
+      app: genos-ai-worker
+  policyTypes:
+    - Egress
+  egress:
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+
+---
+# AI workers accept requests only from web pods
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ai-worker-ingress
+  namespace: genos
+spec:
+  podSelector:
+    matchLabels:
+      app: genos-ai-worker
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: genos-web
+      ports:
+        - protocol: TCP
+          port: 8080
+
+---
+# Monitor pods: read-only access to K8s API, no external egress
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-monitor-limited
+  namespace: genos
+spec:
+  podSelector:
+    matchLabels:
+      app: genos-monitor
+  policyTypes:
+    - Egress
+  egress:
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # K8s API server
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 6443

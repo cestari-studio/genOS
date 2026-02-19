@@ -1,0 +1,133 @@
+# ═══════════════════════════════════════════════════════════════
+# genOS v4.5.0 — Kubernetes RBAC Policies
+# Strict role-based access control for pod security
+# ═══════════════════════════════════════════════════════════════
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: genos
+  labels:
+    app: genos
+    env: production
+
+---
+# ServiceAccount for the genOS application pods
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: genos-app
+  namespace: genos
+
+---
+# ServiceAccount for AI orchestration workers
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: genos-ai-worker
+  namespace: genos
+
+---
+# ServiceAccount for observability/monitoring
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: genos-monitor
+  namespace: genos
+
+---
+# Role: Application — minimal permissions for web pods
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: genos-app-role
+  namespace: genos
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: genos-app-binding
+  namespace: genos
+subjects:
+  - kind: ServiceAccount
+    name: genos-app
+    namespace: genos
+roleRef:
+  kind: Role
+  name: genos-app-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Role: AI Worker — access to secrets for API keys, no pod exec
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: genos-ai-worker-role
+  namespace: genos
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["watsonx-credentials", "anthropic-credentials", "gemini-credentials"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "create"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: genos-ai-worker-binding
+  namespace: genos
+subjects:
+  - kind: ServiceAccount
+    name: genos-ai-worker
+    namespace: genos
+roleRef:
+  kind: Role
+  name: genos-ai-worker-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Role: Monitor — read-only access for observability
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: genos-monitor-role
+  namespace: genos
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "endpoints", "nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["pods", "nodes"]
+    verbs: ["get", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: genos-monitor-binding
+  namespace: genos
+subjects:
+  - kind: ServiceAccount
+    name: genos-monitor
+    namespace: genos
+roleRef:
+  kind: Role
+  name: genos-monitor-role
+  apiGroup: rbac.authorization.k8s.io
