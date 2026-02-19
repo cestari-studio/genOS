@@ -17,6 +17,7 @@ import {
   ArrowRight,
 } from '@carbon/icons-react';
 import Link from 'next/link';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface DashboardData {
   stats: {
@@ -44,31 +45,32 @@ const statusColors: Record<string, 'green' | 'gray' | 'blue' | 'red'> = {
 
 export default function DashboardContent({ data }: { data: DashboardData }) {
   const { stats, recentClients, recentProjects } = data;
+  const { t } = useTranslation();
 
   return (
     <div>
       <div className="page-header">
-        <h1>Dashboard</h1>
-        <p>Visao geral do genOS Content Factory</p>
+        <h1>{t('dashboard.title')}</h1>
+        <p>{t('dashboard.subtitle')}</p>
       </div>
 
       {/* Stats Grid */}
       <div className="stats-grid">
         <StatCard
           icon={<UserMultiple size={24} />}
-          label="Clientes Ativos"
+          label={t('dashboard.activeClients')}
           value={stats.clients}
           href="/clients"
         />
         <StatCard
           icon={<Folder size={24} />}
-          label="Projetos"
+          label={t('dashboard.projects')}
           value={stats.projects}
           href="/projects"
         />
         <StatCard
           icon={<TaskComplete size={24} />}
-          label="Briefings"
+          label={t('dashboard.briefings')}
           value={stats.briefings}
           href="/briefings"
         />
@@ -78,7 +80,7 @@ export default function DashboardContent({ data }: { data: DashboardData }) {
         <Column lg={8} md={4} sm={4}>
           <div className="content-card">
             <div className="card-header">
-              <h2>Clientes Recentes</h2>
+              <h2>{t('dashboard.recentClients')}</h2>
               <Link
                 href="/clients"
                 style={{
@@ -90,7 +92,7 @@ export default function DashboardContent({ data }: { data: DashboardData }) {
                   fontSize: '0.875rem',
                 }}
               >
-                Ver todos <ArrowRight size={16} />
+                {t('common.viewAll')} <ArrowRight size={16} />
               </Link>
             </div>
             <div className="card-body">
@@ -102,7 +104,7 @@ export default function DashboardContent({ data }: { data: DashboardData }) {
                     padding: '2rem',
                   }}
                 >
-                  Nenhum cliente cadastrado
+                  {t('dashboard.noClients')}
                 </p>
               ) : (
                 <StructuredListWrapper isCondensed>
@@ -143,7 +145,7 @@ export default function DashboardContent({ data }: { data: DashboardData }) {
         <Column lg={8} md={4} sm={4}>
           <div className="content-card">
             <div className="card-header">
-              <h2>Projetos Recentes</h2>
+              <h2>{t('dashboard.recentProjects')}</h2>
               <Link
                 href="/projects"
                 style={{
@@ -155,7 +157,7 @@ export default function DashboardContent({ data }: { data: DashboardData }) {
                   fontSize: '0.875rem',
                 }}
               >
-                Ver todos <ArrowRight size={16} />
+                {t('common.viewAll')} <ArrowRight size={16} />
               </Link>
             </div>
             <div className="card-body">
@@ -167,7 +169,7 @@ export default function DashboardContent({ data }: { data: DashboardData }) {
                     padding: '2rem',
                   }}
                 >
-                  Nenhum projeto cadastrado
+                  {t('dashboard.noProjects')}
                 </p>
               ) : (
                 <StructuredListWrapper isCondensed>

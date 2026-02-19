@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from '@/lib/i18n/context';
 import {
   Grid,
   Column,
@@ -45,15 +46,6 @@ const mockReportData = [
   { id: '3', period: 'Março 2025', clients: 18, projects: 12, revenue: 'R$ 68.000', status: 'pending' },
 ];
 
-const headers = [
-  { key: 'period', header: 'Período' },
-  { key: 'clients', header: 'Clientes' },
-  { key: 'projects', header: 'Projetos' },
-  { key: 'revenue', header: 'Receita' },
-  { key: 'status', header: 'Status' },
-  { key: 'actions', header: 'Ações' },
-];
-
 const barChartData = [
   { group: 'Janeiro', value: 45000 },
   { group: 'Fevereiro', value: 52000 },
@@ -63,62 +55,73 @@ const barChartData = [
   { group: 'Junho', value: 82000 },
 ];
 
-const barChartOptions = {
-  title: 'Receita Mensal',
-  axes: {
-    bottom: {
-      mapsTo: 'group',
-      scaleType: ScaleTypes.LABELS,
-    },
-    left: {
-      mapsTo: 'value',
-    },
-  },
-  height: '300px',
-};
-
-const lineChartData = [
-  { group: 'Receita', date: 'Jan', value: 45000 },
-  { group: 'Receita', date: 'Fev', value: 52000 },
-  { group: 'Receita', date: 'Mar', value: 68000 },
-  { group: 'Receita', date: 'Abr', value: 61000 },
-  { group: 'Receita', date: 'Mai', value: 73000 },
-  { group: 'Receita', date: 'Jun', value: 82000 },
-  { group: 'Despesas', date: 'Jan', value: 32000 },
-  { group: 'Despesas', date: 'Fev', value: 35000 },
-  { group: 'Despesas', date: 'Mar', value: 41000 },
-  { group: 'Despesas', date: 'Abr', value: 38000 },
-  { group: 'Despesas', date: 'Mai', value: 44000 },
-  { group: 'Despesas', date: 'Jun', value: 47000 },
-];
-
-const lineChartOptions = {
-  title: 'Tendência Financeira',
-  axes: {
-    bottom: {
-      mapsTo: 'date',
-      scaleType: ScaleTypes.LABELS,
-    },
-    left: {
-      mapsTo: 'value',
-    },
-  },
-  curve: 'curveMonotoneX' as const,
-  height: '300px',
-};
 
 export default function ReportsPage() {
+  const { t } = useTranslation();
   const [reportType, setReportType] = useState('monthly');
+
+  const headers = [
+    { key: 'period', header: t('reports.period') },
+    { key: 'clients', header: t('reports.clients') },
+    { key: 'projects', header: t('reports.projects') },
+    { key: 'revenue', header: t('reports.revenueCol') },
+    { key: 'status', header: t('reports.status') },
+    { key: 'actions', header: t('reports.actions') },
+  ];
+
+  const barChartOptions = {
+    title: t('reports.monthlyRevenue'),
+    axes: {
+      bottom: {
+        mapsTo: 'group',
+        scaleType: ScaleTypes.LABELS,
+      },
+      left: {
+        mapsTo: 'value',
+      },
+    },
+    height: '300px',
+  };
+
+  const lineChartData = [
+    { group: t('reports.revenue'), date: 'Jan', value: 45000 },
+    { group: t('reports.revenue'), date: 'Fev', value: 52000 },
+    { group: t('reports.revenue'), date: 'Mar', value: 68000 },
+    { group: t('reports.revenue'), date: 'Abr', value: 61000 },
+    { group: t('reports.revenue'), date: 'Mai', value: 73000 },
+    { group: t('reports.revenue'), date: 'Jun', value: 82000 },
+    { group: t('reports.expenses'), date: 'Jan', value: 32000 },
+    { group: t('reports.expenses'), date: 'Fev', value: 35000 },
+    { group: t('reports.expenses'), date: 'Mar', value: 41000 },
+    { group: t('reports.expenses'), date: 'Abr', value: 38000 },
+    { group: t('reports.expenses'), date: 'Mai', value: 44000 },
+    { group: t('reports.expenses'), date: 'Jun', value: 47000 },
+  ];
+
+  const lineChartOptions = {
+    title: t('reports.financialTrend'),
+    axes: {
+      bottom: {
+        mapsTo: 'date',
+        scaleType: ScaleTypes.LABELS,
+      },
+      left: {
+        mapsTo: 'value',
+      },
+    },
+    curve: 'curveMonotoneX' as const,
+    height: '300px',
+  };
 
   const rows = mockReportData.map(item => ({
     ...item,
     status: (
       <Tag type={item.status === 'completed' ? 'green' : 'blue'} size="sm">
-        {item.status === 'completed' ? 'Concluído' : 'Em andamento'}
+        {item.status === 'completed' ? t('reports.completed') : t('reports.inProgress')}
       </Tag>
     ),
     actions: (
-      <Button kind="ghost" size="sm" hasIconOnly iconDescription="Download PDF" renderIcon={DocumentPdf} />
+      <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('common.downloadPdf')} renderIcon={DocumentPdf} />
     ),
   }));
 
@@ -126,8 +129,8 @@ export default function ReportsPage() {
     <Grid>
       <Column lg={16} md={8} sm={4}>
         <div className="page-header">
-          <h1>Relatórios</h1>
-          <p>Exporte e visualize relatórios do sistema</p>
+          <h1>{t('reports.title')}</h1>
+          <p>{t('reports.subtitle')}</p>
         </div>
       </Column>
 
@@ -138,21 +141,21 @@ export default function ReportsPage() {
             <Column lg={4} md={2} sm={4}>
               <Select
                 id="report-type"
-                labelText="Tipo de Relatório"
+                labelText={t('reports.reportType')}
                 value={reportType}
                 onChange={(e) => setReportType(e.target.value)}
               >
-                <SelectItem value="monthly" text="Mensal" />
-                <SelectItem value="quarterly" text="Trimestral" />
-                <SelectItem value="yearly" text="Anual" />
-                <SelectItem value="custom" text="Personalizado" />
+                <SelectItem value="monthly" text={t('reports.monthly')} />
+                <SelectItem value="quarterly" text={t('reports.quarterly')} />
+                <SelectItem value="yearly" text={t('reports.yearly')} />
+                <SelectItem value="custom" text={t('reports.custom')} />
               </Select>
             </Column>
             <Column lg={4} md={2} sm={4}>
               <DatePicker datePickerType="single">
                 <DatePickerInput
                   id="start-date"
-                  labelText="Data Início"
+                  labelText={t('reports.startDate')}
                   placeholder="dd/mm/yyyy"
                 />
               </DatePicker>
@@ -161,13 +164,13 @@ export default function ReportsPage() {
               <DatePicker datePickerType="single">
                 <DatePickerInput
                   id="end-date"
-                  labelText="Data Fim"
+                  labelText={t('reports.endDate')}
                   placeholder="dd/mm/yyyy"
                 />
               </DatePicker>
             </Column>
             <Column lg={4} md={2} sm={4} style={{ display: 'flex', alignItems: 'flex-end' }}>
-              <Button renderIcon={Filter}>Filtrar</Button>
+              <Button renderIcon={Filter}>{t('common.filter')}</Button>
             </Column>
           </Grid>
         </Tile>
@@ -176,10 +179,10 @@ export default function ReportsPage() {
       {/* Tabs de Relatórios */}
       <Column lg={16} md={8} sm={4}>
         <Tabs>
-          <TabList aria-label="Tipos de relatório">
-            <Tab renderIcon={ChartBar}>Visão Geral</Tab>
-            <Tab renderIcon={ChartLine}>Financeiro</Tab>
-            <Tab renderIcon={Calendar}>Projetos</Tab>
+          <TabList aria-label={t('reports.reportType')}>
+            <Tab renderIcon={ChartBar}>{t('reports.overview')}</Tab>
+            <Tab renderIcon={ChartLine}>{t('reports.financial')}</Tab>
+            <Tab renderIcon={Calendar}>{t('reports.projectsTab')}</Tab>
           </TabList>
           <TabPanels>
             {/* Visão Geral */}
@@ -187,30 +190,30 @@ export default function ReportsPage() {
               <Grid className="cds--mt-05">
                 <Column lg={4} md={2} sm={4}>
                   <Tile className="stat-card">
-                    <span className="stat-label">Total Clientes</span>
+                    <span className="stat-label">{t('reports.totalClients')}</span>
                     <div className="stat-value">45</div>
-                    <span className="stat-change positive">+12% vs mês anterior</span>
+                    <span className="stat-change positive">+12% {t('reports.vsPreviousMonth')}</span>
                   </Tile>
                 </Column>
                 <Column lg={4} md={2} sm={4}>
                   <Tile className="stat-card">
-                    <span className="stat-label">Projetos Ativos</span>
+                    <span className="stat-label">{t('reports.activeProjects')}</span>
                     <div className="stat-value">28</div>
-                    <span className="stat-change positive">+8% vs mês anterior</span>
+                    <span className="stat-change positive">+8% {t('reports.vsPreviousMonth')}</span>
                   </Tile>
                 </Column>
                 <Column lg={4} md={2} sm={4}>
                   <Tile className="stat-card">
-                    <span className="stat-label">Receita Total</span>
+                    <span className="stat-label">{t('reports.totalRevenue')}</span>
                     <div className="stat-value">R$ 165k</div>
-                    <span className="stat-change positive">+15% vs mês anterior</span>
+                    <span className="stat-change positive">+15% {t('reports.vsPreviousMonth')}</span>
                   </Tile>
                 </Column>
                 <Column lg={4} md={2} sm={4}>
                   <Tile className="stat-card">
-                    <span className="stat-label">Taxa de Conversão</span>
+                    <span className="stat-label">{t('reports.conversionRate')}</span>
                     <div className="stat-value">68%</div>
-                    <span className="stat-change negative">-3% vs mês anterior</span>
+                    <span className="stat-change negative">-3% {t('reports.vsPreviousMonth')}</span>
                   </Tile>
                 </Column>
               </Grid>
@@ -241,7 +244,7 @@ export default function ReportsPage() {
                     <TableToolbar>
                       <TableToolbarContent>
                         <Button renderIcon={Download} kind="primary">
-                          Exportar Relatório
+                          {t('reports.exportReport')}
                         </Button>
                       </TableToolbarContent>
                     </TableToolbar>

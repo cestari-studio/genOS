@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from '@/lib/i18n/context';
 import {
   DataTable, Table, TableHead, TableRow, TableHeader, TableBody, TableCell,
   TableContainer, TableToolbar, TableToolbarContent, TableToolbarSearch,
@@ -10,14 +11,6 @@ import { Add, Download, DocumentPdf, DocumentBlank, Image } from '@carbon/icons-
 import { createClient } from '@/lib/supabase/client';
 import type { Document } from '@/types/database';
 
-const headers = [
-  { key: 'name', header: 'Nome' },
-  { key: 'client', header: 'Cliente' },
-  { key: 'category', header: 'Categoria' },
-  { key: 'type', header: 'Tipo' },
-  { key: 'date', header: 'Data' },
-  { key: 'actions', header: 'Ações' },
-];
 
 const getFileIcon = (type?: string) => {
   if (type?.includes('pdf')) return <DocumentPdf />;
@@ -34,6 +27,16 @@ export default function DocumentsContent({ documents: initial, clients }: Props)
   const [documents, setDocuments] = useState(initial);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const { t } = useTranslation();
+
+  const headers = [
+    { key: 'name', header: t('documents.name') },
+    { key: 'client', header: t('documents.client') },
+    { key: 'category', header: t('documents.category') },
+    { key: 'type', header: t('documents.type') },
+    { key: 'date', header: t('documents.date') },
+    { key: 'actions', header: t('documents.actions') },
+  ];
 
   const filtered = documents.filter(d => 
     d.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -53,7 +56,7 @@ export default function DocumentsContent({ documents: initial, clients }: Props)
     type: d.file_type || '-',
     date: new Date(d.created_at).toLocaleDateString('pt-BR'),
     actions: (
-      <Button kind="ghost" size="sm" hasIconOnly iconDescription="Download" renderIcon={Download}
+      <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('media.download')} renderIcon={Download}
         onClick={() => window.open(d.file_url, '_blank')} />
     ),
   }));
@@ -80,8 +83,8 @@ export default function DocumentsContent({ documents: initial, clients }: Props)
   return (
     <div>
       <div className="page-header">
-        <h1>Documentos</h1>
-        <p>Gerencie documentos e arquivos</p>
+        <h1>{t('documents.title')}</h1>
+        <p>{t('documents.subtitle')}</p>
       </div>
 
       <DataTable rows={rows} headers={headers}>
@@ -89,8 +92,8 @@ export default function DocumentsContent({ documents: initial, clients }: Props)
           <TableContainer>
             <TableToolbar>
               <TableToolbarContent>
-                <TableToolbarSearch placeholder="Buscar..." onChange={(e: any) => setSearch(e.target?.value || '')} />
-                <Button renderIcon={Add} onClick={() => setIsModalOpen(true)}>Novo Documento</Button>
+                <TableToolbarSearch placeholder={t('documents.searchPlaceholder')} onChange={(e: any) => setSearch(e.target?.value || '')} />
+                <Button renderIcon={Add} onClick={() => setIsModalOpen(true)}>{t('documents.newDocument')}</Button>
               </TableToolbarContent>
             </TableToolbar>
             <Table {...getTableProps()}>
@@ -102,28 +105,28 @@ export default function DocumentsContent({ documents: initial, clients }: Props)
       </DataTable>
 
       <Modal open={isModalOpen} onRequestClose={() => setIsModalOpen(false)}
-        modalHeading="Novo Documento" primaryButtonText="Salvar" secondaryButtonText="Cancelar"
+        modalHeading={t('documents.newDocument')} primaryButtonText={t('common.save')} secondaryButtonText={t('common.cancel')}
         onRequestSubmit={() => (document.getElementById('doc-form') as HTMLFormElement)?.requestSubmit()}>
         <Form id="doc-form" onSubmit={handleSave}>
           <Stack gap={6}>
-            <TextInput id="name" name="name" labelText="Nome" required />
-            <Select id="client_id" name="client_id" labelText="Cliente" required>
-              <SelectItem value="" text="Selecione..." />
+            <TextInput id="name" name="name" labelText={t('documents.name')} required />
+            <Select id="client_id" name="client_id" labelText={t('documents.client')} required>
+              <SelectItem value="" text={t('common.select')} />
               {clients.map(c => <SelectItem key={c.id} value={c.id} text={c.name} />)}
             </Select>
-            <Select id="category" name="category" labelText="Categoria">
-              <SelectItem value="contract" text="Contrato" />
-              <SelectItem value="invoice" text="Nota Fiscal" />
-              <SelectItem value="proposal" text="Proposta" />
-              <SelectItem value="briefing" text="Briefing" />
-              <SelectItem value="other" text="Outro" />
+            <Select id="category" name="category" labelText={t('documents.category')}>
+              <SelectItem value="contract" text={t('documents.categoryContract')} />
+              <SelectItem value="invoice" text={t('documents.categoryInvoice')} />
+              <SelectItem value="proposal" text={t('documents.categoryProposal')} />
+              <SelectItem value="briefing" text={t('documents.categoryBriefing')} />
+              <SelectItem value="other" text={t('documents.categoryOther')} />
             </Select>
-            <TextInput id="file_url" name="file_url" labelText="URL do Arquivo" required />
-            <Select id="file_type" name="file_type" labelText="Tipo">
-              <SelectItem value="pdf" text="PDF" />
-              <SelectItem value="doc" text="Word" />
-              <SelectItem value="image" text="Imagem" />
-              <SelectItem value="other" text="Outro" />
+            <TextInput id="file_url" name="file_url" labelText={t('documents.fileUrl')} required />
+            <Select id="file_type" name="file_type" labelText={t('documents.fileType')}>
+              <SelectItem value="pdf" text={t('documents.typePdf')} />
+              <SelectItem value="doc" text={t('documents.typeDoc')} />
+              <SelectItem value="image" text={t('documents.typeImage')} />
+              <SelectItem value="other" text={t('documents.typeOther')} />
             </Select>
           </Stack>
         </Form>

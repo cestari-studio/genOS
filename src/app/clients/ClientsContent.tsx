@@ -25,6 +25,7 @@ import {
 } from '@carbon/react';
 import { Add, View, Edit, TrashCan } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface Client {
   id: string;
@@ -37,15 +38,6 @@ interface Client {
   created_at: string;
 }
 
-const headers = [
-  { key: 'name', header: 'Nome' },
-  { key: 'email', header: 'Email' },
-  { key: 'phone', header: 'Telefone' },
-  { key: 'client_type', header: 'Tipo' },
-  { key: 'status', header: 'Status' },
-  { key: 'actions', header: 'Ações' },
-];
-
 const statusColors: Record<string, 'green' | 'gray' | 'blue' | 'red'> = {
   active: 'green',
   inactive: 'gray',
@@ -53,13 +45,24 @@ const statusColors: Record<string, 'green' | 'gray' | 'blue' | 'red'> = {
   archived: 'red',
 };
 
-const typeLabels: Record<string, string> = {
-  individual: 'Pessoa Física',
-  company: 'Empresa',
-  agency: 'Agência',
-};
-
 export default function ClientsContent({ clients: initialClients }: { clients: Client[] }) {
+  const { t } = useTranslation();
+
+  const headers = [
+    { key: 'name', header: t('clients.name') },
+    { key: 'email', header: t('clients.email') },
+    { key: 'phone', header: t('clients.phone') },
+    { key: 'client_type', header: t('clients.type') },
+    { key: 'status', header: t('clients.status') },
+    { key: 'actions', header: t('clients.actions') },
+  ];
+
+  const typeLabels: Record<string, string> = {
+    individual: t('clients.typeIndividual'),
+    company: t('clients.typeCompany'),
+    agency: t('clients.typeAgency'),
+  };
+
   const [clients, setClients] = useState(initialClients);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
@@ -88,7 +91,7 @@ export default function ClientsContent({ clients: initialClients }: { clients: C
           kind="ghost"
           size="sm"
           hasIconOnly
-          iconDescription="Editar"
+          iconDescription={t('common.edit')}
           renderIcon={Edit}
           onClick={() => {
             setEditingClient(client);
@@ -99,7 +102,7 @@ export default function ClientsContent({ clients: initialClients }: { clients: C
           kind="ghost"
           size="sm"
           hasIconOnly
-          iconDescription="Excluir"
+          iconDescription={t('common.delete')}
           renderIcon={TrashCan}
           onClick={() => setDeleteModal(client.id)}
         />
@@ -161,8 +164,8 @@ export default function ClientsContent({ clients: initialClients }: { clients: C
   return (
     <div>
       <div className="page-header">
-        <h1>Clientes</h1>
-        <p>Gerencie seus clientes e prospects ({clients.length} total)</p>
+        <h1>{t('clients.title')}</h1>
+        <p>{t('clients.subtitleWithCount', { count: clients.length })}</p>
       </div>
 
       <DataTable rows={rows} headers={headers}>
@@ -171,7 +174,7 @@ export default function ClientsContent({ clients: initialClients }: { clients: C
             <TableToolbar>
               <TableToolbarContent>
                 <TableToolbarSearch
-                  placeholder="Buscar clientes..."
+                  placeholder={t('clients.searchPlaceholder')}
                   onChange={(e: any) => setSearchTerm(e.target?.value || '')}
                 />
                 <Button
@@ -181,7 +184,7 @@ export default function ClientsContent({ clients: initialClients }: { clients: C
                     setIsModalOpen(true);
                   }}
                 >
-                  Novo Cliente
+                  {t('clients.newClient')}
                 </Button>
               </TableToolbarContent>
             </TableToolbar>
@@ -216,9 +219,9 @@ export default function ClientsContent({ clients: initialClients }: { clients: C
           setIsModalOpen(false);
           setEditingClient(null);
         }}
-        modalHeading={editingClient ? 'Editar Cliente' : 'Novo Cliente'}
-        primaryButtonText="Salvar"
-        secondaryButtonText="Cancelar"
+        modalHeading={editingClient ? t('clients.editClient') : t('clients.newClient')}
+        primaryButtonText={t('common.save')}
+        secondaryButtonText={t('common.cancel')}
         onRequestSubmit={() => {
           const form = document.getElementById('client-form') as HTMLFormElement;
           form?.requestSubmit();
@@ -229,14 +232,14 @@ export default function ClientsContent({ clients: initialClients }: { clients: C
             <TextInput
               id="name"
               name="name"
-              labelText="Nome"
+              labelText={t('clients.name')}
               defaultValue={editingClient?.name}
               required
             />
             <TextInput
               id="email"
               name="email"
-              labelText="Email"
+              labelText={t('clients.email')}
               type="email"
               defaultValue={editingClient?.email}
               required
@@ -244,34 +247,34 @@ export default function ClientsContent({ clients: initialClients }: { clients: C
             <TextInput
               id="phone"
               name="phone"
-              labelText="Telefone"
+              labelText={t('clients.phone')}
               defaultValue={editingClient?.phone || ''}
             />
             <Select
               id="client_type"
               name="client_type"
-              labelText="Tipo"
+              labelText={t('clients.type')}
               defaultValue={editingClient?.client_type || 'individual'}
             >
-              <SelectItem value="individual" text="Pessoa Física" />
-              <SelectItem value="company" text="Empresa" />
-              <SelectItem value="agency" text="Agência" />
+              <SelectItem value="individual" text={t('clients.typeIndividual')} />
+              <SelectItem value="company" text={t('clients.typeCompany')} />
+              <SelectItem value="agency" text={t('clients.typeAgency')} />
             </Select>
             <Select
               id="status"
               name="status"
-              labelText="Status"
+              labelText={t('clients.status')}
               defaultValue={editingClient?.status || 'active'}
             >
-              <SelectItem value="active" text="Ativo" />
-              <SelectItem value="inactive" text="Inativo" />
-              <SelectItem value="prospect" text="Prospect" />
-              <SelectItem value="archived" text="Arquivado" />
+              <SelectItem value="active" text={t('clients.statusActive')} />
+              <SelectItem value="inactive" text={t('clients.statusInactive')} />
+              <SelectItem value="prospect" text={t('clients.statusProspect')} />
+              <SelectItem value="archived" text={t('clients.statusArchived')} />
             </Select>
             <TextArea
               id="notes"
               name="notes"
-              labelText="Observações"
+              labelText={t('clients.notes')}
               defaultValue={editingClient?.notes || ''}
             />
           </Stack>
@@ -282,13 +285,13 @@ export default function ClientsContent({ clients: initialClients }: { clients: C
       <Modal
         open={deleteModal !== null}
         onRequestClose={() => setDeleteModal(null)}
-        modalHeading="Confirmar Exclusão"
-        primaryButtonText="Excluir"
-        secondaryButtonText="Cancelar"
+        modalHeading={t('clients.confirmDelete')}
+        primaryButtonText={t('common.delete')}
+        secondaryButtonText={t('common.cancel')}
         danger
         onRequestSubmit={() => deleteModal && handleDelete(deleteModal)}
       >
-        <p>Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita.</p>
+        <p>{t('clients.deleteConfirmation')}</p>
       </Modal>
     </div>
   );

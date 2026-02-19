@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from '@/lib/i18n/context';
 import {
   Grid,
   Column,
@@ -53,21 +54,27 @@ const typeColors = {
   milestone: 'green',
 } as const;
 
-const typeLabels = {
-  content: 'Conteúdo',
-  meeting: 'Reunião',
-  deadline: 'Prazo',
-  milestone: 'Marco',
-};
-
-const months = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-];
-
-const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-
 export default function CalendarPage() {
+  const { t } = useTranslation();
+
+  const typeLabels = {
+    content: t('calendar.content'),
+    meeting: t('calendar.meeting'),
+    deadline: t('calendar.deadline'),
+    milestone: t('calendar.milestone'),
+  };
+
+  const months = [
+    t('calendar.months.0'), t('calendar.months.1'), t('calendar.months.2'), t('calendar.months.3'),
+    t('calendar.months.4'), t('calendar.months.5'), t('calendar.months.6'), t('calendar.months.7'),
+    t('calendar.months.8'), t('calendar.months.9'), t('calendar.months.10'), t('calendar.months.11'),
+  ];
+
+  const weekDays = [
+    t('calendar.weekDays.0'), t('calendar.weekDays.1'), t('calendar.weekDays.2'), t('calendar.weekDays.3'),
+    t('calendar.weekDays.4'), t('calendar.weekDays.5'), t('calendar.weekDays.6'),
+  ];
+
   const [currentDate, setCurrentDate] = useState(new Date(2024, 1, 1)); // Fevereiro 2024
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'list'>('month');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -116,18 +123,18 @@ export default function CalendarPage() {
       {/* Breadcrumb */}
       <Breadcrumb noTrailingSlash style={{ marginBottom: '1rem' }}>
         <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>Calendário Editorial</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>{t('calendar.title')}</BreadcrumbItem>
       </Breadcrumb>
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ margin: 0 }}>Calendário Editorial</h1>
-          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Planeje e agende seus conteúdos</p>
+          <h1 style={{ margin: 0 }}>{t('calendar.title')}</h1>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>{t('calendar.subtitle')}</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Button size="sm" renderIcon={Add} onClick={() => setIsModalOpen(true)}>
-            Novo Evento
+            {t('calendar.newEvent')}
           </Button>
         </div>
       </div>
@@ -136,30 +143,30 @@ export default function CalendarPage() {
       <Tile style={{ marginBottom: '1rem', padding: '1rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-            <Button kind="ghost" size="sm" hasIconOnly iconDescription="Mês anterior" renderIcon={ChevronLeft} onClick={prevMonth} />
+            <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('calendar.prevMonth')} renderIcon={ChevronLeft} onClick={prevMonth} />
             <h2 style={{ margin: 0, minWidth: '180px', textAlign: 'center' }}>
               {months[month]} {year}
             </h2>
-            <Button kind="ghost" size="sm" hasIconOnly iconDescription="Próximo mês" renderIcon={ChevronRight} onClick={nextMonth} />
-            <Button kind="tertiary" size="sm" onClick={goToToday}>Hoje</Button>
+            <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('calendar.nextMonth')} renderIcon={ChevronRight} onClick={nextMonth} />
+            <Button kind="tertiary" size="sm" onClick={goToToday}>{t('common.today')}</Button>
           </div>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <Tag type="blue" size="sm">
                 <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--cds-link-primary)', marginRight: 4 }} />
-                Conteúdo
+                {t('calendar.content')}
               </Tag>
               <Tag type="purple" size="sm">
                 <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--cds-support-info)', marginRight: 4 }} />
-                Reunião
+                {t('calendar.meeting')}
               </Tag>
               <Tag type="red" size="sm">
                 <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--cds-support-error)', marginRight: 4 }} />
-                Prazo
+                {t('calendar.deadline')}
               </Tag>
               <Tag type="green" size="sm">
                 <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--cds-support-success)', marginRight: 4 }} />
-                Marco
+                {t('calendar.milestone')}
               </Tag>
             </div>
             <div style={{ display: 'flex', border: '1px solid var(--cds-border-subtle-01)', borderRadius: '4px' }}>
@@ -167,7 +174,7 @@ export default function CalendarPage() {
                 kind={viewMode === 'month' ? 'secondary' : 'ghost'}
                 size="sm"
                 hasIconOnly
-                iconDescription="Mês"
+                iconDescription={t('calendar.monthView')}
                 renderIcon={CalendarIcon}
                 onClick={() => setViewMode('month')}
               />
@@ -175,7 +182,7 @@ export default function CalendarPage() {
                 kind={viewMode === 'list' ? 'secondary' : 'ghost'}
                 size="sm"
                 hasIconOnly
-                iconDescription="Lista"
+                iconDescription={t('calendar.listView')}
                 renderIcon={List}
                 onClick={() => setViewMode('list')}
               />
@@ -264,7 +271,7 @@ export default function CalendarPage() {
                         ))}
                         {dayEvents.length > 3 && (
                           <div style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>
-                            +{dayEvents.length - 3} mais
+                            {t('calendar.more', { count: dayEvents.length - 3 })}
                           </div>
                         )}
                       </div>
@@ -309,10 +316,10 @@ export default function CalendarPage() {
                     {event.platform && <Tag type="gray" size="sm">{event.platform}</Tag>}
                   </div>
                   <div style={{ fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>
-                    {event.time || 'Dia todo'}
+                    {event.time || t('calendar.allDay')}
                   </div>
                 </div>
-                <Button kind="ghost" size="sm" renderIcon={View}>Ver</Button>
+                <Button kind="ghost" size="sm" renderIcon={View}>{t('common.view')}</Button>
               </div>
             ))}
         </Tile>
@@ -325,27 +332,27 @@ export default function CalendarPage() {
           setIsModalOpen(false);
           setSelectedDate(null);
         }}
-        modalHeading="Novo Evento"
-        primaryButtonText="Salvar"
-        secondaryButtonText="Cancelar"
+        modalHeading={t('calendar.newEvent')}
+        primaryButtonText={t('common.save')}
+        secondaryButtonText={t('common.cancel')}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <TextInput
             id="event-title"
-            labelText="Título"
-            placeholder="Ex: Post Instagram - Dicas"
+            labelText={t('calendar.eventTitle')}
+            placeholder={t('calendar.eventTitlePlaceholder')}
           />
-          <Select id="event-type" labelText="Tipo">
-            <SelectItem value="content" text="Conteúdo" />
-            <SelectItem value="meeting" text="Reunião" />
-            <SelectItem value="deadline" text="Prazo" />
-            <SelectItem value="milestone" text="Marco" />
+          <Select id="event-type" labelText={t('calendar.eventType')}>
+            <SelectItem value="content" text={t('calendar.content')} />
+            <SelectItem value="meeting" text={t('calendar.meeting')} />
+            <SelectItem value="deadline" text={t('calendar.deadline')} />
+            <SelectItem value="milestone" text={t('calendar.milestone')} />
           </Select>
           <Grid>
             <Column lg={8} md={4} sm={4}>
               <TextInput
                 id="event-date"
-                labelText="Data"
+                labelText={t('calendar.eventDate')}
                 type="date"
                 defaultValue={selectedDate || ''}
               />
@@ -353,13 +360,13 @@ export default function CalendarPage() {
             <Column lg={8} md={4} sm={4}>
               <TextInput
                 id="event-time"
-                labelText="Horário"
+                labelText={t('calendar.eventTime')}
                 type="time"
               />
             </Column>
           </Grid>
-          <Select id="event-platform" labelText="Plataforma (se conteúdo)">
-            <SelectItem value="" text="Nenhuma" />
+          <Select id="event-platform" labelText={t('calendar.eventPlatform')}>
+            <SelectItem value="" text={t('common.none')} />
             <SelectItem value="instagram" text="Instagram" />
             <SelectItem value="linkedin" text="LinkedIn" />
             <SelectItem value="facebook" text="Facebook" />
@@ -368,7 +375,7 @@ export default function CalendarPage() {
           </Select>
           <TextArea
             id="event-notes"
-            labelText="Notas"
+            labelText={t('calendar.eventNotes')}
             rows={3}
           />
         </div>

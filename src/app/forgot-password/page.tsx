@@ -11,8 +11,10 @@ import {
 } from '@carbon/react';
 import { ArrowLeft, Email } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/context';
 
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,19 +48,19 @@ export default function ForgotPasswordPage() {
       <div className="login-container">
         <div className="login-header">
           <h1>genOS</h1>
-          <p>Recuperar Senha</p>
+          <p>{t('forgotPassword.title')}</p>
         </div>
 
         {success ? (
           <div style={{ textAlign: 'center' }}>
             <InlineNotification
               kind="success"
-              title="Email enviado!"
-              subtitle="Verifique sua caixa de entrada para redefinir sua senha."
+              title={t('forgotPassword.success')}
+              subtitle={t('forgotPassword.successHint')}
               hideCloseButton
             />
             <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', color: 'var(--cds-link-primary)', textDecoration: 'none' }}>
-              <ArrowLeft size={16} /> Voltar ao login
+              <ArrowLeft size={16} /> {t('forgotPassword.backToLogin')}
             </Link>
           </div>
         ) : (
@@ -67,22 +69,22 @@ export default function ForgotPasswordPage() {
               {error && (
                 <InlineNotification
                   kind="error"
-                  title="Erro"
+                  title={t('login.errorTitle')}
                   subtitle={error}
                   hideCloseButton
                 />
               )}
 
               <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem' }}>
-                Digite seu email e enviaremos um link para redefinir sua senha.
+                {t('forgotPassword.subtitle')}
               </p>
 
               <TextInput
                 id="email"
                 name="email"
-                labelText="Email"
+                labelText={t('login.email')}
                 type="email"
-                placeholder="seu@email.com"
+                placeholder={t('login.emailPlaceholder')}
                 required
               />
 
@@ -92,11 +94,11 @@ export default function ForgotPasswordPage() {
                 disabled={loading}
                 style={{ width: '100%', maxWidth: 'none' }}
               >
-                {loading ? 'Enviando...' : 'Enviar Link'}
+                {loading ? t('forgotPassword.submitting') : t('forgotPassword.submit')}
               </Button>
 
               <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--cds-link-primary)', textDecoration: 'none', fontSize: '0.875rem' }}>
-                <ArrowLeft size={16} /> Voltar ao login
+                <ArrowLeft size={16} /> {t('forgotPassword.backToLogin')}
               </Link>
             </Stack>
           </Form>

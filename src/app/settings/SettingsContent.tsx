@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from '@/lib/i18n/context';
 import {
   Tabs,
   TabList,
@@ -19,6 +20,7 @@ import {
 import { Save, User, Settings, Notification, Security } from '@carbon/icons-react';
 
 export default function SettingsContent() {
+  const { t } = useTranslation();
   const [saved, setSaved] = useState(false);
   const [profile, setProfile] = useState({
     name: 'Octavio Cestari',
@@ -41,60 +43,60 @@ export default function SettingsContent() {
   return (
     <div>
       <div className="page-header">
-        <h1>Configurações</h1>
-        <p>Gerencie suas preferências do sistema</p>
+        <h1>{t('settings.title')}</h1>
+        <p>{t('settings.subtitle')}</p>
       </div>
 
       {saved && (
         <InlineNotification
           kind="success"
-          title="Sucesso"
-          subtitle="Configurações salvas com sucesso!"
+          title={t('settings.savedSuccess')}
+          subtitle={t('settings.savedMessage')}
           hideCloseButton
           style={{ marginBottom: '1rem' }}
         />
       )}
 
       <Tabs>
-        <TabList aria-label="Configurações">
-          <Tab renderIcon={User}>Perfil</Tab>
-          <Tab renderIcon={Settings}>Preferências</Tab>
-          <Tab renderIcon={Notification}>Notificações</Tab>
-          <Tab renderIcon={Security}>Segurança</Tab>
+        <TabList aria-label={t('settings.title')}>
+          <Tab renderIcon={User}>{t('settings.profile')}</Tab>
+          <Tab renderIcon={Settings}>{t('settings.preferences')}</Tab>
+          <Tab renderIcon={Notification}>{t('settings.notificationsTab')}</Tab>
+          <Tab renderIcon={Security}>{t('settings.security')}</Tab>
         </TabList>
         <TabPanels>
           {/* Perfil */}
           <TabPanel>
             <Tile style={{ marginTop: '1rem' }}>
-              <h3 style={{ marginBottom: '1.5rem' }}>Informações do Perfil</h3>
+              <h3 style={{ marginBottom: '1.5rem' }}>{t('settings.profileInfo')}</h3>
               <div style={{ display: 'grid', gap: '1rem', maxWidth: '500px' }}>
                 <TextInput
                   id="name"
-                  labelText="Nome"
+                  labelText={t('settings.name')}
                   value={profile.name}
                   onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                 />
                 <TextInput
                   id="email"
-                  labelText="Email"
+                  labelText={t('settings.email')}
                   type="email"
                   value={profile.email}
                   onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                 />
                 <TextInput
                   id="phone"
-                  labelText="Telefone"
+                  labelText={t('settings.phone')}
                   value={profile.phone}
                   onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                 />
                 <TextInput
                   id="company"
-                  labelText="Empresa"
+                  labelText={t('settings.company')}
                   value={profile.company}
                   onChange={(e) => setProfile({ ...profile, company: e.target.value })}
                 />
                 <Button renderIcon={Save} onClick={handleSave} style={{ marginTop: '1rem' }}>
-                  Salvar Alterações
+                  {t('settings.saveChanges')}
                 </Button>
               </div>
             </Tile>
@@ -103,28 +105,28 @@ export default function SettingsContent() {
           {/* Preferências */}
           <TabPanel>
             <Tile style={{ marginTop: '1rem' }}>
-              <h3 style={{ marginBottom: '1.5rem' }}>Preferências do Sistema</h3>
+              <h3 style={{ marginBottom: '1.5rem' }}>{t('settings.systemPreferences')}</h3>
               <div style={{ display: 'grid', gap: '1.5rem', maxWidth: '500px' }}>
                 <Select
                   id="language"
-                  labelText="Idioma"
+                  labelText={t('settings.language')}
                   value={preferences.language}
                   onChange={(e) => setPreferences({ ...preferences, language: e.target.value })}
                 >
-                  <SelectItem value="pt-BR" text="Português (Brasil)" />
-                  <SelectItem value="en-US" text="English (US)" />
-                  <SelectItem value="es" text="Español" />
+                  <SelectItem value="pt-BR" text={t('settings.languagePtBr')} />
+                  <SelectItem value="en-US" text={t('settings.languageEn')} />
+                  <SelectItem value="es" text={t('settings.languageEs')} />
                 </Select>
                 <Toggle
                   id="darkMode"
-                  labelText="Modo Escuro"
-                  labelA="Desativado"
-                  labelB="Ativado"
+                  labelText={t('settings.darkMode')}
+                  labelA={t('settings.disabled')}
+                  labelB={t('settings.enabled')}
                   toggled={preferences.darkMode}
                   onToggle={(checked) => setPreferences({ ...preferences, darkMode: checked })}
                 />
                 <Button renderIcon={Save} onClick={handleSave} style={{ marginTop: '1rem' }}>
-                  Salvar Preferências
+                  {t('settings.savePreferences')}
                 </Button>
               </div>
             </Tile>
@@ -133,39 +135,39 @@ export default function SettingsContent() {
           {/* Notificações */}
           <TabPanel>
             <Tile style={{ marginTop: '1rem' }}>
-              <h3 style={{ marginBottom: '1.5rem' }}>Configurações de Notificações</h3>
+              <h3 style={{ marginBottom: '1.5rem' }}>{t('settings.notificationSettings')}</h3>
               <div style={{ display: 'grid', gap: '1.5rem', maxWidth: '500px' }}>
                 <Toggle
                   id="emailNotifications"
-                  labelText="Notificações por Email"
-                  labelA="Desativado"
-                  labelB="Ativado"
+                  labelText={t('settings.emailNotifications')}
+                  labelA={t('settings.disabled')}
+                  labelB={t('settings.enabled')}
                   toggled={preferences.emailNotifications}
                   onToggle={(checked) => setPreferences({ ...preferences, emailNotifications: checked })}
                 />
                 <Toggle
                   id="newClient"
-                  labelText="Novos clientes"
-                  labelA="Desativado"
-                  labelB="Ativado"
+                  labelText={t('settings.newClients')}
+                  labelA={t('settings.disabled')}
+                  labelB={t('settings.enabled')}
                   defaultToggled={true}
                 />
                 <Toggle
                   id="newBriefing"
-                  labelText="Novos briefings"
-                  labelA="Desativado"
-                  labelB="Ativado"
+                  labelText={t('settings.newBriefings')}
+                  labelA={t('settings.disabled')}
+                  labelB={t('settings.enabled')}
                   defaultToggled={true}
                 />
                 <Toggle
                   id="projectUpdates"
-                  labelText="Atualizações de projetos"
-                  labelA="Desativado"
-                  labelB="Ativado"
+                  labelText={t('settings.projectUpdates')}
+                  labelA={t('settings.disabled')}
+                  labelB={t('settings.enabled')}
                   defaultToggled={true}
                 />
                 <Button renderIcon={Save} onClick={handleSave} style={{ marginTop: '1rem' }}>
-                  Salvar Notificações
+                  {t('settings.saveNotifications')}
                 </Button>
               </div>
             </Tile>
@@ -174,32 +176,32 @@ export default function SettingsContent() {
           {/* Segurança */}
           <TabPanel>
             <Tile style={{ marginTop: '1rem' }}>
-              <h3 style={{ marginBottom: '1.5rem' }}>Segurança da Conta</h3>
+              <h3 style={{ marginBottom: '1.5rem' }}>{t('settings.accountSecurity')}</h3>
               <div style={{ display: 'grid', gap: '1rem', maxWidth: '500px' }}>
                 <PasswordInput
                   id="currentPassword"
-                  labelText="Senha Atual"
+                  labelText={t('settings.currentPassword')}
                 />
                 <PasswordInput
                   id="newPassword"
-                  labelText="Nova Senha"
+                  labelText={t('settings.newPassword')}
                 />
                 <PasswordInput
                   id="confirmPassword"
-                  labelText="Confirmar Nova Senha"
+                  labelText={t('settings.confirmPassword')}
                 />
                 <Button renderIcon={Save} onClick={handleSave} style={{ marginTop: '1rem' }}>
-                  Alterar Senha
+                  {t('settings.changePassword')}
                 </Button>
               </div>
             </Tile>
 
             <Tile style={{ marginTop: '1rem' }}>
-              <h3 style={{ marginBottom: '1rem', color: 'var(--cds-support-error)' }}>Zona de Perigo</h3>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--cds-support-error)' }}>{t('settings.dangerZone')}</h3>
               <p style={{ color: 'var(--cds-text-secondary)', marginBottom: '1rem' }}>
-                Ações irreversíveis para sua conta.
+                {t('settings.dangerDescription')}
               </p>
-              <Button kind="danger">Excluir Conta</Button>
+              <Button kind="danger">{t('settings.deleteAccount')}</Button>
             </Tile>
           </TabPanel>
         </TabPanels>

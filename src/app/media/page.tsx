@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from '@/lib/i18n/context';
 import {
   Grid,
   Column,
@@ -58,14 +59,6 @@ interface MediaFolder {
   count: number;
 }
 
-const folders: MediaFolder[] = [
-  { id: 'all', name: 'Todos os Arquivos', count: 24 },
-  { id: 'images', name: 'Imagens', count: 15 },
-  { id: 'videos', name: 'Vídeos', count: 3 },
-  { id: 'documents', name: 'Documentos', count: 6 },
-  { id: 'brand', name: 'Identidade Visual', count: 8 },
-  { id: 'projects', name: 'Projetos', count: 12 },
-];
 
 const files: MediaFile[] = [
   { id: '1', name: 'logo-principal.svg', type: 'image', size: '24 KB', url: '#', folder: 'brand', uploadedAt: '2024-02-15', uploadedBy: 'João' },
@@ -93,6 +86,17 @@ const typeColors = {
 };
 
 export default function MediaPage() {
+  const { t } = useTranslation();
+
+  const folders: MediaFolder[] = [
+    { id: 'all', name: t('media.allFiles'), count: 24 },
+    { id: 'images', name: t('media.images'), count: 15 },
+    { id: 'videos', name: t('media.videos'), count: 3 },
+    { id: 'documents', name: t('media.documents'), count: 6 },
+    { id: 'brand', name: t('media.brandIdentity'), count: 8 },
+    { id: 'projects', name: t('media.projects'), count: 12 },
+  ];
+
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedFolder, setSelectedFolder] = useState('all');
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
@@ -118,22 +122,22 @@ export default function MediaPage() {
     <div>
       {/* Breadcrumb */}
       <Breadcrumb noTrailingSlash style={{ marginBottom: '1rem' }}>
-        <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>Biblioteca de Mídia</BreadcrumbItem>
+        <BreadcrumbItem href="/dashboard">{t('sidebar.dashboard')}</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>{t('media.title')}</BreadcrumbItem>
       </Breadcrumb>
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ margin: 0 }}>Biblioteca de Mídia</h1>
-          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>{files.length} arquivos • 185 MB utilizados</p>
+          <h1 style={{ margin: 0 }}>{t('media.title')}</h1>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>{t('media.fileCount', { count: files.length, size: '185 MB' })}</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Button kind="secondary" size="sm" renderIcon={FolderAdd} onClick={() => setIsNewFolderModalOpen(true)}>
-            Nova Pasta
+            {t('media.newFolder')}
           </Button>
           <Button size="sm" renderIcon={Upload} onClick={() => setIsUploadModalOpen(true)}>
-            Upload
+            {t('media.upload')}
           </Button>
         </div>
       </div>
@@ -142,7 +146,7 @@ export default function MediaPage() {
         {/* Sidebar - Pastas */}
         <Column lg={3} md={2} sm={4}>
           <Tile style={{ padding: '1rem' }}>
-            <h4 style={{ marginBottom: '1rem' }}>Pastas</h4>
+            <h4 style={{ marginBottom: '1rem' }}>{t('media.folders')}</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
               {folders.map(folder => (
                 <button
@@ -179,26 +183,26 @@ export default function MediaPage() {
             <div style={{ flex: 1, minWidth: '200px' }}>
               <Search
                 size="sm"
-                placeholder="Buscar arquivos..."
-                labelText="Buscar"
+                placeholder={t('media.searchPlaceholder')}
+                labelText={t('common.search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
               <Select id="filter-type" size="sm" style={{ minWidth: '120px' }}>
-                <SelectItem value="all" text="Todos" />
-                <SelectItem value="image" text="Imagens" />
-                <SelectItem value="video" text="Vídeos" />
-                <SelectItem value="document" text="Documentos" />
-                <SelectItem value="audio" text="Áudio" />
+                <SelectItem value="all" text={t('media.all')} />
+                <SelectItem value="image" text={t('media.images')} />
+                <SelectItem value="video" text={t('media.videos')} />
+                <SelectItem value="document" text={t('media.documents')} />
+                <SelectItem value="audio" text={t('media.audio')} />
               </Select>
               <div style={{ display: 'flex', border: '1px solid var(--cds-border-subtle-01)', borderRadius: '4px' }}>
                 <Button
                   kind={viewMode === 'grid' ? 'secondary' : 'ghost'}
                   size="sm"
                   hasIconOnly
-                  iconDescription="Grid"
+                  iconDescription={t('media.grid')}
                   renderIcon={GridIcon}
                   onClick={() => setViewMode('grid')}
                 />
@@ -206,7 +210,7 @@ export default function MediaPage() {
                   kind={viewMode === 'list' ? 'secondary' : 'ghost'}
                   size="sm"
                   hasIconOnly
-                  iconDescription="Lista"
+                  iconDescription={t('media.list')}
                   renderIcon={List}
                   onClick={() => setViewMode('list')}
                 />
@@ -218,11 +222,11 @@ export default function MediaPage() {
           {selectedFiles.length > 0 && (
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', padding: '0.75rem', background: 'var(--cds-layer-accent-01)', borderRadius: '4px' }}>
               <span style={{ display: 'flex', alignItems: 'center', marginRight: '1rem' }}>
-                {selectedFiles.length} selecionado(s)
+                {t('media.selectedCount', { count: selectedFiles.length })}
               </span>
-              <Button kind="ghost" size="sm" renderIcon={Download}>Download</Button>
-              <Button kind="ghost" size="sm" renderIcon={Copy}>Copiar Link</Button>
-              <Button kind="danger--ghost" size="sm" renderIcon={TrashCan}>Excluir</Button>
+              <Button kind="ghost" size="sm" renderIcon={Download}>{t('media.download')}</Button>
+              <Button kind="ghost" size="sm" renderIcon={Copy}>{t('media.copyLink')}</Button>
+              <Button kind="danger--ghost" size="sm" renderIcon={TrashCan}>{t('common.delete')}</Button>
             </div>
           )}
 
@@ -264,10 +268,10 @@ export default function MediaPage() {
                             </p>
                           </div>
                           <OverflowMenu size="sm" flipped>
-                            <OverflowMenuItem itemText="Download" />
-                            <OverflowMenuItem itemText="Copiar Link" />
-                            <OverflowMenuItem itemText="Renomear" />
-                            <OverflowMenuItem itemText="Excluir" hasDivider isDelete />
+                            <OverflowMenuItem itemText={t('media.download')} />
+                            <OverflowMenuItem itemText={t('media.copyLink')} />
+                            <OverflowMenuItem itemText={t('media.rename')} />
+                            <OverflowMenuItem itemText={t('common.delete')} hasDivider isDelete />
                           </OverflowMenu>
                         </div>
                       </div>
@@ -285,11 +289,11 @@ export default function MediaPage() {
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--cds-border-subtle-01)', background: '#f4f4f4' }}>
                     <th style={{ padding: '0.75rem', textAlign: 'left', width: '40px' }}></th>
-                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>Nome</th>
-                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>Tipo</th>
-                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>Tamanho</th>
-                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>Data</th>
-                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>Enviado por</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>{t('media.name')}</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>{t('media.type')}</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>{t('media.size')}</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>{t('media.date')}</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'left' }}>{t('media.uploadedBy')}</th>
                     <th style={{ padding: '0.75rem', width: '50px' }}></th>
                   </tr>
                 </thead>
@@ -320,10 +324,10 @@ export default function MediaPage() {
                         <td style={{ padding: '0.75rem', color: 'var(--cds-text-secondary)' }}>{file.uploadedBy}</td>
                         <td style={{ padding: '0.75rem' }}>
                           <OverflowMenu size="sm" flipped>
-                            <OverflowMenuItem itemText="Download" />
-                            <OverflowMenuItem itemText="Copiar Link" />
-                            <OverflowMenuItem itemText="Renomear" />
-                            <OverflowMenuItem itemText="Excluir" hasDivider isDelete />
+                            <OverflowMenuItem itemText={t('media.download')} />
+                            <OverflowMenuItem itemText={t('media.copyLink')} />
+                            <OverflowMenuItem itemText={t('media.rename')} />
+                            <OverflowMenuItem itemText={t('common.delete')} hasDivider isDelete />
                           </OverflowMenu>
                         </td>
                       </tr>
@@ -348,22 +352,22 @@ export default function MediaPage() {
       <Modal
         open={isUploadModalOpen}
         onRequestClose={() => setIsUploadModalOpen(false)}
-        modalHeading="Upload de Arquivos"
-        primaryButtonText="Fazer Upload"
-        secondaryButtonText="Cancelar"
+        modalHeading={t('media.uploadTitle')}
+        primaryButtonText={t('media.doUpload')}
+        secondaryButtonText={t('common.cancel')}
       >
         <div style={{ marginBottom: '1rem' }}>
-          <Select id="upload-folder" labelText="Pasta de destino">
-            <SelectItem value="all" text="Raiz" />
+          <Select id="upload-folder" labelText={t('media.targetFolder')}>
+            <SelectItem value="all" text={t('media.root')} />
             {folders.filter(f => f.id !== 'all').map(folder => (
               <SelectItem key={folder.id} value={folder.id} text={folder.name} />
             ))}
           </Select>
         </div>
         <FileUploader
-          labelTitle="Arraste arquivos ou clique para selecionar"
-          labelDescription="Tamanho máximo: 50MB"
-          buttonLabel="Adicionar arquivos"
+          labelTitle={t('media.dragOrClick')}
+          labelDescription={t('media.maxSize')}
+          buttonLabel={t('media.addFiles')}
           filenameStatus="edit"
           accept={['.jpg', '.jpeg', '.png', '.gif', '.svg', '.pdf', '.doc', '.docx', '.mp4', '.mp3']}
           multiple
@@ -374,14 +378,14 @@ export default function MediaPage() {
       <Modal
         open={isNewFolderModalOpen}
         onRequestClose={() => setIsNewFolderModalOpen(false)}
-        modalHeading="Nova Pasta"
-        primaryButtonText="Criar"
-        secondaryButtonText="Cancelar"
+        modalHeading={t('media.newFolderTitle')}
+        primaryButtonText={t('common.create')}
+        secondaryButtonText={t('common.cancel')}
       >
         <TextInput
           id="folder-name"
-          labelText="Nome da pasta"
-          placeholder="Ex: Projeto XYZ"
+          labelText={t('media.folderName')}
+          placeholder={t('media.folderPlaceholder')}
         />
       </Modal>
     </div>

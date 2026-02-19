@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from '@/lib/i18n/context';
 import {
   Grid,
   Column,
@@ -72,21 +73,23 @@ const typeColors = {
   video: 'magenta',
 } as const;
 
-const statusConfig = {
-  pending: { label: 'Pendente', color: 'gray' },
-  approved: { label: 'Aprovado', color: 'green' },
-  rejected: { label: 'Rejeitado', color: 'red' },
-  revision: { label: 'Revisão', color: 'purple' },
-} as const;
-
-const priorityConfig = {
-  low: { label: 'Baixa', color: 'gray' },
-  normal: { label: 'Normal', color: 'blue' },
-  high: { label: 'Alta', color: 'orange' },
-  urgent: { label: 'Urgente', color: 'red' },
-} as const;
-
 export default function ApprovalsPage() {
+  const { t } = useTranslation();
+
+  const statusConfig = {
+    pending: { label: t('approvals.statusPending'), color: 'gray' },
+    approved: { label: t('approvals.statusApproved'), color: 'green' },
+    rejected: { label: t('approvals.statusRejected'), color: 'red' },
+    revision: { label: t('approvals.statusRevision'), color: 'purple' },
+  } as const;
+
+  const priorityConfig = {
+    low: { label: t('approvals.priorityLow'), color: 'gray' },
+    normal: { label: t('approvals.priorityNormal'), color: 'blue' },
+    high: { label: t('approvals.priorityHigh'), color: 'orange' },
+    urgent: { label: t('approvals.priorityUrgent'), color: 'red' },
+  } as const;
+
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [selectedItem, setSelectedItem] = useState<ApprovalItem | null>(null);
@@ -155,18 +158,18 @@ export default function ApprovalsPage() {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>
-                <span>Por {item.submittedBy} • {item.submittedAt}</span>
+                <span>{t('approvals.by', { name: item.submittedBy, date: item.submittedAt })}</span>
                 {item.comments > 0 && (
                   <span style={{ marginLeft: '1rem' }}>
                     <Chat size={12} style={{ marginRight: '0.25rem' }} />
-                    {item.comments} comentários
+                    {t('approvals.comments', { count: item.comments })}
                   </span>
                 )}
               </div>
 
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <Link href={`/approvals/${item.id}`}>
-                  <Button kind="ghost" size="sm" renderIcon={View}>Ver</Button>
+                  <Button kind="ghost" size="sm" renderIcon={View}>{t('common.view')}</Button>
                 </Link>
                 {item.status === 'pending' && (
                   <>
@@ -179,7 +182,7 @@ export default function ApprovalsPage() {
                         setIsRejectModalOpen(true);
                       }}
                     >
-                      Rejeitar
+                      {t('approvals.reject')}
                     </Button>
                     <Button
                       kind="primary"
@@ -187,7 +190,7 @@ export default function ApprovalsPage() {
                       renderIcon={Checkmark}
                       onClick={() => handleApprove(item)}
                     >
-                      Aprovar
+                      {t('approvals.approve')}
                     </Button>
                   </>
                 )}
@@ -210,9 +213,9 @@ export default function ApprovalsPage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ margin: 0 }}>Central de Aprovações</h1>
+          <h1 style={{ margin: 0 }}>{t('approvals.title')}</h1>
           <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>
-            {pendingItems.length} itens pendentes de aprovação
+            {t('approvals.pendingCount', { count: pendingItems.length })}
           </p>
         </div>
       </div>
@@ -223,21 +226,21 @@ export default function ApprovalsPage() {
           <div style={{ flex: 1, minWidth: '200px' }}>
             <Search
               size="sm"
-              placeholder="Buscar aprovações..."
-              labelText="Buscar"
+              placeholder={t('approvals.searchPlaceholder')}
+              labelText={t('approvals.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <Select id="filter-type" size="sm" value={filterType} onChange={(e) => setFilterType(e.target.value)} style={{ minWidth: '150px' }}>
-            <SelectItem value="all" text="Todos os tipos" />
+            <SelectItem value="all" text={t('common.allTypes')} />
             <SelectItem value="content" text="Conteúdo" />
             <SelectItem value="design" text="Design" />
             <SelectItem value="document" text="Documento" />
             <SelectItem value="video" text="Vídeo" />
           </Select>
           <Select id="filter-client" size="sm" style={{ minWidth: '150px' }}>
-            <SelectItem value="all" text="Todos os clientes" />
+            <SelectItem value="all" text={t('common.allClients')} />
             <SelectItem value="techcorp" text="TechCorp" />
             <SelectItem value="startup" text="Startup XYZ" />
             <SelectItem value="empresa" text="Empresa ABC" />
@@ -249,15 +252,15 @@ export default function ApprovalsPage() {
       <Tabs>
         <TabList aria-label="Status de aprovação">
           <Tab>
-            Pendentes
+            {t('approvals.pending')}
             <Tag type="gray" size="sm" style={{ marginLeft: '0.5rem' }}>{pendingItems.length}</Tag>
           </Tab>
           <Tab>
-            Em Revisão
+            {t('approvals.inRevision')}
             <Tag type="purple" size="sm" style={{ marginLeft: '0.5rem' }}>{inRevisionItems.length}</Tag>
           </Tab>
           <Tab>
-            Histórico
+            {t('approvals.history')}
             <Tag type="gray" size="sm" style={{ marginLeft: '0.5rem' }}>{completedItems.length}</Tag>
           </Tab>
         </TabList>
@@ -268,8 +271,8 @@ export default function ApprovalsPage() {
               {pendingItems.length === 0 ? (
                 <Tile style={{ textAlign: 'center', padding: '3rem' }}>
                   <Checkmark size={48} style={{ color: 'var(--cds-support-success)', marginBottom: '1rem' }} />
-                  <h3>Tudo em dia!</h3>
-                  <p style={{ color: 'var(--cds-text-secondary)' }}>Não há itens pendentes de aprovação.</p>
+                  <h3>{t('approvals.allClear')}</h3>
+                  <p style={{ color: 'var(--cds-text-secondary)' }}>{t('approvals.noPending')}</p>
                 </Tile>
               ) : (
                 pendingItems.map(renderApprovalCard)
@@ -283,8 +286,8 @@ export default function ApprovalsPage() {
               {inRevisionItems.length === 0 ? (
                 <Tile style={{ textAlign: 'center', padding: '3rem' }}>
                   <Time size={48} style={{ color: 'var(--cds-text-helper)', marginBottom: '1rem' }} />
-                  <h3>Nenhum item em revisão</h3>
-                  <p style={{ color: 'var(--cds-text-secondary)' }}>Itens solicitados para revisão aparecerão aqui.</p>
+                  <h3>{t('approvals.noRevision')}</h3>
+                  <p style={{ color: 'var(--cds-text-secondary)' }}>{t('approvals.revisionHint')}</p>
                 </Tile>
               ) : (
                 inRevisionItems.map(renderApprovalCard)
@@ -309,19 +312,19 @@ export default function ApprovalsPage() {
           setSelectedItem(null);
           setRejectReason('');
         }}
-        modalHeading="Rejeitar Item"
-        primaryButtonText="Confirmar Rejeição"
-        secondaryButtonText="Cancelar"
+        modalHeading={t('approvals.rejectModal')}
+        primaryButtonText={t('approvals.rejectConfirm')}
+        secondaryButtonText={t('common.cancel')}
         danger
         onRequestSubmit={handleReject}
       >
         <p style={{ marginBottom: '1rem' }}>
-          Você está rejeitando: <strong>{selectedItem?.title}</strong>
+          {t('approvals.rejectingItem', { title: selectedItem?.title ?? '' })}
         </p>
         <TextArea
           id="reject-reason"
-          labelText="Motivo da rejeição"
-          placeholder="Descreva o que precisa ser alterado..."
+          labelText={t('approvals.rejectReason')}
+          placeholder={t('approvals.rejectPlaceholder')}
           value={rejectReason}
           onChange={(e) => setRejectReason(e.target.value)}
           rows={4}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from '@/lib/i18n/context';
 import {
   Grid,
   Column,
@@ -70,13 +71,6 @@ const contracts: Contract[] = [
   { id: '5', title: 'Proposta - Rebranding', type: 'proposal', client: 'Empresa ABC', project: 'Identidade Visual', value: 15000, status: 'expired', createdAt: '2024-01-05', expiresAt: '2024-01-20' },
 ];
 
-const typeLabels = {
-  contract: 'Contrato',
-  proposal: 'Proposta',
-  nda: 'NDA',
-  amendment: 'Aditivo',
-};
-
 const typeColors = {
   contract: 'blue',
   proposal: 'purple',
@@ -84,19 +78,27 @@ const typeColors = {
   amendment: 'teal',
 } as const;
 
-const statusConfig = {
-  draft: { label: 'Rascunho', color: 'gray', icon: Document },
-  sent: { label: 'Enviado', color: 'blue', icon: Send },
-  viewed: { label: 'Visualizado', color: 'purple', icon: View },
-  signed: { label: 'Assinado', color: 'green', icon: Checkmark },
-  expired: { label: 'Expirado', color: 'red', icon: Warning },
-} as const;
-
 export default function ContractsPage() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+
+  const typeLabels = {
+    contract: t('contracts.typeContract'),
+    proposal: t('contracts.typeProposal'),
+    nda: t('contracts.typeNda'),
+    amendment: t('contracts.typeAmendment'),
+  };
+
+  const statusConfig = {
+    draft: { label: t('contracts.statusDraft'), color: 'gray', icon: Document },
+    sent: { label: t('contracts.statusSent'), color: 'blue', icon: Send },
+    viewed: { label: t('contracts.statusViewed'), color: 'purple', icon: View },
+    signed: { label: t('contracts.statusSigned'), color: 'green', icon: Checkmark },
+    expired: { label: t('contracts.statusExpired'), color: 'red', icon: Warning },
+  };
 
   const filteredContracts = contracts.filter(contract => {
     const matchesSearch = contract.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -107,12 +109,12 @@ export default function ContractsPage() {
   });
 
   const headers = [
-    { key: 'title', header: 'Documento' },
-    { key: 'client', header: 'Cliente' },
-    { key: 'type', header: 'Tipo' },
-    { key: 'value', header: 'Valor' },
-    { key: 'status', header: 'Status' },
-    { key: 'expiresAt', header: 'Validade' },
+    { key: 'title', header: t('contracts.document') },
+    { key: 'client', header: t('contracts.client') },
+    { key: 'type', header: t('contracts.type') },
+    { key: 'value', header: t('contracts.value') },
+    { key: 'status', header: t('contracts.status') },
+    { key: 'expiresAt', header: t('contracts.validity') },
     { key: 'actions', header: '' },
   ];
 
@@ -137,17 +139,17 @@ export default function ContractsPage() {
       {/* Breadcrumb */}
       <Breadcrumb noTrailingSlash style={{ marginBottom: '1rem' }}>
         <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>Contratos e Propostas</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>{t('contracts.title')}</BreadcrumbItem>
       </Breadcrumb>
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ margin: 0 }}>Contratos e Propostas</h1>
-          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Gerencie documentos comerciais</p>
+          <h1 style={{ margin: 0 }}>{t('contracts.title')}</h1>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>{t('contracts.subtitle')}</p>
         </div>
         <Button size="sm" renderIcon={Add} onClick={() => setIsNewModalOpen(true)}>
-          Novo Documento
+          {t('contracts.newDocument')}
         </Button>
       </div>
 
@@ -155,43 +157,43 @@ export default function ContractsPage() {
       <Grid style={{ marginBottom: '1.5rem' }}>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Valor Assinado</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>{t('contracts.signedValue')}</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-success)' }}>
               R$ {totalValue.toLocaleString('pt-BR')}
             </p>
             <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
-              {signedCount} contratos
+              {t('contracts.contracts', { count: signedCount })}
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Aguardando Assinatura</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>{t('contracts.awaitingSignature')}</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-link-primary)' }}>
               R$ {pendingValue.toLocaleString('pt-BR')}
             </p>
             <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
-              {pendingCount} documentos
+              {t('contracts.documents', { count: pendingCount })}
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Taxa de Conversão</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>{t('contracts.conversionRate')}</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>
               {contracts.length > 0 ? Math.round((signedCount / contracts.length) * 100) : 0}%
             </p>
             <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
-              propostas convertidas
+              {t('contracts.convertedProposals')}
             </p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Total de Documentos</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>{t('contracts.totalDocuments')}</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>{contracts.length}</p>
             <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
-              neste período
+              {t('contracts.inThisPeriod')}
             </p>
           </Tile>
         </Column>
@@ -203,26 +205,26 @@ export default function ContractsPage() {
           <div style={{ flex: 1, minWidth: '200px' }}>
             <Search
               size="sm"
-              placeholder="Buscar documentos..."
-              labelText="Buscar"
+              placeholder={t('contracts.searchPlaceholder')}
+              labelText={t('contracts.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <Select id="filter-type" size="sm" value={filterType} onChange={(e) => setFilterType(e.target.value)} style={{ minWidth: '150px' }}>
-            <SelectItem value="all" text="Todos os tipos" />
-            <SelectItem value="contract" text="Contrato" />
-            <SelectItem value="proposal" text="Proposta" />
-            <SelectItem value="nda" text="NDA" />
-            <SelectItem value="amendment" text="Aditivo" />
+            <SelectItem value="all" text={t('common.allTypes')} />
+            <SelectItem value="contract" text={t('contracts.typeContract')} />
+            <SelectItem value="proposal" text={t('contracts.typeProposal')} />
+            <SelectItem value="nda" text={t('contracts.typeNda')} />
+            <SelectItem value="amendment" text={t('contracts.typeAmendment')} />
           </Select>
           <Select id="filter-status" size="sm" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} style={{ minWidth: '150px' }}>
-            <SelectItem value="all" text="Todos os status" />
-            <SelectItem value="draft" text="Rascunho" />
-            <SelectItem value="sent" text="Enviado" />
-            <SelectItem value="viewed" text="Visualizado" />
-            <SelectItem value="signed" text="Assinado" />
-            <SelectItem value="expired" text="Expirado" />
+            <SelectItem value="all" text={t('common.allStatus')} />
+            <SelectItem value="draft" text={t('contracts.statusDraft')} />
+            <SelectItem value="sent" text={t('contracts.statusSent')} />
+            <SelectItem value="viewed" text={t('contracts.statusViewed')} />
+            <SelectItem value="signed" text={t('contracts.statusSigned')} />
+            <SelectItem value="expired" text={t('contracts.statusExpired')} />
           </Select>
         </div>
       </Tile>
@@ -270,7 +272,7 @@ export default function ContractsPage() {
                       <TableCell>
                         {contract.signedAt ? (
                           <span style={{ color: 'var(--cds-support-success)' }}>
-                            Assinado em {new Date(contract.signedAt).toLocaleDateString('pt-BR')}
+                            {t('contracts.signedOn', { date: new Date(contract.signedAt).toLocaleDateString('pt-BR') })}
                           </span>
                         ) : (
                           <span style={{ color: new Date(contract.expiresAt) < new Date() ? 'var(--cds-support-error)' : 'var(--cds-text-secondary)' }}>
@@ -280,12 +282,12 @@ export default function ContractsPage() {
                       </TableCell>
                       <TableCell>
                         <OverflowMenu size="sm" flipped>
-                          <OverflowMenuItem itemText="Visualizar" />
-                          <OverflowMenuItem itemText="Editar" />
-                          <OverflowMenuItem itemText="Duplicar" />
-                          <OverflowMenuItem itemText="Download PDF" />
-                          {contract.status === 'draft' && <OverflowMenuItem itemText="Enviar" />}
-                          <OverflowMenuItem itemText="Excluir" hasDivider isDelete />
+                          <OverflowMenuItem itemText={t('common.view')} />
+                          <OverflowMenuItem itemText={t('common.edit')} />
+                          <OverflowMenuItem itemText={t('common.duplicate')} />
+                          <OverflowMenuItem itemText={t('common.downloadPdf')} />
+                          {contract.status === 'draft' && <OverflowMenuItem itemText={t('common.send')} />}
+                          <OverflowMenuItem itemText={t('common.delete')} hasDivider isDelete />
                         </OverflowMenu>
                       </TableCell>
                     </TableRow>
@@ -308,42 +310,42 @@ export default function ContractsPage() {
       <Modal
         open={isNewModalOpen}
         onRequestClose={() => setIsNewModalOpen(false)}
-        modalHeading="Novo Documento"
-        primaryButtonText="Criar"
-        secondaryButtonText="Cancelar"
+        modalHeading={t('contracts.newModal')}
+        primaryButtonText={t('common.create')}
+        secondaryButtonText={t('common.cancel')}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <Select id="doc-type" labelText="Tipo de Documento">
-            <SelectItem value="contract" text="Contrato" />
-            <SelectItem value="proposal" text="Proposta Comercial" />
-            <SelectItem value="nda" text="NDA" />
-            <SelectItem value="amendment" text="Aditivo" />
+          <Select id="doc-type" labelText={t('contracts.docType')}>
+            <SelectItem value="contract" text={t('contracts.typeContract')} />
+            <SelectItem value="proposal" text={t('contracts.proposalCommercial')} />
+            <SelectItem value="nda" text={t('contracts.typeNda')} />
+            <SelectItem value="amendment" text={t('contracts.typeAmendment')} />
           </Select>
           <TextInput
             id="doc-title"
-            labelText="Título"
-            placeholder="Ex: Contrato de Prestação de Serviços"
+            labelText={t('contracts.docTitle')}
+            placeholder={t('contracts.docTitlePlaceholder')}
           />
-          <Select id="doc-client" labelText="Cliente">
-            <SelectItem value="" text="Selecione" />
+          <Select id="doc-client" labelText={t('contracts.docClient')}>
+            <SelectItem value="" text={t('common.select')} />
             <SelectItem value="techcorp" text="TechCorp Brasil" />
             <SelectItem value="startup" text="Startup XYZ" />
             <SelectItem value="empresa" text="Empresa ABC" />
           </Select>
-          <Select id="doc-project" labelText="Projeto (opcional)">
-            <SelectItem value="" text="Nenhum" />
+          <Select id="doc-project" labelText={t('contracts.docProject')}>
+            <SelectItem value="" text={t('common.none')} />
             <SelectItem value="website" text="Website Institucional" />
             <SelectItem value="social" text="Gestão Redes Sociais" />
           </Select>
           <TextInput
             id="doc-value"
-            labelText="Valor (R$)"
+            labelText={t('contracts.docValue')}
             type="number"
             placeholder="0"
           />
           <TextInput
             id="doc-expires"
-            labelText="Válido até"
+            labelText={t('contracts.docExpires')}
             type="date"
           />
         </div>

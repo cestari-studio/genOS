@@ -18,6 +18,7 @@ import {
 } from '@carbon/icons-react';
 import { DonutChart } from '@carbon/charts-react';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface Stats {
   totalClients: number;
@@ -33,6 +34,7 @@ interface Stats {
 export default function AnalyticsContent() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function fetchStats() {
@@ -58,7 +60,6 @@ export default function AnalyticsContent() {
         supabase.from('projects').select('status'),
       ]);
 
-      // Agrupar por status
       const clientsByStatus = Object.entries(
         (clients || []).reduce((acc: Record<string, number>, c: any) => {
           acc[c.status] = (acc[c.status] || 0) + 1;
@@ -92,7 +93,7 @@ export default function AnalyticsContent() {
   if (loading) {
     return (
       <div className="page-header">
-        <Loading description="Carregando analytics..." withOverlay={false} />
+        <Loading description={t('analytics.loading')} withOverlay={false} />
       </div>
     );
   }
@@ -101,14 +102,14 @@ export default function AnalyticsContent() {
     <div>
       <Breadcrumb noTrailingSlash style={{ marginBottom: '1rem' }}>
         <BreadcrumbItem>
-          <Link href="/dashboard">Dashboard</Link>
+          <Link href="/dashboard">{t('sidebar.dashboard')}</Link>
         </BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>Analytics</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>{t('analytics.title')}</BreadcrumbItem>
       </Breadcrumb>
 
       <div className="page-header">
-        <h1>Analytics</h1>
-        <p>Metricas e estatisticas do sistema</p>
+        <h1>{t('analytics.title')}</h1>
+        <p>{t('analytics.subtitle')}</p>
       </div>
 
       <Grid>
@@ -116,11 +117,11 @@ export default function AnalyticsContent() {
           <Tile className="stat-card">
             <div className="stat-card__header" style={{ color: 'var(--cds-link-primary, #0f62fe)' }}>
               <UserMultiple size={24} />
-              <span>Total de Clientes</span>
+              <span>{t('analytics.totalClients')}</span>
             </div>
             <div className="stat-value">{stats?.totalClients}</div>
             <div className="stat-change positive">
-              {stats?.activeClients} ativos
+              {t('analytics.active', { count: stats?.activeClients || 0 })}
             </div>
           </Tile>
         </Column>
@@ -129,11 +130,11 @@ export default function AnalyticsContent() {
           <Tile className="stat-card">
             <div className="stat-card__header" style={{ color: 'var(--cds-support-info, #8a3ffc)' }}>
               <Folder size={24} />
-              <span>Total de Projetos</span>
+              <span>{t('analytics.totalProjects')}</span>
             </div>
             <div className="stat-value">{stats?.totalProjects}</div>
             <div className="stat-change positive">
-              {stats?.completedProjects} concluidos
+              {t('analytics.completed', { count: stats?.completedProjects || 0 })}
             </div>
           </Tile>
         </Column>
@@ -142,7 +143,7 @@ export default function AnalyticsContent() {
           <Tile className="stat-card">
             <div className="stat-card__header" style={{ color: 'var(--cds-support-success, #007d79)' }}>
               <TaskComplete size={24} />
-              <span>Briefings</span>
+              <span>{t('analytics.briefings')}</span>
             </div>
             <div className="stat-value">{stats?.totalBriefings}</div>
           </Tile>
@@ -152,7 +153,7 @@ export default function AnalyticsContent() {
           <Tile className="stat-card">
             <div className="stat-card__header" style={{ color: 'var(--cds-support-error, #fa4d56)' }}>
               <Document size={24} />
-              <span>Documentos</span>
+              <span>{t('analytics.documents')}</span>
             </div>
             <div className="stat-value">{stats?.totalDocuments}</div>
           </Tile>
@@ -168,12 +169,12 @@ export default function AnalyticsContent() {
                 value: s.count,
               })) || []}
               options={{
-                title: 'Clientes por Status',
+                title: t('analytics.clientsByStatus'),
                 resizable: true,
                 height: '300px',
                 donut: {
                   center: {
-                    label: 'Clientes',
+                    label: t('sidebar.clients'),
                   },
                 },
               }}
@@ -189,12 +190,12 @@ export default function AnalyticsContent() {
                 value: s.count,
               })) || []}
               options={{
-                title: 'Projetos por Status',
+                title: t('analytics.projectsByStatus'),
                 resizable: true,
                 height: '300px',
                 donut: {
                   center: {
-                    label: 'Projetos',
+                    label: t('sidebar.projects'),
                   },
                 },
               }}

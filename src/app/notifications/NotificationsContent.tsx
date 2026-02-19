@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from '@/lib/i18n/context';
 import {
   Tile,
   Button,
@@ -65,6 +66,7 @@ const iconMap = {
 };
 
 export default function NotificationsContent() {
+  const { t } = useTranslation();
   const [notifications, setNotifications] = useState(mockNotifications);
 
   const markAsRead = (id: string) => {
@@ -87,19 +89,19 @@ export default function NotificationsContent() {
     <div>
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <h1>Notificações</h1>
-          <p>Acompanhe as atualizações do sistema</p>
+          <h1>{t('notifications.title')}</h1>
+          <p>{t('notifications.subtitle')}</p>
         </div>
         {unreadCount > 0 && (
           <Button kind="ghost" size="sm" onClick={markAllAsRead}>
-            Marcar todas como lidas
+            {t('notifications.markAllRead')}
           </Button>
         )}
       </div>
 
       {unreadCount > 0 && (
         <Tag type="blue" style={{ marginBottom: '1rem' }}>
-          {unreadCount} não lida{unreadCount > 1 ? 's' : ''}
+          {t('notifications.unreadCount', { count: unreadCount })}
         </Tag>
       )}
 
@@ -107,7 +109,7 @@ export default function NotificationsContent() {
         {notifications.length === 0 ? (
           <Tile style={{ textAlign: 'center', padding: '3rem' }}>
             <Notification size={48} style={{ color: 'var(--cds-text-helper)', marginBottom: '1rem' }} />
-            <p style={{ color: 'var(--cds-text-helper)' }}>Nenhuma notificação</p>
+            <p style={{ color: 'var(--cds-text-helper)' }}>{t('notifications.noNotifications')}</p>
           </Tile>
         ) : (
           notifications.map((notification) => (
@@ -139,7 +141,7 @@ export default function NotificationsContent() {
                   kind="ghost"
                   size="sm"
                   hasIconOnly
-                  iconDescription="Excluir"
+                  iconDescription={t('common.delete')}
                   renderIcon={TrashCan}
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();

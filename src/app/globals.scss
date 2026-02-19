@@ -20,6 +20,7 @@ body {
   background-color: var(--cds-background, #f4f4f4);
   font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
   color: var(--cds-text-primary, #161616);
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 // ── Layout ─────────────────────────────────────────────

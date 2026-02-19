@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from '@/lib/i18n/context';
 import {
   Grid,
   Column,
@@ -85,18 +86,19 @@ const invoices: Invoice[] = [
   { id: '5', number: 'FAT-2024-005', client: 'Empresa ABC', project: 'Identidade Visual', value: 7500, status: 'draft', issuedAt: '2024-02-18', dueAt: '2024-03-05', items: [] },
 ];
 
-const statusConfig = {
-  draft: { label: 'Rascunho', color: 'gray' },
-  sent: { label: 'Enviada', color: 'blue' },
-  paid: { label: 'Paga', color: 'green' },
-  overdue: { label: 'Vencida', color: 'red' },
-  cancelled: { label: 'Cancelada', color: 'gray' },
-} as const;
-
 export default function BillingPage() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [isNewInvoiceModalOpen, setIsNewInvoiceModalOpen] = useState(false);
+
+  const statusConfig = {
+    draft: { label: t('billing.statusDraft'), color: 'gray' },
+    sent: { label: t('billing.statusSent'), color: 'blue' },
+    paid: { label: t('billing.statusPaid'), color: 'green' },
+    overdue: { label: t('billing.statusOverdue'), color: 'red' },
+    cancelled: { label: t('billing.statusCancelled'), color: 'gray' },
+  } as const;
 
   const filteredInvoices = invoices.filter(invoice => {
     const matchesSearch = invoice.number.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -112,12 +114,12 @@ export default function BillingPage() {
   const overdueCount = invoices.filter(i => i.status === 'overdue').length;
 
   const headers = [
-    { key: 'number', header: 'Número' },
-    { key: 'client', header: 'Cliente' },
-    { key: 'project', header: 'Projeto' },
-    { key: 'value', header: 'Valor' },
-    { key: 'status', header: 'Status' },
-    { key: 'dueAt', header: 'Vencimento' },
+    { key: 'number', header: t('billing.number') },
+    { key: 'client', header: t('billing.client') },
+    { key: 'project', header: t('billing.project') },
+    { key: 'value', header: t('billing.value') },
+    { key: 'status', header: t('billing.status') },
+    { key: 'dueAt', header: t('billing.dueDate') },
     { key: 'actions', header: '' },
   ];
 
@@ -136,17 +138,17 @@ export default function BillingPage() {
       {/* Breadcrumb */}
       <Breadcrumb noTrailingSlash style={{ marginBottom: '1rem' }}>
         <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>Faturamento</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>{t('billing.title')}</BreadcrumbItem>
       </Breadcrumb>
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ margin: 0 }}>Faturamento</h1>
-          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Gerencie faturas e recebimentos</p>
+          <h1 style={{ margin: 0 }}>{t('billing.title')}</h1>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>{t('billing.subtitle')}</p>
         </div>
         <Button size="sm" renderIcon={Add} onClick={() => setIsNewInvoiceModalOpen(true)}>
-          Nova Fatura
+          {t('billing.newInvoice')}
         </Button>
       </div>
 
@@ -154,8 +156,8 @@ export default function BillingPage() {
       {overdueCount > 0 && (
         <InlineNotification
           kind="warning"
-          title="Atenção"
-          subtitle={`Você tem ${overdueCount} fatura(s) vencida(s) totalizando R$ ${totalOverdue.toLocaleString('pt-BR')}`}
+          title={t('billing.attention')}
+          subtitle={t('billing.overdueAlert', { count: overdueCount, total: totalOverdue.toLocaleString('pt-BR') })}
           style={{ marginBottom: '1rem' }}
         />
       )}
@@ -166,13 +168,13 @@ export default function BillingPage() {
           <Tile>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
               <Checkmark size={20} style={{ color: 'var(--cds-support-success)' }} />
-              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>Recebido</h4>
+              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>{t('billing.received')}</h4>
             </div>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-success)' }}>
               R$ {totalReceived.toLocaleString('pt-BR')}
             </p>
             <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
-              {invoices.filter(i => i.status === 'paid').length} faturas pagas
+              {t('billing.paidInvoices', { count: invoices.filter(i => i.status === 'paid').length })}
             </p>
           </Tile>
         </Column>
@@ -180,13 +182,13 @@ export default function BillingPage() {
           <Tile>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
               <Time size={20} style={{ color: 'var(--cds-link-primary)' }} />
-              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>A Receber</h4>
+              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>{t('billing.pending')}</h4>
             </div>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-link-primary)' }}>
               R$ {totalPending.toLocaleString('pt-BR')}
             </p>
             <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
-              {invoices.filter(i => i.status === 'sent').length} faturas pendentes
+              {t('billing.pendingInvoices', { count: invoices.filter(i => i.status === 'sent').length })}
             </p>
           </Tile>
         </Column>
@@ -194,13 +196,13 @@ export default function BillingPage() {
           <Tile>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
               <Warning size={20} style={{ color: 'var(--cds-support-error)' }} />
-              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>Vencido</h4>
+              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>{t('billing.overdue')}</h4>
             </div>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-error)' }}>
               R$ {totalOverdue.toLocaleString('pt-BR')}
             </p>
             <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
-              {overdueCount} faturas vencidas
+              {t('billing.overdueInvoices', { count: overdueCount })}
             </p>
           </Tile>
         </Column>
@@ -208,13 +210,13 @@ export default function BillingPage() {
           <Tile>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
               <Receipt size={20} style={{ color: 'var(--cds-text-secondary)' }} />
-              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>Total Faturado</h4>
+              <h4 style={{ color: 'var(--cds-text-secondary)', margin: 0 }}>{t('billing.totalBilled')}</h4>
             </div>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>
               R$ {invoices.reduce((acc, i) => acc + i.value, 0).toLocaleString('pt-BR')}
             </p>
             <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
-              {invoices.length} faturas emitidas
+              {t('billing.invoicesIssued', { count: invoices.length })}
             </p>
           </Tile>
         </Column>
@@ -226,28 +228,28 @@ export default function BillingPage() {
           <div style={{ flex: 1, minWidth: '200px' }}>
             <Search
               size="sm"
-              placeholder="Buscar faturas..."
-              labelText="Buscar"
+              placeholder={t('billing.searchPlaceholder')}
+              labelText={t('billing.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <Select id="filter-status" size="sm" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} style={{ minWidth: '150px' }}>
-            <SelectItem value="all" text="Todos os status" />
-            <SelectItem value="draft" text="Rascunho" />
-            <SelectItem value="sent" text="Enviada" />
-            <SelectItem value="paid" text="Paga" />
-            <SelectItem value="overdue" text="Vencida" />
-            <SelectItem value="cancelled" text="Cancelada" />
+            <SelectItem value="all" text={t('common.allStatus')} />
+            <SelectItem value="draft" text={t('billing.statusDraft')} />
+            <SelectItem value="sent" text={t('billing.statusSent')} />
+            <SelectItem value="paid" text={t('billing.statusPaid')} />
+            <SelectItem value="overdue" text={t('billing.statusOverdue')} />
+            <SelectItem value="cancelled" text={t('billing.statusCancelled')} />
           </Select>
           <Select id="filter-period" size="sm" style={{ minWidth: '150px' }}>
-            <SelectItem value="all" text="Todo período" />
-            <SelectItem value="this-month" text="Este mês" />
-            <SelectItem value="last-month" text="Mês passado" />
-            <SelectItem value="this-year" text="Este ano" />
+            <SelectItem value="all" text={t('common.allPeriod')} />
+            <SelectItem value="this-month" text={t('common.thisMonth')} />
+            <SelectItem value="last-month" text={t('common.lastMonth')} />
+            <SelectItem value="this-year" text={t('common.thisYear')} />
           </Select>
           <Button kind="tertiary" size="sm" renderIcon={Download}>
-            Exportar
+            {t('common.export')}
           </Button>
         </div>
       </Tile>
@@ -255,10 +257,10 @@ export default function BillingPage() {
       {/* Tabs */}
       <Tabs>
         <TabList aria-label="Faturas">
-          <Tab>Todas ({invoices.length})</Tab>
-          <Tab>Pendentes ({invoices.filter(i => i.status === 'sent').length})</Tab>
-          <Tab>Vencidas ({overdueCount})</Tab>
-          <Tab>Pagas ({invoices.filter(i => i.status === 'paid').length})</Tab>
+          <Tab>{t('billing.all', { count: invoices.length })}</Tab>
+          <Tab>{t('billing.pendingTab', { count: invoices.filter(i => i.status === 'sent').length })}</Tab>
+          <Tab>{t('billing.overdueTab', { count: overdueCount })}</Tab>
+          <Tab>{t('billing.paidTab', { count: invoices.filter(i => i.status === 'paid').length })}</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -296,7 +298,7 @@ export default function BillingPage() {
                             <TableCell>
                               {invoice.paidAt ? (
                                 <span style={{ color: 'var(--cds-support-success)' }}>
-                                  Pago em {new Date(invoice.paidAt).toLocaleDateString('pt-BR')}
+                                  {t('billing.paidOn', { date: new Date(invoice.paidAt).toLocaleDateString('pt-BR') })}
                                 </span>
                               ) : (
                                 <span style={{ color: new Date(invoice.dueAt) < new Date() ? 'var(--cds-support-error)' : 'var(--cds-text-secondary)' }}>
@@ -306,13 +308,13 @@ export default function BillingPage() {
                             </TableCell>
                             <TableCell>
                               <OverflowMenu size="sm" flipped>
-                                <OverflowMenuItem itemText="Visualizar" />
-                                <OverflowMenuItem itemText="Editar" />
-                                <OverflowMenuItem itemText="Duplicar" />
-                                <OverflowMenuItem itemText="Download PDF" />
-                                {invoice.status === 'draft' && <OverflowMenuItem itemText="Enviar" />}
-                                {invoice.status === 'sent' && <OverflowMenuItem itemText="Marcar como Paga" />}
-                                <OverflowMenuItem itemText="Cancelar" hasDivider isDelete />
+                                <OverflowMenuItem itemText={t('common.view')} />
+                                <OverflowMenuItem itemText={t('common.edit')} />
+                                <OverflowMenuItem itemText={t('common.duplicate')} />
+                                <OverflowMenuItem itemText={t('common.downloadPdf')} />
+                                {invoice.status === 'draft' && <OverflowMenuItem itemText={t('common.send')} />}
+                                {invoice.status === 'sent' && <OverflowMenuItem itemText={t('billing.markAsPaid')} />}
+                                <OverflowMenuItem itemText={t('common.cancel')} hasDivider isDelete />
                               </OverflowMenu>
                             </TableCell>
                           </TableRow>
@@ -345,10 +347,10 @@ export default function BillingPage() {
                       <div style={{ textAlign: 'right' }}>
                         <strong>R$ {invoice.value.toLocaleString('pt-BR')}</strong>
                         <div style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)' }}>
-                          Vence em {new Date(invoice.dueAt).toLocaleDateString('pt-BR')}
+                          {t('billing.paidOn', { date: new Date(invoice.dueAt).toLocaleDateString('pt-BR') })}
                         </div>
                       </div>
-                      <Button kind="primary" size="sm">Marcar como Paga</Button>
+                      <Button kind="primary" size="sm">{t('billing.markAsPaid')}</Button>
                     </div>
                   </div>
                 </Tile>
@@ -369,11 +371,11 @@ export default function BillingPage() {
                       <div style={{ textAlign: 'right' }}>
                         <strong style={{ color: 'var(--cds-support-error)' }}>R$ {invoice.value.toLocaleString('pt-BR')}</strong>
                         <div style={{ fontSize: '0.75rem', color: 'var(--cds-support-error)' }}>
-                          Vencida em {new Date(invoice.dueAt).toLocaleDateString('pt-BR')}
+                          {t('billing.paidOn', { date: new Date(invoice.dueAt).toLocaleDateString('pt-BR') })}
                         </div>
                       </div>
-                      <Button kind="secondary" size="sm">Enviar Lembrete</Button>
-                      <Button kind="primary" size="sm">Marcar como Paga</Button>
+                      <Button kind="secondary" size="sm">{t('billing.sendReminder')}</Button>
+                      <Button kind="primary" size="sm">{t('billing.markAsPaid')}</Button>
                     </div>
                   </div>
                 </Tile>
@@ -394,7 +396,7 @@ export default function BillingPage() {
                       <div style={{ textAlign: 'right' }}>
                         <strong style={{ color: 'var(--cds-support-success)' }}>R$ {invoice.value.toLocaleString('pt-BR')}</strong>
                         <div style={{ fontSize: '0.75rem', color: 'var(--cds-support-success)' }}>
-                          Pago em {new Date(invoice.paidAt!).toLocaleDateString('pt-BR')}
+                          {t('billing.paidOn', { date: new Date(invoice.paidAt!).toLocaleDateString('pt-BR') })}
                         </div>
                       </div>
                       <Button kind="ghost" size="sm" renderIcon={Download}>PDF</Button>
@@ -411,23 +413,23 @@ export default function BillingPage() {
       <Modal
         open={isNewInvoiceModalOpen}
         onRequestClose={() => setIsNewInvoiceModalOpen(false)}
-        modalHeading="Nova Fatura"
-        primaryButtonText="Criar Fatura"
-        secondaryButtonText="Cancelar"
+        modalHeading={t('billing.newInvoice')}
+        primaryButtonText={t('billing.newInvoice')}
+        secondaryButtonText={t('common.cancel')}
         size="lg"
       >
         <Grid>
           <Column lg={8} md={4} sm={4}>
-            <Select id="invoice-client" labelText="Cliente">
-              <SelectItem value="" text="Selecione" />
+            <Select id="invoice-client" labelText={t('billing.invoiceClient')}>
+              <SelectItem value="" text={t('common.select')} />
               <SelectItem value="techcorp" text="TechCorp Brasil" />
               <SelectItem value="startup" text="Startup XYZ" />
               <SelectItem value="empresa" text="Empresa ABC" />
             </Select>
           </Column>
           <Column lg={8} md={4} sm={4}>
-            <Select id="invoice-project" labelText="Projeto (opcional)">
-              <SelectItem value="" text="Nenhum" />
+            <Select id="invoice-project" labelText={t('billing.invoiceProject')}>
+              <SelectItem value="" text={t('common.none')} />
               <SelectItem value="website" text="Website Institucional" />
               <SelectItem value="social" text="Gestão Redes Sociais" />
             </Select>
@@ -435,8 +437,8 @@ export default function BillingPage() {
           <Column lg={16} md={8} sm={4}>
             <TextArea
               id="invoice-description"
-              labelText="Descrição"
-              placeholder="Descrição dos serviços..."
+              labelText={t('billing.description')}
+              placeholder={t('billing.descriptionPlaceholder')}
               rows={3}
               style={{ marginTop: '1rem' }}
             />
@@ -444,7 +446,7 @@ export default function BillingPage() {
           <Column lg={8} md={4} sm={4}>
             <NumberInput
               id="invoice-value"
-              label="Valor (R$)"
+              label={t('billing.invoiceValue')}
               min={0}
               step={100}
               style={{ marginTop: '1rem' }}
@@ -453,7 +455,7 @@ export default function BillingPage() {
           <Column lg={8} md={4} sm={4}>
             <TextInput
               id="invoice-due"
-              labelText="Vencimento"
+              labelText={t('billing.invoiceDue')}
               type="date"
               style={{ marginTop: '1rem' }}
             />

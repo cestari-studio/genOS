@@ -12,11 +12,13 @@ import {
 } from '@carbon/react';
 import { Login } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/context';
 
 export default function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,7 +38,7 @@ export default function LoginForm() {
 
     if (authError) {
       setError(authError.message === 'Invalid login credentials'
-        ? 'Email ou senha incorretos'
+        ? t('login.invalidCredentials')
         : authError.message);
       setLoading(false);
       return;
@@ -52,7 +54,7 @@ export default function LoginForm() {
         {error && (
           <InlineNotification
             kind="error"
-            title="Erro"
+            title={t('login.errorTitle')}
             subtitle={error}
             hideCloseButton
           />
@@ -61,17 +63,17 @@ export default function LoginForm() {
         <TextInput
           id="email"
           name="email"
-          labelText="Email"
+          labelText={t('login.email')}
           type="email"
-          placeholder="seu@email.com"
+          placeholder={t('login.emailPlaceholder')}
           required
         />
 
         <PasswordInput
           id="password"
           name="password"
-          labelText="Senha"
-          placeholder="Sua senha"
+          labelText={t('login.password')}
+          placeholder={t('login.passwordPlaceholder')}
           required
         />
 
@@ -81,7 +83,7 @@ export default function LoginForm() {
           disabled={loading}
           style={{ width: '100%', maxWidth: 'none' }}
         >
-          {loading ? 'Entrando...' : 'Entrar'}
+          {loading ? t('login.submitting') : t('login.submit')}
         </Button>
       </Stack>
     </Form>

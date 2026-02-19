@@ -33,56 +33,52 @@ import {
   Connect,
   Report,
 } from '@carbon/icons-react';
-
-// Navegação principal
-const mainNavItems = [
-  { href: '/dashboard', icon: Dashboard, label: 'Dashboard' },
-  { href: '/reports', icon: Report, label: 'Relatórios' },
-];
-
-// Gestão de Clientes e Projetos
-const managementItems = [
-  { href: '/clients', icon: UserMultiple, label: 'Clientes' },
-  { href: '/projects', icon: Folder, label: 'Projetos' },
-  { href: '/briefings', icon: TaskComplete, label: 'Briefings' },
-];
-
-// Conteúdo
-const contentItems = [
-  { href: '/content', icon: Edit, label: 'Conteúdo' },
-  { href: '/media', icon: Image, label: 'Biblioteca de Mídia' },
-  { href: '/calendar', icon: Calendar, label: 'Calendário' },
-  { href: '/approvals', icon: Checkmark, label: 'Aprovações' },
-];
-
-// Documentos e Financeiro
-const financeItems = [
-  { href: '/documents', icon: Document, label: 'Documentos' },
-  { href: '/contracts', icon: Receipt, label: 'Contratos' },
-  { href: '/billing', icon: Money, label: 'Faturamento' },
-  { href: '/quotes', icon: Calculator, label: 'Orçamentos' },
-];
-
-// Sistema
-const systemItems = [
-  { href: '/analytics', icon: Analytics, label: 'Analytics' },
-  { href: '/notifications', icon: Notification, label: 'Notificações' },
-];
-
-// Configurações
-const settingsItems = [
-  { href: '/settings', icon: Settings, label: 'Configurações' },
-  { href: '/settings/users', icon: UserAdmin, label: 'Usuários' },
-  { href: '/settings/integrations', icon: Connect, label: 'Integrações' },
-];
+import { useTranslation } from '@/lib/i18n/context';
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const { t } = useTranslation();
 
   const isActive = (href: string) => {
     return pathname === href || pathname?.startsWith(href + '/');
   };
+
+  const mainNavItems = [
+    { href: '/dashboard', icon: Dashboard, label: t('sidebar.dashboard') },
+    { href: '/reports', icon: Report, label: t('sidebar.reports') },
+  ];
+
+  const managementItems = [
+    { href: '/clients', icon: UserMultiple, label: t('sidebar.clients') },
+    { href: '/projects', icon: Folder, label: t('sidebar.projects') },
+    { href: '/briefings', icon: TaskComplete, label: t('sidebar.briefings') },
+  ];
+
+  const contentItems = [
+    { href: '/content', icon: Edit, label: t('sidebar.contentLabel') },
+    { href: '/media', icon: Image, label: t('sidebar.mediaLibrary') },
+    { href: '/calendar', icon: Calendar, label: t('sidebar.calendar') },
+    { href: '/approvals', icon: Checkmark, label: t('sidebar.approvals') },
+  ];
+
+  const financeItems = [
+    { href: '/documents', icon: Document, label: t('sidebar.documents') },
+    { href: '/contracts', icon: Receipt, label: t('sidebar.contracts') },
+    { href: '/billing', icon: Money, label: t('sidebar.billing') },
+    { href: '/quotes', icon: Calculator, label: t('sidebar.quotes') },
+  ];
+
+  const systemItems = [
+    { href: '/analytics', icon: Analytics, label: t('sidebar.analytics') },
+    { href: '/notifications', icon: Notification, label: t('sidebar.notificationsLabel') },
+  ];
+
+  const settingsItems = [
+    { href: '/settings', icon: Settings, label: t('sidebar.settings') },
+    { href: '/settings/users', icon: UserAdmin, label: t('sidebar.users') },
+    { href: '/settings/integrations', icon: Connect, label: t('sidebar.integrations') },
+  ];
 
   const renderNavLink = (item: { href: string; icon: typeof Dashboard; label: string }) => (
     <SideNavLink
@@ -114,22 +110,20 @@ export default function Sidebar() {
         <button
           className="collapse-btn"
           onClick={() => setCollapsed(!collapsed)}
-          aria-label={collapsed ? 'Expandir' : 'Recolher'}
+          aria-label={collapsed ? t('sidebar.expand') : t('sidebar.collapse')}
         >
           {collapsed ? <ChevronRight /> : <ChevronLeft />}
         </button>
       </div>
 
       <SideNavItems>
-        {/* Dashboard e Relatórios */}
         {mainNavItems.map(renderNavLink)}
 
         <SideNavDivider />
 
-        {/* Gestão */}
         <SideNavMenu
           renderIcon={Folder}
-          title="Gestão"
+          title={t('sidebar.management')}
           defaultExpanded={
             managementItems.some(item => isActive(item.href))
           }
@@ -146,10 +140,9 @@ export default function Sidebar() {
           ))}
         </SideNavMenu>
 
-        {/* Conteúdo */}
         <SideNavMenu
           renderIcon={Edit}
-          title="Conteúdo"
+          title={t('sidebar.content')}
           defaultExpanded={
             contentItems.some(item => isActive(item.href))
           }
@@ -166,10 +159,9 @@ export default function Sidebar() {
           ))}
         </SideNavMenu>
 
-        {/* Financeiro */}
         <SideNavMenu
           renderIcon={Money}
-          title="Financeiro"
+          title={t('sidebar.finance')}
           defaultExpanded={
             financeItems.some(item => isActive(item.href))
           }
@@ -188,15 +180,13 @@ export default function Sidebar() {
 
         <SideNavDivider />
 
-        {/* Sistema */}
         {systemItems.map(renderNavLink)}
 
         <SideNavDivider />
 
-        {/* Configurações */}
         <SideNavMenu
           renderIcon={Settings}
-          title="Configurações"
+          title={t('sidebar.settings')}
           defaultExpanded={
             settingsItems.some(item => isActive(item.href))
           }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from '@/lib/i18n/context';
 import {
   DataTable, Table, TableHead, TableRow, TableHeader, TableBody, TableCell,
   TableContainer, TableToolbar, TableToolbarContent, TableToolbarSearch,
@@ -9,15 +10,6 @@ import {
 import { Add, View, Edit } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
 import type { Briefing } from '@/types/database';
-
-const headers = [
-  { key: 'title', header: 'Título' },
-  { key: 'client', header: 'Cliente' },
-  { key: 'type', header: 'Tipo' },
-  { key: 'status', header: 'Status' },
-  { key: 'date', header: 'Data' },
-  { key: 'actions', header: 'Ações' },
-];
 
 const statusColors: Record<string, 'gray' | 'blue' | 'cyan' | 'green'> = {
   draft: 'gray',
@@ -36,6 +28,16 @@ export default function BriefingsContent({ briefings: initial, clients }: Props)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState<Briefing | null>(null);
   const [search, setSearch] = useState('');
+  const { t } = useTranslation();
+
+  const headers = [
+    { key: 'title', header: t('briefings.headerTitle') },
+    { key: 'client', header: t('briefings.client') },
+    { key: 'type', header: t('briefings.type') },
+    { key: 'status', header: t('briefings.status') },
+    { key: 'date', header: t('briefings.date') },
+    { key: 'actions', header: t('briefings.actions') },
+  ];
 
   const filtered = briefings.filter(b => 
     b.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -51,8 +53,8 @@ export default function BriefingsContent({ briefings: initial, clients }: Props)
     date: new Date(b.created_at).toLocaleDateString('pt-BR'),
     actions: (
       <div style={{ display: 'flex', gap: '0.5rem' }}>
-        <Button kind="ghost" size="sm" hasIconOnly iconDescription="Ver" renderIcon={View} />
-        <Button kind="ghost" size="sm" hasIconOnly iconDescription="Editar" renderIcon={Edit}
+        <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('common.view')} renderIcon={View} />
+        <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('common.edit')} renderIcon={Edit}
           onClick={() => { setEditing(b); setIsModalOpen(true); }} />
       </div>
     ),
@@ -87,8 +89,8 @@ export default function BriefingsContent({ briefings: initial, clients }: Props)
   return (
     <div>
       <div className="page-header">
-        <h1>Briefings</h1>
-        <p>Gerencie briefings de projetos</p>
+        <h1>{t('briefings.title')}</h1>
+        <p>{t('briefings.subtitle')}</p>
       </div>
 
       <DataTable rows={rows} headers={headers}>
@@ -96,8 +98,8 @@ export default function BriefingsContent({ briefings: initial, clients }: Props)
           <TableContainer>
             <TableToolbar>
               <TableToolbarContent>
-                <TableToolbarSearch placeholder="Buscar..." onChange={(e: any) => setSearch(e.target?.value || '')} />
-                <Button renderIcon={Add} onClick={() => { setEditing(null); setIsModalOpen(true); }}>Novo Briefing</Button>
+                <TableToolbarSearch placeholder={t('briefings.searchPlaceholder')} onChange={(e: any) => setSearch(e.target?.value || '')} />
+                <Button renderIcon={Add} onClick={() => { setEditing(null); setIsModalOpen(true); }}>{t('briefings.newBriefing')}</Button>
               </TableToolbarContent>
             </TableToolbar>
             <Table {...getTableProps()}>
@@ -109,29 +111,29 @@ export default function BriefingsContent({ briefings: initial, clients }: Props)
       </DataTable>
 
       <Modal open={isModalOpen} onRequestClose={() => { setIsModalOpen(false); setEditing(null); }}
-        modalHeading={editing ? 'Editar Briefing' : 'Novo Briefing'} primaryButtonText="Salvar" secondaryButtonText="Cancelar"
+        modalHeading={editing ? t('briefings.editBriefing') : t('briefings.newBriefing')} primaryButtonText={t('common.save')} secondaryButtonText={t('common.cancel')}
         onRequestSubmit={() => (document.getElementById('briefing-form') as HTMLFormElement)?.requestSubmit()}>
         <Form id="briefing-form" onSubmit={handleSave}>
           <Stack gap={6}>
-            <TextInput id="title" name="title" labelText="Título" defaultValue={editing?.title} required />
-            <Select id="client_id" name="client_id" labelText="Cliente" defaultValue={editing?.client_id || ''} required>
-              <SelectItem value="" text="Selecione..." />
+            <TextInput id="title" name="title" labelText={t('briefings.headerTitle')} defaultValue={editing?.title} required />
+            <Select id="client_id" name="client_id" labelText={t('briefings.client')} defaultValue={editing?.client_id || ''} required>
+              <SelectItem value="" text={t('common.select')} />
               {clients.map(c => <SelectItem key={c.id} value={c.id} text={c.name} />)}
             </Select>
-            <Select id="briefing_type" name="briefing_type" labelText="Tipo" defaultValue={editing?.briefing_type || 'general'}>
-              <SelectItem value="general" text="Geral" />
-              <SelectItem value="branding" text="Branding" />
-              <SelectItem value="social_media" text="Social Media" />
-              <SelectItem value="website" text="Website" />
-              <SelectItem value="photography" text="Fotografia" />
+            <Select id="briefing_type" name="briefing_type" labelText={t('briefings.type')} defaultValue={editing?.briefing_type || 'general'}>
+              <SelectItem value="general" text={t('briefings.typeGeneral')} />
+              <SelectItem value="branding" text={t('briefings.typeBranding')} />
+              <SelectItem value="social_media" text={t('briefings.typeSocialMedia')} />
+              <SelectItem value="website" text={t('briefings.typeWebsite')} />
+              <SelectItem value="photography" text={t('briefings.typePhotography')} />
             </Select>
-            <Select id="status" name="status" labelText="Status" defaultValue={editing?.status || 'draft'}>
-              <SelectItem value="draft" text="Rascunho" />
-              <SelectItem value="submitted" text="Enviado" />
-              <SelectItem value="reviewed" text="Revisado" />
-              <SelectItem value="approved" text="Aprovado" />
+            <Select id="status" name="status" labelText={t('briefings.status')} defaultValue={editing?.status || 'draft'}>
+              <SelectItem value="draft" text={t('briefings.statusDraft')} />
+              <SelectItem value="submitted" text={t('briefings.statusSubmitted')} />
+              <SelectItem value="reviewed" text={t('briefings.statusReviewed')} />
+              <SelectItem value="approved" text={t('briefings.statusApproved')} />
             </Select>
-            <TextArea id="notes" name="notes" labelText="Notas" defaultValue={editing?.form_data?.notes || ''} />
+            <TextArea id="notes" name="notes" labelText={t('briefings.notes')} defaultValue={editing?.form_data?.notes || ''} />
           </Stack>
         </Form>
       </Modal>

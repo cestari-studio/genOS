@@ -27,6 +27,7 @@ import {
 } from '@carbon/react';
 import { Add, View, Edit, TrashCan } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface Project {
   id: string;
@@ -40,15 +41,6 @@ interface Project {
   client?: { name: string };
 }
 
-const headers = [
-  { key: 'name', header: 'Projeto' },
-  { key: 'client', header: 'Cliente' },
-  { key: 'project_type', header: 'Tipo' },
-  { key: 'status', header: 'Status' },
-  { key: 'deadline', header: 'Prazo' },
-  { key: 'actions', header: 'Ações' },
-];
-
 const statusColors: Record<string, 'green' | 'gray' | 'blue' | 'cyan' | 'purple' | 'red' | 'teal'> = {
   planning: 'gray',
   briefing: 'blue',
@@ -57,26 +49,6 @@ const statusColors: Record<string, 'green' | 'gray' | 'blue' | 'cyan' | 'purple'
   completed: 'green',
   on_hold: 'teal',
   cancelled: 'red',
-};
-
-const statusLabels: Record<string, string> = {
-  planning: 'Planejamento',
-  briefing: 'Briefing',
-  in_progress: 'Em Progresso',
-  review: 'Revisão',
-  completed: 'Concluído',
-  on_hold: 'Pausado',
-  cancelled: 'Cancelado',
-};
-
-const typeLabels: Record<string, string> = {
-  social_media: 'Social Media',
-  website: 'Website',
-  branding: 'Branding',
-  photography: 'Fotografia',
-  video: 'Vídeo',
-  consulting: 'Consultoria',
-  other: 'Outro',
 };
 
 interface Props {
@@ -90,6 +62,36 @@ export default function ProjectsContent({ projects: initialProjects, clients }: 
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [deleteModal, setDeleteModal] = useState<string | null>(null);
+  const { t } = useTranslation();
+
+  const headers = [
+    { key: 'name', header: t('projects.name') },
+    { key: 'client', header: t('projects.client') },
+    { key: 'project_type', header: t('projects.type') },
+    { key: 'status', header: t('projects.status') },
+    { key: 'deadline', header: t('projects.deadline') },
+    { key: 'actions', header: t('projects.actions') },
+  ];
+
+  const statusLabels: Record<string, string> = {
+    planning: t('projects.statusPlanning'),
+    briefing: t('projects.statusBriefing'),
+    in_progress: t('projects.statusInProgress'),
+    review: t('projects.statusReview'),
+    completed: t('projects.statusCompleted'),
+    on_hold: t('projects.statusOnHold'),
+    cancelled: t('projects.statusCancelled'),
+  };
+
+  const typeLabels: Record<string, string> = {
+    social_media: t('projects.typeSocialMedia'),
+    website: t('projects.typeWebsite'),
+    branding: t('projects.typeBranding'),
+    photography: t('projects.typePhotography'),
+    video: t('projects.typeVideo'),
+    consulting: t('projects.typeConsulting'),
+    other: t('projects.typeOther'),
+  };
 
   const filteredProjects = projects.filter(project =>
     project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -109,9 +111,9 @@ export default function ProjectsContent({ projects: initialProjects, clients }: 
     deadline: project.deadline ? new Date(project.deadline).toLocaleDateString('pt-BR') : '-',
     actions: (
       <div style={{ display: 'flex', gap: '0.5rem' }}>
-        <Button kind="ghost" size="sm" hasIconOnly iconDescription="Editar" renderIcon={Edit}
+        <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('common.edit')} renderIcon={Edit}
           onClick={() => { setEditingProject(project); setIsModalOpen(true); }} />
-        <Button kind="ghost" size="sm" hasIconOnly iconDescription="Excluir" renderIcon={TrashCan}
+        <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('common.delete')} renderIcon={TrashCan}
           onClick={() => setDeleteModal(project.id)} />
       </div>
     ),
@@ -169,8 +171,8 @@ export default function ProjectsContent({ projects: initialProjects, clients }: 
   return (
     <div>
       <div className="page-header">
-        <h1>Projetos</h1>
-        <p>Gerencie seus projetos e entregas ({projects.length} total)</p>
+        <h1>{t('projects.title')}</h1>
+        <p>{t('projects.subtitleWithCount', { count: projects.length })}</p>
       </div>
 
       <DataTable rows={rows} headers={headers}>
@@ -178,9 +180,9 @@ export default function ProjectsContent({ projects: initialProjects, clients }: 
           <TableContainer>
             <TableToolbar>
               <TableToolbarContent>
-                <TableToolbarSearch placeholder="Buscar projetos..." onChange={(e: any) => setSearchTerm(e.target?.value || '')} />
+                <TableToolbarSearch placeholder={t('projects.searchPlaceholder')} onChange={(e: any) => setSearchTerm(e.target?.value || '')} />
                 <Button renderIcon={Add} onClick={() => { setEditingProject(null); setIsModalOpen(true); }}>
-                  Novo Projeto
+                  {t('projects.newProject')}
                 </Button>
               </TableToolbarContent>
             </TableToolbar>
@@ -209,9 +211,9 @@ export default function ProjectsContent({ projects: initialProjects, clients }: 
       <Modal
         open={isModalOpen}
         onRequestClose={() => { setIsModalOpen(false); setEditingProject(null); }}
-        modalHeading={editingProject ? 'Editar Projeto' : 'Novo Projeto'}
-        primaryButtonText="Salvar"
-        secondaryButtonText="Cancelar"
+        modalHeading={editingProject ? t('projects.editProject') : t('projects.newProject')}
+        primaryButtonText={t('common.save')}
+        secondaryButtonText={t('common.cancel')}
         onRequestSubmit={() => {
           const form = document.getElementById('project-form') as HTMLFormElement;
           form?.requestSubmit();
@@ -219,30 +221,30 @@ export default function ProjectsContent({ projects: initialProjects, clients }: 
       >
         <Form id="project-form" onSubmit={handleSave}>
           <Stack gap={6}>
-            <TextInput id="name" name="name" labelText="Nome do Projeto" defaultValue={editingProject?.name} required />
-            <Select id="client_id" name="client_id" labelText="Cliente" defaultValue={editingProject?.client_id || ''}>
-              <SelectItem value="" text="Selecione..." />
+            <TextInput id="name" name="name" labelText={t('projects.projectName')} defaultValue={editingProject?.name} required />
+            <Select id="client_id" name="client_id" labelText={t('projects.client')} defaultValue={editingProject?.client_id || ''}>
+              <SelectItem value="" text={t('common.select')} />
               {clients.map(c => <SelectItem key={c.id} value={c.id} text={c.name} />)}
             </Select>
-            <Select id="project_type" name="project_type" labelText="Tipo" defaultValue={editingProject?.project_type || 'other'}>
-              <SelectItem value="social_media" text="Social Media" />
-              <SelectItem value="website" text="Website" />
-              <SelectItem value="branding" text="Branding" />
-              <SelectItem value="photography" text="Fotografia" />
-              <SelectItem value="video" text="Vídeo" />
-              <SelectItem value="consulting" text="Consultoria" />
-              <SelectItem value="other" text="Outro" />
+            <Select id="project_type" name="project_type" labelText={t('projects.type')} defaultValue={editingProject?.project_type || 'other'}>
+              <SelectItem value="social_media" text={t('projects.typeSocialMedia')} />
+              <SelectItem value="website" text={t('projects.typeWebsite')} />
+              <SelectItem value="branding" text={t('projects.typeBranding')} />
+              <SelectItem value="photography" text={t('projects.typePhotography')} />
+              <SelectItem value="video" text={t('projects.typeVideo')} />
+              <SelectItem value="consulting" text={t('projects.typeConsulting')} />
+              <SelectItem value="other" text={t('projects.typeOther')} />
             </Select>
-            <Select id="status" name="status" labelText="Status" defaultValue={editingProject?.status || 'planning'}>
-              <SelectItem value="planning" text="Planejamento" />
-              <SelectItem value="briefing" text="Briefing" />
-              <SelectItem value="in_progress" text="Em Progresso" />
-              <SelectItem value="review" text="Revisão" />
-              <SelectItem value="completed" text="Concluído" />
-              <SelectItem value="on_hold" text="Pausado" />
-              <SelectItem value="cancelled" text="Cancelado" />
+            <Select id="status" name="status" labelText={t('projects.status')} defaultValue={editingProject?.status || 'planning'}>
+              <SelectItem value="planning" text={t('projects.statusPlanning')} />
+              <SelectItem value="briefing" text={t('projects.statusBriefing')} />
+              <SelectItem value="in_progress" text={t('projects.statusInProgress')} />
+              <SelectItem value="review" text={t('projects.statusReview')} />
+              <SelectItem value="completed" text={t('projects.statusCompleted')} />
+              <SelectItem value="on_hold" text={t('projects.statusOnHold')} />
+              <SelectItem value="cancelled" text={t('projects.statusCancelled')} />
             </Select>
-            <TextArea id="description" name="description" labelText="Descrição" defaultValue={editingProject?.description || ''} />
+            <TextArea id="description" name="description" labelText={t('projects.description')} defaultValue={editingProject?.description || ''} />
           </Stack>
         </Form>
       </Modal>
@@ -250,13 +252,13 @@ export default function ProjectsContent({ projects: initialProjects, clients }: 
       <Modal
         open={deleteModal !== null}
         onRequestClose={() => setDeleteModal(null)}
-        modalHeading="Confirmar Exclusão"
-        primaryButtonText="Excluir"
-        secondaryButtonText="Cancelar"
+        modalHeading={t('projects.confirmDelete')}
+        primaryButtonText={t('common.delete')}
+        secondaryButtonText={t('common.cancel')}
         danger
         onRequestSubmit={() => deleteModal && handleDelete(deleteModal)}
       >
-        <p>Tem certeza que deseja excluir este projeto?</p>
+        <p>{t('projects.deleteConfirmation')}</p>
       </Modal>
     </div>
   );

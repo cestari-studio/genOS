@@ -13,9 +13,11 @@ import {
 } from '@carbon/react';
 import { Password, Checkmark } from '@carbon/icons-react';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/context';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,13 +33,13 @@ export default function ResetPasswordPage() {
     const confirmPassword = formData.get('confirmPassword') as string;
 
     if (password !== confirmPassword) {
-      setError('As senhas não coincidem');
+      setError(t('resetPassword.passwordsMismatch'));
       setLoading(false);
       return;
     }
 
     if (password.length < 8) {
-      setError('A senha deve ter pelo menos 8 caracteres');
+      setError(t('resetPassword.passwordMinLength'));
       setLoading(false);
       return;
     }
@@ -68,13 +70,13 @@ export default function ResetPasswordPage() {
       <div className="login-container">
         <div className="login-header">
           <h1>genOS</h1>
-          <p>Redefinir Senha</p>
+          <p>{t('resetPassword.title')}</p>
         </div>
 
         <ProgressIndicator currentIndex={step} style={{ marginBottom: '2rem' }}>
-          <ProgressStep label="Link enviado" />
-          <ProgressStep label="Nova senha" />
-          <ProgressStep label="Concluído" />
+          <ProgressStep label={t('resetPassword.stepLinkSent')} />
+          <ProgressStep label={t('resetPassword.stepNewPassword')} />
+          <ProgressStep label={t('resetPassword.stepCompleted')} />
         </ProgressIndicator>
 
         {success ? (
@@ -82,8 +84,8 @@ export default function ResetPasswordPage() {
             <Checkmark size={48} style={{ color: 'var(--cds-support-success)', marginBottom: '1rem' }} />
             <InlineNotification
               kind="success"
-              title="Senha alterada!"
-              subtitle="Redirecionando para o login..."
+              title={t('resetPassword.success')}
+              subtitle={t('resetPassword.redirecting')}
               hideCloseButton
             />
           </div>
@@ -93,7 +95,7 @@ export default function ResetPasswordPage() {
               {error && (
                 <InlineNotification
                   kind="error"
-                  title="Erro"
+                  title={t('login.errorTitle')}
                   subtitle={error}
                   hideCloseButton
                 />
@@ -102,16 +104,16 @@ export default function ResetPasswordPage() {
               <PasswordInput
                 id="password"
                 name="password"
-                labelText="Nova Senha"
-                placeholder="Mínimo 8 caracteres"
+                labelText={t('resetPassword.password')}
+                placeholder={t('resetPassword.minCharsPlaceholder')}
                 required
               />
 
               <PasswordInput
                 id="confirmPassword"
                 name="confirmPassword"
-                labelText="Confirmar Senha"
-                placeholder="Digite novamente"
+                labelText={t('resetPassword.confirm')}
+                placeholder={t('resetPassword.retypePlaceholder')}
                 required
               />
 
@@ -121,7 +123,7 @@ export default function ResetPasswordPage() {
                 disabled={loading}
                 style={{ width: '100%', maxWidth: 'none' }}
               >
-                {loading ? 'Salvando...' : 'Redefinir Senha'}
+                {loading ? t('resetPassword.submitting') : t('resetPassword.submit')}
               </Button>
             </Stack>
           </Form>
