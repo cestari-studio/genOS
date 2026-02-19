@@ -41,6 +41,7 @@ import {
 } from '@carbon/icons-react';
 import AIChat from '@/components/ai/AIChat';
 import AIContentLabel from '@/components/ai/AIContentLabel';
+import { useTranslation } from '@/lib/i18n/context';
 
 // TODO: Integrar @tiptap/react para editor rico
 
@@ -60,6 +61,7 @@ interface ContentData {
 export default function EditContentPage() {
   const params = useParams();
   const router = useRouter();
+  const { t } = useTranslation();
   const contentId = params.id as string;
 
   const [saved, setSaved] = useState(false);
@@ -108,36 +110,36 @@ Analise quando seu público está mais ativo e programe seus posts.`,
     <div>
       {/* Breadcrumb */}
       <Breadcrumb noTrailingSlash style={{ marginBottom: '1rem' }}>
-        <BreadcrumbItem href="/content">Conteúdo</BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>Editar</BreadcrumbItem>
+        <BreadcrumbItem href="/content">{t('content.title')}</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>{t('common.edit')}</BreadcrumbItem>
       </Breadcrumb>
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ margin: 0 }}>Editor de Conteúdo</h1>
+          <h1 style={{ margin: 0 }}>{t('editor.title')}</h1>
           <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>
-            {content.status === 'draft' && 'Rascunho'}
-            {content.status === 'review' && 'Aguardando revisão'}
-            {content.status === 'approved' && 'Aprovado'}
-            {content.status === 'published' && 'Publicado'}
+            {content.status === 'draft' && t('content.status.draft')}
+            {content.status === 'review' && t('editor.awaitingReview')}
+            {content.status === 'approved' && t('content.status.approved')}
+            {content.status === 'published' && t('content.status.published')}
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Link href="/content">
-            <Button kind="secondary" size="sm" renderIcon={ArrowLeft}>Voltar</Button>
+            <Button kind="secondary" size="sm" renderIcon={ArrowLeft}>{t('common.back')}</Button>
           </Link>
-          <Button kind="secondary" size="sm" renderIcon={View}>Visualizar</Button>
-          <Button kind="secondary" size="sm" renderIcon={Send}>Enviar para Revisão</Button>
-          <Button size="sm" renderIcon={Save} onClick={handleSave}>Salvar</Button>
+          <Button kind="secondary" size="sm" renderIcon={View}>{t('common.view')}</Button>
+          <Button kind="secondary" size="sm" renderIcon={Send}>{t('editor.sendToReview')}</Button>
+          <Button size="sm" renderIcon={Save} onClick={handleSave}>{t('common.save')}</Button>
         </div>
       </div>
 
       {saved && (
         <InlineNotification
           kind="success"
-          title="Sucesso"
-          subtitle="Conteúdo salvo com sucesso!"
+          title={t('editor.success')}
+          subtitle={t('editor.savedMessage')}
           hideCloseButton
           style={{ marginBottom: '1rem' }}
         />
@@ -149,14 +151,14 @@ Analise quando seu público está mais ativo e programe seus posts.`,
           <Tile style={{ marginBottom: '1rem' }}>
             <TextInput
               id="title"
-              labelText="Título"
+              labelText={t('editor.fieldTitle')}
               value={content.title}
               onChange={(e) => setContent({ ...content, title: e.target.value })}
               style={{ marginBottom: '1rem' }}
             />
             <TextArea
               id="excerpt"
-              labelText="Resumo / Descrição"
+              labelText={t('editor.fieldExcerpt')}
               value={content.excerpt}
               onChange={(e) => setContent({ ...content, excerpt: e.target.value })}
               rows={2}
@@ -175,17 +177,17 @@ Analise quando seu público está mais ativo e programe seus posts.`,
               marginBottom: '1rem',
               flexWrap: 'wrap',
             }}>
-              <Button kind="ghost" size="sm" hasIconOnly iconDescription="Negrito" renderIcon={TextBold} />
-              <Button kind="ghost" size="sm" hasIconOnly iconDescription="Itálico" renderIcon={TextItalic} />
+              <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('editor.bold')} renderIcon={TextBold} />
+              <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('editor.italic')} renderIcon={TextItalic} />
               <div style={{ width: '1px', background: 'var(--cds-layer-accent-01)', margin: '0 0.5rem' }} />
-              <Button kind="ghost" size="sm" hasIconOnly iconDescription="Lista" renderIcon={ListBulleted} />
-              <Button kind="ghost" size="sm" hasIconOnly iconDescription="Lista Numerada" renderIcon={ListNumbered} />
+              <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('editor.list')} renderIcon={ListBulleted} />
+              <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('editor.numberedList')} renderIcon={ListNumbered} />
               <div style={{ width: '1px', background: 'var(--cds-layer-accent-01)', margin: '0 0.5rem' }} />
-              <Button kind="ghost" size="sm" hasIconOnly iconDescription="Citação" renderIcon={Quotes} />
-              <Button kind="ghost" size="sm" hasIconOnly iconDescription="Código" renderIcon={Code} />
+              <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('editor.quote')} renderIcon={Quotes} />
+              <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('editor.code')} renderIcon={Code} />
               <div style={{ width: '1px', background: 'var(--cds-layer-accent-01)', margin: '0 0.5rem' }} />
-              <Button kind="ghost" size="sm" hasIconOnly iconDescription="Imagem" renderIcon={Image} />
-              <Button kind="ghost" size="sm" hasIconOnly iconDescription="Link" renderIcon={LinkIcon} />
+              <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('editor.image')} renderIcon={Image} />
+              <Button kind="ghost" size="sm" hasIconOnly iconDescription={t('editor.link')} renderIcon={LinkIcon} />
             </div>
 
             {/* Área de edição */}
@@ -201,7 +203,7 @@ Analise quando seu público está mais ativo e programe seus posts.`,
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
               <p style={{ fontSize: '0.75rem', color: 'var(--cds-text-secondary)', margin: 0 }}>
-                Suporta Markdown. {content.content.length} caracteres
+                {t('editor.markdownSupport', { count: content.content.length })}
               </p>
               <AIContentLabel
                 size="mini"
@@ -213,11 +215,11 @@ Analise quando seu público está mais ativo e programe seus posts.`,
 
           {/* Mídia */}
           <Tile style={{ marginTop: '1rem' }}>
-            <h3 style={{ marginBottom: '1rem' }}>Mídia</h3>
+            <h3 style={{ marginBottom: '1rem' }}>{t('editor.media')}</h3>
             <FileUploader
-              labelTitle="Arraste imagens ou vídeos"
-              labelDescription="PNG, JPG, GIF, MP4 até 50MB"
-              buttonLabel="Adicionar mídia"
+              labelTitle={t('editor.dragMedia')}
+              labelDescription={t('editor.mediaFormats')}
+              buttonLabel={t('editor.addMedia')}
               filenameStatus="edit"
               accept={['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.mov']}
               multiple
@@ -228,22 +230,22 @@ Analise quando seu público está mais ativo e programe seus posts.`,
         {/* Sidebar */}
         <Column lg={6} md={8} sm={4}>
           <Tile style={{ marginBottom: '1rem' }}>
-            <h3 style={{ marginBottom: '1rem' }}>Publicação</h3>
+            <h3 style={{ marginBottom: '1rem' }}>{t('editor.publication')}</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <Select
                 id="status"
-                labelText="Status"
+                labelText={t('editor.status')}
                 value={content.status}
                 onChange={(e) => setContent({ ...content, status: e.target.value as ContentData['status'] })}
               >
-                <SelectItem value="draft" text="Rascunho" />
-                <SelectItem value="review" text="Em Revisão" />
-                <SelectItem value="approved" text="Aprovado" />
-                <SelectItem value="published" text="Publicado" />
+                <SelectItem value="draft" text={t('content.status.draft')} />
+                <SelectItem value="review" text={t('content.status.review')} />
+                <SelectItem value="approved" text={t('content.status.approved')} />
+                <SelectItem value="published" text={t('content.status.published')} />
               </Select>
               <TextInput
                 id="scheduledAt"
-                labelText="Agendar publicação"
+                labelText={t('editor.schedulePublication')}
                 type="datetime-local"
                 value={content.scheduledAt}
                 onChange={(e) => setContent({ ...content, scheduledAt: e.target.value })}
@@ -252,22 +254,22 @@ Analise quando seu público está mais ativo e programe seus posts.`,
           </Tile>
 
           <Tile style={{ marginBottom: '1rem' }}>
-            <h3 style={{ marginBottom: '1rem' }}>Tipo de Conteúdo</h3>
+            <h3 style={{ marginBottom: '1rem' }}>{t('editor.contentType')}</h3>
             <Select
               id="type"
-              labelText="Formato"
+              labelText={t('editor.format')}
               value={content.type}
               onChange={(e) => setContent({ ...content, type: e.target.value as ContentData['type'] })}
             >
-              <SelectItem value="post" text="Post/Artigo" />
-              <SelectItem value="page" text="Página" />
-              <SelectItem value="story" text="Story" />
-              <SelectItem value="reel" text="Reel/Vídeo Curto" />
+              <SelectItem value="post" text={t('editor.typePost')} />
+              <SelectItem value="page" text={t('editor.typePage')} />
+              <SelectItem value="story" text={t('editor.typeStory')} />
+              <SelectItem value="reel" text={t('editor.typeReel')} />
             </Select>
           </Tile>
 
           <Tile style={{ marginBottom: '1rem' }}>
-            <h3 style={{ marginBottom: '1rem' }}>Plataformas</h3>
+            <h3 style={{ marginBottom: '1rem' }}>{t('editor.platforms')}</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <Toggle
                 id="platform-instagram"
@@ -338,7 +340,7 @@ Analise quando seu público está mais ativo e programe seus posts.`,
           </Tile>
 
           <Tile style={{ marginBottom: '1rem' }}>
-            <h3 style={{ marginBottom: '1rem' }}>Tags</h3>
+            <h3 style={{ marginBottom: '1rem' }}>{t('editor.tags')}</h3>
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
               {content.tags.map((tag, i) => (
                 <Tag
@@ -355,8 +357,8 @@ Analise quando seu público está mais ativo e programe seus posts.`,
             </div>
             <TextInput
               id="new-tag"
-              labelText="Adicionar tag"
-              placeholder="Digite e pressione Enter"
+              labelText={t('editor.addTag')}
+              placeholder={t('editor.tagPlaceholder')}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   const input = e.currentTarget;
@@ -373,8 +375,8 @@ Analise quando seu público está mais ativo e programe seus posts.`,
           {/* AI Assistant */}
           <AIChat
             brandId={undefined /* TODO: load brandId from project/post data */}
-            context={`Tipo: ${content.type}, Plataformas: ${content.platform.join(', ')}, Tags: ${content.tags.join(', ')}`}
-            placeholder="Peça para a IA gerar ou melhorar o conteúdo..."
+            context={t('editor.aiContext', { type: content.type, platforms: content.platform.join(', '), tags: content.tags.join(', ') })}
+            placeholder={t('editor.aiPlaceholder')}
             onContentGenerated={(generated, meta) => {
               setContent(prev => ({ ...prev, content: prev.content + '\n\n' + generated }));
               if (meta) setAiMeta(meta);
@@ -382,7 +384,7 @@ Analise quando seu público está mais ativo e programe seus posts.`,
           />
 
           <Button kind="danger--ghost" renderIcon={TrashCan} style={{ width: '100%', marginTop: '1rem' }}>
-            Excluir Conteúdo
+            {t('editor.deleteContent')}
           </Button>
         </Column>
       </Grid>

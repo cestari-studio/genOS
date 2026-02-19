@@ -3,6 +3,7 @@
 import { AILabel, AILabelContent, AILabelActions } from '@carbon/react';
 import { Button } from '@carbon/react';
 import { Renew, ThumbsUp, ThumbsDown, Copy } from '@carbon/icons-react';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface AIContentLabelProps {
   model?: string;
@@ -19,6 +20,7 @@ export default function AIContentLabel({
   onCopy,
   size = 'xs',
 }: AIContentLabelProps) {
+  const { t } = useTranslation();
   return (
     <AILabel size={size} align="bottom-right">
       <AILabelContent>
@@ -28,7 +30,7 @@ export default function AIContentLabel({
             color: 'var(--cds-text-secondary)',
             marginBottom: '0.5rem',
           }}>
-            Gerado por IA
+            {t('ai.generatedByAi')}
           </p>
           <p style={{
             fontSize: '0.875rem',
@@ -43,7 +45,7 @@ export default function AIContentLabel({
               color: 'var(--cds-text-secondary)',
               margin: 0,
             }}>
-              Confiança: {confidence}%
+              {t('ai.confidence', { value: confidence })}
             </p>
           )}
         </div>
@@ -54,7 +56,7 @@ export default function AIContentLabel({
             kind="ghost"
             size="sm"
             hasIconOnly
-            iconDescription="Regenerar"
+            iconDescription={t('ai.regenerate')}
             renderIcon={Renew}
             onClick={onRegenerate}
           />
@@ -64,7 +66,7 @@ export default function AIContentLabel({
             kind="ghost"
             size="sm"
             hasIconOnly
-            iconDescription="Copiar"
+            iconDescription={t('ai.copy')}
             renderIcon={Copy}
             onClick={onCopy}
           />
@@ -73,14 +75,14 @@ export default function AIContentLabel({
           kind="ghost"
           size="sm"
           hasIconOnly
-          iconDescription="Útil"
+          iconDescription={t('ai.helpful')}
           renderIcon={ThumbsUp}
         />
         <Button
           kind="ghost"
           size="sm"
           hasIconOnly
-          iconDescription="Não útil"
+          iconDescription={t('ai.notHelpful')}
           renderIcon={ThumbsDown}
         />
       </AILabelActions>

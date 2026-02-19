@@ -37,6 +37,7 @@ import {
   Close,
   Warning,
 } from '@carbon/icons-react';
+import { useTranslation } from '@/lib/i18n/context';
 
 // TODO: Integrar com Supabase Auth
 
@@ -59,26 +60,27 @@ const users: User[] = [
   { id: '5', name: 'Ana Costa', email: 'ana@cestari.studio', role: 'viewer', status: 'pending', lastActive: '-', createdAt: '2024-02-15' },
 ];
 
-const roleConfig = {
-  admin: { label: 'Administrador', color: 'red', permissions: 'Acesso total ao sistema' },
-  manager: { label: 'Gerente', color: 'purple', permissions: 'Gerencia projetos e equipe' },
-  member: { label: 'Membro', color: 'blue', permissions: 'Acesso a projetos atribuídos' },
-  viewer: { label: 'Visualizador', color: 'gray', permissions: 'Apenas visualização' },
-} as const;
-
-const statusConfig = {
-  active: { label: 'Ativo', color: 'green' },
-  pending: { label: 'Pendente', color: 'orange' },
-  inactive: { label: 'Inativo', color: 'gray' },
-} as const;
-
 export default function UsersPage() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [inviteSent, setInviteSent] = useState(false);
+
+  const roleConfig = {
+    admin: { label: t('users.roleAdmin'), color: 'red', permissions: t('users.permAdmin') },
+    manager: { label: t('users.roleManager'), color: 'purple', permissions: t('users.permManager') },
+    member: { label: t('users.roleMember'), color: 'blue', permissions: t('users.permMember') },
+    viewer: { label: t('users.roleViewer'), color: 'gray', permissions: t('users.permViewer') },
+  };
+
+  const statusConfig = {
+    active: { label: t('users.statusActive'), color: 'green' },
+    pending: { label: t('users.statusPending'), color: 'orange' },
+    inactive: { label: t('users.statusInactive'), color: 'gray' },
+  };
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -106,26 +108,26 @@ export default function UsersPage() {
     <div>
       {/* Breadcrumb */}
       <Breadcrumb noTrailingSlash style={{ marginBottom: '1rem' }}>
-        <BreadcrumbItem href="/settings">Configurações</BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>Usuários</BreadcrumbItem>
+        <BreadcrumbItem href="/settings">{t('settings.title')}</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>{t('users.title')}</BreadcrumbItem>
       </Breadcrumb>
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ margin: 0 }}>Gerenciar Usuários</h1>
-          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>Gerencie sua equipe e permissões</p>
+          <h1 style={{ margin: 0 }}>{t('users.title')}</h1>
+          <p style={{ color: 'var(--cds-text-secondary)', margin: '0.25rem 0 0' }}>{t('users.subtitle')}</p>
         </div>
         <Button size="sm" renderIcon={Add} onClick={() => setIsInviteModalOpen(true)}>
-          Convidar Usuário
+          {t('users.inviteUser')}
         </Button>
       </div>
 
       {inviteSent && (
         <InlineNotification
           kind="success"
-          title="Convite enviado!"
-          subtitle="O usuário receberá um email com instruções de acesso."
+          title={t('users.inviteSent')}
+          subtitle={t('users.inviteSentSubtitle')}
           hideCloseButton
           style={{ marginBottom: '1rem' }}
         />
@@ -135,25 +137,25 @@ export default function UsersPage() {
       <Grid style={{ marginBottom: '1.5rem' }}>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Total de Usuários</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>{t('users.totalUsers')}</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>{users.length}</p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Ativos</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>{t('users.active')}</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-success)' }}>{activeUsers}</p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Convites Pendentes</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>{t('users.pendingInvites')}</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0, color: 'var(--cds-support-warning)' }}>{pendingUsers}</p>
           </Tile>
         </Column>
         <Column lg={4} md={4} sm={4}>
           <Tile>
-            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>Administradores</h4>
+            <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>{t('users.admins')}</h4>
             <p style={{ fontSize: '2rem', fontWeight: 600, margin: 0 }}>
               {users.filter(u => u.role === 'admin').length}
             </p>
@@ -167,18 +169,18 @@ export default function UsersPage() {
           <div style={{ flex: 1, minWidth: '200px' }}>
             <Search
               size="sm"
-              placeholder="Buscar usuários..."
+              placeholder={t('users.searchPlaceholder')}
               labelText="Buscar"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <Select id="filter-role" size="sm" value={filterRole} onChange={(e) => setFilterRole(e.target.value)} style={{ minWidth: '150px' }}>
-            <SelectItem value="all" text="Todas as funções" />
-            <SelectItem value="admin" text="Administrador" />
-            <SelectItem value="manager" text="Gerente" />
-            <SelectItem value="member" text="Membro" />
-            <SelectItem value="viewer" text="Visualizador" />
+            <SelectItem value="all" text={t('users.allRoles')} />
+            <SelectItem value="admin" text={t('users.roleAdmin')} />
+            <SelectItem value="manager" text={t('users.roleManager')} />
+            <SelectItem value="member" text={t('users.roleMember')} />
+            <SelectItem value="viewer" text={t('users.roleViewer')} />
           </Select>
         </div>
       </Tile>
@@ -188,10 +190,10 @@ export default function UsersPage() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--cds-border-subtle-01)', background: 'var(--cds-background)' }}>
-              <th style={{ padding: '1rem', textAlign: 'left' }}>Usuário</th>
-              <th style={{ padding: '1rem', textAlign: 'left' }}>Função</th>
-              <th style={{ padding: '1rem', textAlign: 'left' }}>Status</th>
-              <th style={{ padding: '1rem', textAlign: 'left' }}>Última Atividade</th>
+              <th style={{ padding: '1rem', textAlign: 'left' }}>{t('users.user')}</th>
+              <th style={{ padding: '1rem', textAlign: 'left' }}>{t('users.role')}</th>
+              <th style={{ padding: '1rem', textAlign: 'left' }}>{t('users.status')}</th>
+              <th style={{ padding: '1rem', textAlign: 'left' }}>{t('users.lastActivity')}</th>
               <th style={{ padding: '1rem', width: '50px' }}></th>
             </tr>
           </thead>
@@ -228,16 +230,16 @@ export default function UsersPage() {
                   </Tag>
                 </td>
                 <td style={{ padding: '1rem', color: 'var(--cds-text-secondary)' }}>
-                  {user.lastActive === '-' ? 'Nunca' : user.lastActive}
+                  {user.lastActive === '-' ? t('users.never') : user.lastActive}
                 </td>
                 <td style={{ padding: '1rem' }}>
                   <OverflowMenu size="sm" flipped>
-                    <OverflowMenuItem itemText="Editar" onClick={() => handleEditUser(user)} />
-                    <OverflowMenuItem itemText="Redefinir Senha" />
-                    {user.status === 'pending' && <OverflowMenuItem itemText="Reenviar Convite" />}
-                    {user.status === 'active' && <OverflowMenuItem itemText="Desativar" />}
-                    {user.status === 'inactive' && <OverflowMenuItem itemText="Reativar" />}
-                    <OverflowMenuItem itemText="Remover" hasDivider isDelete />
+                    <OverflowMenuItem itemText={t('common.edit')} onClick={() => handleEditUser(user)} />
+                    <OverflowMenuItem itemText={t('users.resetPassword')} />
+                    {user.status === 'pending' && <OverflowMenuItem itemText={t('users.resendInvite')} />}
+                    {user.status === 'active' && <OverflowMenuItem itemText={t('users.deactivate')} />}
+                    {user.status === 'inactive' && <OverflowMenuItem itemText={t('users.reactivate')} />}
+                    <OverflowMenuItem itemText={t('common.delete')} hasDivider isDelete />
                   </OverflowMenu>
                 </td>
               </tr>
@@ -250,36 +252,36 @@ export default function UsersPage() {
       <Modal
         open={isInviteModalOpen}
         onRequestClose={() => setIsInviteModalOpen(false)}
-        modalHeading="Convidar Usuário"
-        primaryButtonText="Enviar Convite"
-        secondaryButtonText="Cancelar"
+        modalHeading={t('users.inviteUser')}
+        primaryButtonText={t('users.sendInvite')}
+        secondaryButtonText={t('common.cancel')}
         onRequestSubmit={handleInvite}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <TextInput
             id="invite-email"
-            labelText="Email"
+            labelText={t('users.email')}
             type="email"
             placeholder="usuario@empresa.com"
           />
           <TextInput
             id="invite-name"
-            labelText="Nome (opcional)"
-            placeholder="Nome do usuário"
+            labelText={t('users.nameOptional')}
+            placeholder={t('users.namePlaceholder')}
           />
-          <Select id="invite-role" labelText="Função">
-            <SelectItem value="member" text="Membro" />
-            <SelectItem value="manager" text="Gerente" />
-            <SelectItem value="viewer" text="Visualizador" />
-            <SelectItem value="admin" text="Administrador" />
+          <Select id="invite-role" labelText={t('users.role')}>
+            <SelectItem value="member" text={t('users.roleMember')} />
+            <SelectItem value="manager" text={t('users.roleManager')} />
+            <SelectItem value="viewer" text={t('users.roleViewer')} />
+            <SelectItem value="admin" text={t('users.roleAdmin')} />
           </Select>
           <div style={{ background: 'var(--cds-background)', padding: '1rem', borderRadius: '4px' }}>
-            <h5 style={{ margin: '0 0 0.5rem' }}>Permissões:</h5>
+            <h5 style={{ margin: '0 0 0.5rem' }}>{t('users.permissions')}:</h5>
             <ul style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--cds-text-secondary)', fontSize: '0.875rem' }}>
-              <li>Administrador: Acesso total ao sistema</li>
-              <li>Gerente: Gerencia projetos e equipe</li>
-              <li>Membro: Acesso a projetos atribuídos</li>
-              <li>Visualizador: Apenas visualização</li>
+              <li>{t('users.roleAdmin')}: {t('users.permAdmin')}</li>
+              <li>{t('users.roleManager')}: {t('users.permManager')}</li>
+              <li>{t('users.roleMember')}: {t('users.permMember')}</li>
+              <li>{t('users.roleViewer')}: {t('users.permViewer')}</li>
             </ul>
           </div>
         </div>
@@ -292,34 +294,34 @@ export default function UsersPage() {
           setIsEditModalOpen(false);
           setSelectedUser(null);
         }}
-        modalHeading="Editar Usuário"
-        primaryButtonText="Salvar"
-        secondaryButtonText="Cancelar"
+        modalHeading={t('users.editUser')}
+        primaryButtonText={t('common.save')}
+        secondaryButtonText={t('common.cancel')}
       >
         {selectedUser && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <TextInput
               id="edit-name"
-              labelText="Nome"
+              labelText={t('users.name')}
               defaultValue={selectedUser.name}
             />
             <TextInput
               id="edit-email"
-              labelText="Email"
+              labelText={t('users.email')}
               type="email"
               defaultValue={selectedUser.email}
             />
-            <Select id="edit-role" labelText="Função" defaultValue={selectedUser.role}>
-              <SelectItem value="member" text="Membro" />
-              <SelectItem value="manager" text="Gerente" />
-              <SelectItem value="viewer" text="Visualizador" />
-              <SelectItem value="admin" text="Administrador" />
+            <Select id="edit-role" labelText={t('users.role')} defaultValue={selectedUser.role}>
+              <SelectItem value="member" text={t('users.roleMember')} />
+              <SelectItem value="manager" text={t('users.roleManager')} />
+              <SelectItem value="viewer" text={t('users.roleViewer')} />
+              <SelectItem value="admin" text={t('users.roleAdmin')} />
             </Select>
             <Toggle
               id="edit-status"
-              labelText="Status"
-              labelA="Inativo"
-              labelB="Ativo"
+              labelText={t('users.status')}
+              labelA={t('users.statusInactive')}
+              labelB={t('users.statusActive')}
               defaultToggled={selectedUser.status === 'active'}
             />
           </div>

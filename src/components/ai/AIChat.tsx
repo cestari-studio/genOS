@@ -17,6 +17,7 @@ import {
   Maximize,
   Minimize,
 } from '@carbon/icons-react';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface Message {
   id: string;
@@ -38,8 +39,10 @@ export default function AIChat({
   onContentGenerated,
   brandId,
   context,
-  placeholder = 'Descreva o conteúdo que deseja gerar...',
+  placeholder,
 }: AIChatProps) {
+  const { t } = useTranslation();
+  const resolvedPlaceholder = placeholder ?? t('ai.defaultPlaceholder');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +84,7 @@ export default function AIChat({
       const json = await res.json();
 
       if (!res.ok) {
-        throw new Error(json.error || 'Erro ao gerar conteúdo');
+        throw new Error(json.error || t('ai.generateError'));
       }
 
       const assistantMessage: Message = {
@@ -94,7 +97,7 @@ export default function AIChat({
       };
       setMessages(prev => [...prev, assistantMessage]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro inesperado');
+      setError(err instanceof Error ? err.message : t('ai.unexpectedError'));
     } finally {
       setIsLoading(false);
     }
@@ -148,7 +151,7 @@ export default function AIChat({
           <IconButton
             kind="ghost"
             size="sm"
-            label={isExpanded ? 'Minimizar' : 'Expandir'}
+            label={isExpanded ? t('ai.minimize') : t('ai.expand')}
             onClick={() => setIsExpanded(!isExpanded)}
           >
             {isExpanded ? <Minimize size={16} /> : <Maximize size={16} />}
@@ -173,10 +176,10 @@ export default function AIChat({
           }}>
             <WatsonxAi size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
             <p style={{ margin: 0, fontSize: '0.875rem' }}>
-              Descreva o conteúdo que deseja gerar.
+              {t('ai.emptyStateTitle')}
             </p>
             <p style={{ margin: '0.5rem 0 0', fontSize: '0.75rem' }}>
-              O AI Assistant usa IA para criar textos, legendas, briefings e mais.
+              {t('ai.emptyStateDescription')}
             </p>
           </div>
         )}
@@ -184,7 +187,7 @@ export default function AIChat({
         {error && (
           <InlineNotification
             kind="error"
-            title="Erro"
+            title={t('ai.error')}
             subtitle={error}
             lowContrast
             onClose={() => setError(null)}
@@ -225,7 +228,7 @@ export default function AIChat({
                   kind="ghost"
                   size="sm"
                   hasIconOnly
-                  iconDescription="Copiar"
+                  iconDescription={t('ai.copy')}
                   renderIcon={Copy}
                   onClick={() => handleCopyMessage(msg.content)}
                 />
@@ -233,7 +236,7 @@ export default function AIChat({
                   kind="ghost"
                   size="sm"
                   hasIconOnly
-                  iconDescription="Regenerar"
+                  iconDescription={t('ai.regenerate')}
                   renderIcon={Renew}
                 />
                 {onContentGenerated && (
@@ -242,7 +245,7 @@ export default function AIChat({
                     size="sm"
                     onClick={() => handleUseContent(msg)}
                   >
-                    Usar conteúdo
+                    {t('ai.useContent')}
                   </Button>
                 )}
                 {msg.model && (
@@ -262,7 +265,7 @@ export default function AIChat({
             background: 'var(--cds-layer-01)',
             fontSize: '0.875rem',
           }}>
-            <span className="ai-typing-indicator">Gerando conteúdo...</span>
+            <span className="ai-typing-indicator">{t('ai.generating')}</span>
           </div>
         )}
         <div ref={messagesEndRef} />
@@ -280,7 +283,7 @@ export default function AIChat({
           id="ai-chat-input"
           labelText=""
           hideLabel
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -291,7 +294,7 @@ export default function AIChat({
           kind="primary"
           size="md"
           hasIconOnly
-          iconDescription="Enviar"
+          iconDescription={t('ai.send')}
           renderIcon={Send}
           onClick={handleSend}
           disabled={!input.trim() || isLoading}
