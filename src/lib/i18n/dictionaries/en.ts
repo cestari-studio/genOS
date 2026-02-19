@@ -860,6 +860,18 @@ const en: Record<string, string> = {
   'ai.indexContent': 'Index content for RAG',
   'ai.indexing': 'Indexing...',
   'ai.indexed': 'Content indexed successfully',
+
+  // ── Global Shell ──────────────────────────────────────
+  'shell.globalNav': 'Global navigation',
+  'shell.solutions': 'Agency Solutions',
+  'shell.pricing': 'Pricing',
+  'shell.docs': 'Docs & APIs',
+  'shell.contentFactory': 'Content Factory',
+  'shell.geoIntelligence': 'GEO Intelligence',
+  'shell.agentOps': 'AgentOps',
+  'shell.finops': 'FinOps (ROI)',
+  'shell.privacy': 'Privacy',
+  'shell.terms': 'Terms of Use',
 };
 
 export default en;

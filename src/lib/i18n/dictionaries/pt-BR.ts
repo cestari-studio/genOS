@@ -860,6 +860,18 @@ const ptBR: Record<string, string> = {
   'ai.indexContent': 'Indexar conteúdo para RAG',
   'ai.indexing': 'Indexando...',
   'ai.indexed': 'Conteúdo indexado com sucesso',
+
+  // ── Global Shell ──────────────────────────────────────
+  'shell.globalNav': 'Navegação global',
+  'shell.solutions': 'Soluções para Agências',
+  'shell.pricing': 'Preços',
+  'shell.docs': 'Docs & APIs',
+  'shell.contentFactory': 'Content Factory',
+  'shell.geoIntelligence': 'GEO Intelligence',
+  'shell.agentOps': 'AgentOps',
+  'shell.finops': 'FinOps (ROI)',
+  'shell.privacy': 'Privacidade',
+  'shell.terms': 'Termos de Uso',
 };
 
 export default ptBR;

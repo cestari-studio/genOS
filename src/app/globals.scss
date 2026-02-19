@@ -251,6 +251,44 @@ body {
   min-height: 100%;
 }
 
+// ── CLI Login Theme ─────────────────────────────────────
+// Dark-mode CLI overrides for the Carbon inputs on the login page
+main[style*="background-color: #161616"] {
+  .cds--text-input,
+  .cds--password-input {
+    background-color: #161616;
+    color: #f4f4f4;
+    border-bottom-color: #0f62fe;
+    caret-color: #0f62fe;
+  }
+
+  .cds--label {
+    color: #8d8d8d;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .cds--text-input::placeholder,
+  .cds--password-input::placeholder {
+    color: #6f6f6f;
+  }
+}
+
+// ── Micro Footer ────────────────────────────────────────
+.genos-micro-footer {
+  background-color: #161616;
+  border-top: 1px solid #393939;
+  padding: 0.75rem 2rem;
+
+  a {
+    color: #78a9ff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
 // ── Reduced motion (accessibility compliance) ───────────
 @media (prefers-reduced-motion: reduce) {
   .main-content {
