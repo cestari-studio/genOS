@@ -34,6 +34,7 @@ import {
   Report,
   ChartRadar,
   Earth,
+  Chemistry,
 } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
 
@@ -55,6 +56,7 @@ export default function Sidebar() {
     { href: '/clients', icon: UserMultiple, label: t('sidebar.clients') },
     { href: '/projects', icon: Folder, label: t('sidebar.projects') },
     { href: '/briefings', icon: TaskComplete, label: t('sidebar.briefings') },
+    { href: '/brands', icon: Chemistry, label: t('sidebar.brands') },
   ];
 
   const contentItems = [
