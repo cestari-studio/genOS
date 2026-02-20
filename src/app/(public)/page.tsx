@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Grid,
   Column,
   Button,
   Tile,
   ClickableTile,
+  Tag,
 } from '@carbon/react';
 import {
   ArrowRight,
@@ -14,17 +15,12 @@ import {
   DataBase,
   Chemistry,
   Earth,
-  LogoLinkedin,
-  LogoGithub,
-  LogoTwitter,
-  Email,
-  Phone,
   Partnership,
   Enterprise,
   UserMultiple,
 } from '@carbon/icons-react';
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useTranslation } from '@/lib/i18n/context';
 
 /* ───────── animation helpers ───────── */
 const fadeUp = {
@@ -40,7 +36,7 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-function AnimatedSection({ children, className, style }: any) {
+function AnimatedSection({ children, className, style, id }: any) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
   return (
@@ -51,6 +47,7 @@ function AnimatedSection({ children, className, style }: any) {
       variants={stagger}
       className={className}
       style={style}
+      id={id}
     >
       {children}
     </motion.section>
@@ -72,7 +69,7 @@ const features = [
     title: 'Content Factory',
     subtitle: 'AI-Powered Content at Scale',
     description:
-      'End-to-end content pipeline — from brief to published asset — with matrix views, version control, and brand DNA alignment.',
+      'End-to-end content pipeline \u2014 from brief to published asset \u2014 with matrix views, version control, and brand DNA alignment.',
     href: '/content-factory',
   },
   {
@@ -88,21 +85,21 @@ const features = [
     title: 'GEO Intelligence',
     subtitle: 'Generative Engine Optimization',
     description:
-      'Visibility analytics for AI-generated answers — track how your brand appears inside ChatGPT, Gemini, Perplexity, and more.',
-    href: '/geo',
+      'Visibility analytics for AI-generated answers \u2014 track how your brand appears inside ChatGPT, Gemini, Perplexity, and more.',
+    href: '/marketing',
   },
 ];
 
 const testimonials = [
   {
     quote:
-      'Cestari Studio transformed the way we approach content. Our production velocity increased 8× while maintaining our brand voice.',
+      'Cestari Studio transformed the way we approach content. Our production velocity increased 8\u00d7 while maintaining our brand voice.',
     author: 'Daniela Ferreira',
     role: 'CMO, Vortex Media Group',
   },
   {
     quote:
-      'The genOS token economy gives us complete financial visibility on AI spend — something no other platform offers at this level.',
+      'The genOS token economy gives us complete financial visibility on AI spend \u2014 something no other platform offers at this level.',
     author: 'Marcos Oliveira',
     role: 'VP Engineering, Scaleway',
   },
@@ -117,7 +114,29 @@ const testimonials = [
 /* ───────── page ───────── */
 export default function CestariHomePage() {
   const [mounted, setMounted] = useState(false);
+  const { t } = useTranslation();
   useEffect(() => setMounted(true), []);
+
+  const valueCards = [
+    {
+      value: t('landing.card1Value'),
+      label: t('landing.card1Label'),
+      desc: t('landing.card1Desc'),
+      color: '#0f62fe',
+    },
+    {
+      value: t('landing.card2Value'),
+      label: t('landing.card2Label'),
+      desc: t('landing.card2Desc'),
+      color: '#a56eff',
+    },
+    {
+      value: t('landing.card3Value'),
+      label: t('landing.card3Label'),
+      desc: t('landing.card3Desc'),
+      color: '#08bdba',
+    },
+  ];
 
   return (
     <div style={{ overflow: 'hidden' }}>
@@ -175,44 +194,46 @@ export default function CestariHomePage() {
                   fontWeight: 600,
                 }}
               >
-                Enterprise AI Solutions
+                {t('landing.eyebrow')}
               </p>
               <h1
                 style={{
-                  fontSize: 'clamp(3rem, 7vw, 5.25rem)',
-                  fontWeight: 300,
-                  lineHeight: 1.07,
+                  fontSize: 'clamp(2.5rem, 6vw, 4.25rem)',
+                  fontWeight: 600,
+                  lineHeight: 1.1,
                   color: '#f4f4f4',
                   marginBottom: '1.5rem',
                   letterSpacing: '-0.02em',
                 }}
               >
-                Cestari
-                <br />
-                <span style={{ fontWeight: 600 }}>Studio</span>
+                {t('landing.headline')}
               </h1>
-              <p
+
+              {/* Social proof */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={mounted ? { opacity: 1 } : {}}
+                transition={{ delay: 0.4, duration: 0.6 }}
                 style={{
-                  fontSize: 'clamp(1.125rem, 2vw, 1.5rem)',
-                  lineHeight: 1.4,
-                  color: '#c6c6c6',
-                  maxWidth: 640,
-                  marginBottom: '3rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  marginBottom: '2.5rem',
                 }}
               >
-                Enterprise AI Solutions for Content&nbsp;&amp;&nbsp;Marketing.
-                <br />
-                Build, orchestrate, and optimize at scale.
-              </p>
+                <Tag type="blue" size="md">
+                  {t('landing.socialProof')}
+                </Tag>
+              </motion.div>
 
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <Button
                   size="xl"
                   renderIcon={ArrowRight}
-                  href="/genos"
+                  href="/pricing"
                   style={{ minWidth: 180 }}
                 >
-                  Explore genOS
+                  {t('landing.ctaPrimary')}
                 </Button>
                 <Button
                   kind="ghost"
@@ -220,7 +241,7 @@ export default function CestariHomePage() {
                   href="#solutions"
                   style={{ color: '#f4f4f4' }}
                 >
-                  View Solutions
+                  {t('landing.ctaSecondary')}
                 </Button>
               </div>
             </motion.div>
@@ -279,6 +300,62 @@ export default function CestariHomePage() {
         </Grid>
       </section>
 
+      {/* ── VALUE CARDS ── */}
+      <AnimatedSection
+        style={{
+          background: '#161616',
+          padding: '0 0 clamp(4rem, 8vw, 6rem)',
+        }}
+      >
+        <Grid fullWidth style={{ padding: '0 2rem', maxWidth: 1584, margin: '0 auto' }}>
+          {valueCards.map((card, i) => (
+            <Column key={card.label} lg={5} md={4} sm={4}>
+              <motion.div variants={fadeUp} custom={i}>
+                <Tile
+                  style={{
+                    padding: '2rem',
+                    minHeight: 200,
+                    background: '#262626',
+                    borderTop: `3px solid ${card.color}`,
+                    marginBottom: '1rem',
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: '2.5rem',
+                      fontWeight: 700,
+                      color: card.color,
+                      marginBottom: '0.25rem',
+                    }}
+                  >
+                    {card.value}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: '1rem',
+                      fontWeight: 600,
+                      color: '#f4f4f4',
+                      marginBottom: '0.75rem',
+                    }}
+                  >
+                    {card.label}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: '0.875rem',
+                      color: '#8d8d8d',
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {card.desc}
+                  </p>
+                </Tile>
+              </motion.div>
+            </Column>
+          ))}
+        </Grid>
+      </AnimatedSection>
+
       {/* ── FEATURES ── */}
       <AnimatedSection
         id="solutions"
@@ -301,7 +378,7 @@ export default function CestariHomePage() {
                 marginBottom: '0.75rem',
               }}
             >
-              Our Solutions
+              {t('landing.solutionsEyebrow')}
             </motion.p>
             <motion.h2
               variants={fadeUp}
@@ -314,8 +391,8 @@ export default function CestariHomePage() {
                 marginBottom: '1rem',
               }}
             >
-              Four pillars of the{' '}
-              <span style={{ fontWeight: 600 }}>AI-native</span> enterprise
+              {t('landing.solutionsTitle')}{' '}
+              <span style={{ fontWeight: 600 }}>{t('landing.solutionsTitleBold')}</span>
             </motion.h2>
             <motion.p
               variants={fadeUp}
@@ -328,9 +405,7 @@ export default function CestariHomePage() {
                 marginBottom: '3rem',
               }}
             >
-              Each product works independently — or together as a unified
-              ecosystem that compounds value across your entire marketing
-              operation.
+              {t('landing.solutionsDesc')}
             </motion.p>
           </Column>
 
@@ -405,7 +480,7 @@ export default function CestariHomePage() {
                 marginBottom: '0.75rem',
               }}
             >
-              Testimonials
+              {t('landing.testimonialsEyebrow')}
             </motion.p>
             <motion.h2
               variants={fadeUp}
@@ -417,11 +492,12 @@ export default function CestariHomePage() {
                 marginBottom: '3rem',
               }}
             >
-              Trusted by <span style={{ fontWeight: 600 }}>industry leaders</span>
+              {t('landing.testimonialsTitle')}{' '}
+              <span style={{ fontWeight: 600 }}>{t('landing.testimonialsTitleBold')}</span>
             </motion.h2>
           </Column>
 
-          {testimonials.map((t, i) => (
+          {testimonials.map((item, i) => (
             <Column key={i} lg={5} md={4} sm={4}>
               <motion.div variants={fadeUp} custom={i + 2}>
                 <Tile
@@ -445,13 +521,13 @@ export default function CestariHomePage() {
                       marginBottom: '1.5rem',
                     }}
                   >
-                    &ldquo;{t.quote}&rdquo;
+                    &ldquo;{item.quote}&rdquo;
                   </p>
                   <div>
                     <p style={{ fontSize: '1rem', fontWeight: 600, color: '#f4f4f4' }}>
-                      {t.author}
+                      {item.author}
                     </p>
-                    <p style={{ fontSize: '0.875rem', color: '#8d8d8d' }}>{t.role}</p>
+                    <p style={{ fontSize: '0.875rem', color: '#8d8d8d' }}>{item.role}</p>
                   </div>
                 </Tile>
               </motion.div>
@@ -506,8 +582,9 @@ export default function CestariHomePage() {
                 marginBottom: '1rem',
               }}
             >
-              Ready to <span style={{ fontWeight: 600 }}>transform</span> your
-              content operation?
+              {t('landing.ctaBannerTitle')}{' '}
+              <span style={{ fontWeight: 600 }}>{t('landing.ctaBannerTitleBold')}</span>{' '}
+              your content operation?
             </h2>
             <p
               style={{
@@ -518,8 +595,7 @@ export default function CestariHomePage() {
                 marginBottom: '2rem',
               }}
             >
-              Schedule a live demo and see how Cestari Studio can
-              multiply your team's creative output.
+              {t('landing.ctaBannerDesc')}
             </p>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               <Button
@@ -532,7 +608,7 @@ export default function CestariHomePage() {
                   minWidth: 180,
                 }}
               >
-                View Pricing
+                {t('landing.ctaBannerPrimary')}
               </Button>
               <Button
                 kind="ghost"
@@ -540,213 +616,12 @@ export default function CestariHomePage() {
                 href="/helian"
                 style={{ color: '#fff', borderColor: 'rgba(255,255,255,.5)' }}
               >
-                Learn about Helian
+                {t('landing.ctaBannerSecondary')}
               </Button>
             </div>
           </Column>
         </Grid>
       </section>
-
-      {/* ── FOOTER ── */}
-      <footer
-        style={{
-          background: '#161616',
-          padding: '4rem 0 2rem',
-          borderTop: '1px solid #393939',
-        }}
-      >
-        <Grid fullWidth style={{ padding: '0 2rem', maxWidth: 1584, margin: '0 auto' }}>
-          <Column lg={4} md={4} sm={4}>
-            <h3
-              style={{
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                color: '#f4f4f4',
-                marginBottom: '1rem',
-              }}
-            >
-              Cestari Studio
-            </h3>
-            <p
-              style={{
-                fontSize: '0.875rem',
-                color: '#8d8d8d',
-                lineHeight: 1.6,
-                marginBottom: '1.5rem',
-              }}
-            >
-              Enterprise AI solutions for content, marketing, and creative operations.
-            </p>
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <LogoLinkedin size={24} style={{ color: '#c6c6c6', cursor: 'pointer' }} />
-              <LogoGithub size={24} style={{ color: '#c6c6c6', cursor: 'pointer' }} />
-              <LogoTwitter size={24} style={{ color: '#c6c6c6', cursor: 'pointer' }} />
-            </div>
-          </Column>
-
-          <Column lg={3} md={2} sm={4}>
-            <h4
-              style={{
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                color: '#f4f4f4',
-                marginBottom: '1rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.32px',
-              }}
-            >
-              Products
-            </h4>
-            {['genOS', 'Content Factory', 'Helian', 'GEO Intelligence'].map(
-              (l) => (
-                <a
-                  key={l}
-                  href={`/${l.toLowerCase().replace(/\s+/g, '-')}`}
-                  style={{
-                    display: 'block',
-                    fontSize: '0.875rem',
-                    color: '#c6c6c6',
-                    textDecoration: 'none',
-                    marginBottom: '0.75rem',
-                  }}
-                >
-                  {l}
-                </a>
-              ),
-            )}
-          </Column>
-
-          <Column lg={3} md={2} sm={4}>
-            <h4
-              style={{
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                color: '#f4f4f4',
-                marginBottom: '1rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.32px',
-              }}
-            >
-              Company
-            </h4>
-            {['About', 'Blog', 'Careers', 'Contact'].map((l) => (
-              <a
-                key={l}
-                href="#"
-                style={{
-                  display: 'block',
-                  fontSize: '0.875rem',
-                  color: '#c6c6c6',
-                  textDecoration: 'none',
-                  marginBottom: '0.75rem',
-                }}
-              >
-                {l}
-              </a>
-            ))}
-          </Column>
-
-          <Column lg={3} md={2} sm={4}>
-            <h4
-              style={{
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                color: '#f4f4f4',
-                marginBottom: '1rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.32px',
-              }}
-            >
-              Resources
-            </h4>
-            {['Documentation', 'API Reference', 'Pricing', 'Status'].map(
-              (l) => (
-                <a
-                  key={l}
-                  href="#"
-                  style={{
-                    display: 'block',
-                    fontSize: '0.875rem',
-                    color: '#c6c6c6',
-                    textDecoration: 'none',
-                    marginBottom: '0.75rem',
-                  }}
-                >
-                  {l}
-                </a>
-              ),
-            )}
-          </Column>
-
-          <Column lg={3} md={2} sm={4}>
-            <h4
-              style={{
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                color: '#f4f4f4',
-                marginBottom: '1rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.32px',
-              }}
-            >
-              Contact
-            </h4>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                marginBottom: '0.75rem',
-              }}
-            >
-              <Email size={16} style={{ color: '#78a9ff' }} />
-              <span style={{ fontSize: '0.875rem', color: '#c6c6c6' }}>
-                hello@cestaristudio.com
-              </span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Phone size={16} style={{ color: '#78a9ff' }} />
-              <span style={{ fontSize: '0.875rem', color: '#c6c6c6' }}>
-                +55 11 9999-0000
-              </span>
-            </div>
-          </Column>
-
-          {/* copyright */}
-          <Column lg={16} md={8} sm={4}>
-            <div
-              style={{
-                borderTop: '1px solid #393939',
-                marginTop: '3rem',
-                paddingTop: '1.5rem',
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '1rem',
-              }}
-            >
-              <p style={{ fontSize: '0.75rem', color: '#6f6f6f' }}>
-                &copy; {new Date().getFullYear()} Cestari Studio. All rights reserved.
-              </p>
-              <div style={{ display: 'flex', gap: '1.5rem' }}>
-                {['Privacy', 'Terms', 'Cookies'].map((l) => (
-                  <a
-                    key={l}
-                    href="#"
-                    style={{
-                      fontSize: '0.75rem',
-                      color: '#6f6f6f',
-                      textDecoration: 'none',
-                    }}
-                  >
-                    {l}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </Column>
-        </Grid>
-      </footer>
     </div>
   );
 }

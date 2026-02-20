@@ -24,6 +24,42 @@ import {
   Renew,
 } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
+import { DonutChart, LineChart } from '@carbon/charts-react';
+import '@carbon/charts-react/styles.css';
+
+const costBreakdownData = [
+  { group: 'AI API', value: 24000 },
+  { group: 'Infrastructure', value: 12000 },
+  { group: 'Bandwidth', value: 3000 },
+  { group: 'Storage', value: 2000 },
+];
+const costBreakdownOptions = {
+  title: 'Cost Breakdown by Category',
+  resizable: true,
+  height: '320px',
+  theme: 'g10' as const,
+  donut: { center: { label: 'Total $41K' } },
+};
+
+const monthlyRevenueData = [
+  { group: 'Revenue', date: 'Sep 2025', value: 98000 },
+  { group: 'Revenue', date: 'Oct 2025', value: 105000 },
+  { group: 'Revenue', date: 'Nov 2025', value: 112000 },
+  { group: 'Revenue', date: 'Dec 2025', value: 120000 },
+  { group: 'Revenue', date: 'Jan 2026', value: 131000 },
+  { group: 'Revenue', date: 'Feb 2026', value: 142000 },
+];
+const monthlyRevenueOptions = {
+  title: 'Monthly Revenue Trend',
+  resizable: true,
+  height: '320px',
+  theme: 'g10' as const,
+  axes: {
+    bottom: { mapsTo: 'date', scaleType: 'labels' as any },
+    left: { mapsTo: 'value' },
+  },
+  curve: 'curveMonotoneX' as const,
+};
 
 const kpiData = [
   { label: 'Total Revenue', value: '$142K', icon: Currency, color: 'green' },
@@ -86,6 +122,18 @@ export default function FinOpsHomePage() {
           </Tile>
         </Column>
       ))}
+
+      {/* Charts */}
+      <Column lg={8} md={8} sm={4} style={{ marginBottom: '1rem' }}>
+        <Tile>
+          <DonutChart data={costBreakdownData} options={costBreakdownOptions} />
+        </Tile>
+      </Column>
+      <Column lg={8} md={8} sm={4} style={{ marginBottom: '1rem' }}>
+        <Tile>
+          <LineChart data={monthlyRevenueData} options={monthlyRevenueOptions} />
+        </Tile>
+      </Column>
 
       {/* Quick Links */}
       <Column lg={16} md={8} sm={4} style={{ marginTop: '1rem', marginBottom: '1rem' }}>

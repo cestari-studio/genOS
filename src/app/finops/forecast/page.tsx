@@ -17,6 +17,33 @@ import {
 } from '@carbon/react';
 import { ChartLine, Growth, Checkmark, Analytics } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
+import { LineChart } from '@carbon/charts-react';
+import '@carbon/charts-react/styles.css';
+
+const forecastChartData = [
+  { group: 'Actual Revenue', date: 'Sep 2025', value: 98000 },
+  { group: 'Actual Revenue', date: 'Oct 2025', value: 105000 },
+  { group: 'Actual Revenue', date: 'Nov 2025', value: 112000 },
+  { group: 'Actual Revenue', date: 'Dec 2025', value: 120000 },
+  { group: 'Actual Revenue', date: 'Jan 2026', value: 131000 },
+  { group: 'Actual Revenue', date: 'Feb 2026', value: 142000 },
+  { group: 'Projected Revenue', date: 'Feb 2026', value: 142000 },
+  { group: 'Projected Revenue', date: 'Mar 2026', value: 105000 },
+  { group: 'Projected Revenue', date: 'Apr 2026', value: 115000 },
+  { group: 'Projected Revenue', date: 'May 2026', value: 128000 },
+  { group: 'Projected Revenue', date: 'Jun 2026', value: 142000 },
+];
+const forecastChartOptions = {
+  title: 'Revenue Forecast Projection',
+  resizable: true,
+  height: '350px',
+  theme: 'g10' as const,
+  axes: {
+    bottom: { mapsTo: 'date', scaleType: 'labels' as any },
+    left: { mapsTo: 'value' },
+  },
+  curve: 'curveMonotoneX' as const,
+};
 
 const kpiData = [
   { label: 'Projected Q1 Revenue', value: '$420K', icon: ChartLine },
@@ -92,6 +119,13 @@ export default function ForecastPage() {
           </Tile>
         </Column>
       ))}
+
+      {/* Forecast Chart */}
+      <Column lg={16} md={8} sm={4} style={{ marginBottom: '1rem' }}>
+        <Tile>
+          <LineChart data={forecastChartData} options={forecastChartOptions} />
+        </Tile>
+      </Column>
 
       {/* Monthly Projections */}
       <Column lg={16} md={8} sm={4} style={{ marginTop: '1rem', marginBottom: '1rem' }}>

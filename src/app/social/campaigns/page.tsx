@@ -26,6 +26,28 @@ import {
   Growth,
 } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
+import { SimpleBarChart } from '@carbon/charts-react';
+import '@carbon/charts-react/styles.css';
+
+const campaignPerformanceData = [
+  { group: 'Spring Product Launch', value: 3.8 },
+  { group: 'Holiday Sale Push', value: 3.5 },
+  { group: 'Customer Stories', value: 3.4 },
+  { group: 'Brand Awareness Q1', value: 2.9 },
+  { group: 'New Year Drive', value: 2.7 },
+  { group: 'Influencer Collab', value: 4.1 },
+  { group: 'Thought Leadership', value: 1.8 },
+];
+const campaignPerformanceOptions = {
+  title: 'Campaign Performance (ROI)',
+  resizable: true,
+  height: '350px',
+  theme: 'g10' as const,
+  axes: {
+    bottom: { mapsTo: 'value', title: 'ROI Multiple (x)' },
+    left: { mapsTo: 'group', scaleType: 'labels' as any },
+  },
+};
 
 const kpiData = [
   { label: 'Active Bullhorns', value: '5', icon: Bullhorn },
@@ -210,6 +232,13 @@ export default function BullhornsPage() {
       {/* Create Bullhorn Button */}
       <Column lg={4} md={2} sm={4} style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
         <Button renderIcon={Add}>{t('Create Bullhorn')}</Button>
+      </Column>
+
+      {/* Campaign Performance Chart */}
+      <Column lg={16} md={8} sm={4} style={{ marginBottom: '1rem' }}>
+        <Tile>
+          <SimpleBarChart data={campaignPerformanceData} options={campaignPerformanceOptions} />
+        </Tile>
       </Column>
 
       {/* Bullhorns Table */}

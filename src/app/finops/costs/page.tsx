@@ -21,6 +21,31 @@ import {
 } from '@carbon/react';
 import { Chip, CloudServiceManagement, Network_2, DataBase } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
+import { GroupedBarChart } from '@carbon/charts-react';
+import '@carbon/charts-react/styles.css';
+
+const costByCategoryData = [
+  { group: 'AI API', key: 'OpenAI GPT-4o', value: 12400 },
+  { group: 'AI API', key: 'Anthropic Claude', value: 8200 },
+  { group: 'AI API', key: 'Stability AI', value: 3400 },
+  { group: 'Infrastructure', key: 'AWS EC2', value: 5800 },
+  { group: 'Infrastructure', key: 'AWS Lambda', value: 2100 },
+  { group: 'Infrastructure', key: 'Vercel', value: 1950 },
+  { group: 'Bandwidth', key: 'CloudFront CDN', value: 1800 },
+  { group: 'Bandwidth', key: 'Data Transfer', value: 1200 },
+  { group: 'Storage', key: 'S3', value: 1400 },
+  { group: 'Storage', key: 'EBS', value: 600 },
+];
+const costByCategoryOptions = {
+  title: 'Cost by Category & Service',
+  resizable: true,
+  height: '350px',
+  theme: 'g10' as const,
+  axes: {
+    bottom: { mapsTo: 'value' },
+    left: { mapsTo: 'key', scaleType: 'labels' as any },
+  },
+};
 
 const kpiData = [
   { label: 'AI API Costs', value: '$24K', icon: Chip },
@@ -103,6 +128,13 @@ export default function CostBreakdownPage() {
           </Tile>
         </Column>
       ))}
+
+      {/* Cost by Category Chart */}
+      <Column lg={16} md={8} sm={4} style={{ marginBottom: '1rem' }}>
+        <Tile>
+          <GroupedBarChart data={costByCategoryData} options={costByCategoryOptions} />
+        </Tile>
+      </Column>
 
       {/* Filter */}
       <Column lg={4} md={4} sm={4} style={{ marginTop: '1rem', marginBottom: '1rem' }}>

@@ -29,6 +29,43 @@ import {
   CheckmarkOutline,
 } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
+import { LineChart } from '@carbon/charts-react';
+import '@carbon/charts-react/styles.css';
+
+const engagementTrendData = [
+  { group: 'Likes', date: 'Feb 13', value: 18200 },
+  { group: 'Likes', date: 'Feb 14', value: 24500 },
+  { group: 'Likes', date: 'Feb 15', value: 21800 },
+  { group: 'Likes', date: 'Feb 16', value: 28900 },
+  { group: 'Likes', date: 'Feb 17', value: 32100 },
+  { group: 'Likes', date: 'Feb 18', value: 27600 },
+  { group: 'Likes', date: 'Feb 19', value: 35400 },
+  { group: 'Comments', date: 'Feb 13', value: 1420 },
+  { group: 'Comments', date: 'Feb 14', value: 1890 },
+  { group: 'Comments', date: 'Feb 15', value: 1650 },
+  { group: 'Comments', date: 'Feb 16', value: 2340 },
+  { group: 'Comments', date: 'Feb 17', value: 2780 },
+  { group: 'Comments', date: 'Feb 18', value: 2100 },
+  { group: 'Comments', date: 'Feb 19', value: 3120 },
+  { group: 'Shares', date: 'Feb 13', value: 3200 },
+  { group: 'Shares', date: 'Feb 14', value: 4100 },
+  { group: 'Shares', date: 'Feb 15', value: 3800 },
+  { group: 'Shares', date: 'Feb 16', value: 5200 },
+  { group: 'Shares', date: 'Feb 17', value: 6400 },
+  { group: 'Shares', date: 'Feb 18', value: 4900 },
+  { group: 'Shares', date: 'Feb 19', value: 7100 },
+];
+const engagementTrendOptions = {
+  title: 'Engagement Trend (Last 7 Days)',
+  resizable: true,
+  height: '350px',
+  theme: 'g10' as const,
+  axes: {
+    bottom: { mapsTo: 'date', scaleType: 'labels' as any },
+    left: { mapsTo: 'value' },
+  },
+  curve: 'curveMonotoneX' as const,
+};
 
 const kpiData = [
   { label: 'Impressions', value: '1.2M', icon: View },
@@ -169,6 +206,13 @@ export default function AnalyticsPage() {
           </Tile>
         </Column>
       ))}
+
+      {/* Engagement Trend Chart */}
+      <Column lg={16} md={8} sm={4} style={{ marginBottom: '1rem' }}>
+        <Tile>
+          <LineChart data={engagementTrendData} options={engagementTrendOptions} />
+        </Tile>
+      </Column>
 
       {/* Filters */}
       <Column lg={4} md={4} sm={4} style={{ marginTop: '1rem', marginBottom: '1rem' }}>

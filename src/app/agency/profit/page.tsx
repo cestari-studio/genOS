@@ -20,6 +20,31 @@ import {
 } from '@carbon/react';
 import { Finance, Money, Calculator, ArrowUp } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
+import { SimpleBarChart } from '@carbon/charts-react';
+import '@carbon/charts-react/styles.css';
+
+const profitMarginChartData = [
+  { group: 'Profit Margin %', value: 68.3, key: 'Delta Financial' },
+  { group: 'Profit Margin %', value: 69.1, key: 'Gamma Health' },
+  { group: 'Profit Margin %', value: 68.3, key: 'Acme Corp' },
+  { group: 'Profit Margin %', value: 63.4, key: 'Eta Logistics' },
+  { group: 'Profit Margin %', value: 61.8, key: 'Iota Foods' },
+  { group: 'Profit Margin %', value: 55.8, key: 'Zeta Media' },
+  { group: 'Profit Margin %', value: 55.6, key: 'Beta Industries' },
+  { group: 'Profit Margin %', value: 44.8, key: 'Theta Education' },
+  { group: 'Profit Margin %', value: 43.8, key: 'Epsilon Retail' },
+  { group: 'Profit Margin %', value: 38.0, key: 'Kappa Energy' },
+];
+const profitMarginChartOptions = {
+  title: 'Client Profit Margins',
+  resizable: true,
+  height: '400px',
+  theme: 'g10' as const,
+  axes: {
+    bottom: { mapsTo: 'value', title: 'Margin %' },
+    left: { mapsTo: 'key', scaleType: 'labels' as any },
+  },
+};
 
 interface ClientRevenue {
   id: string;
@@ -131,6 +156,15 @@ export default function ProfitPage() {
               {t('Profit Margin')}
             </p>
             <p style={{ fontSize: '2rem', fontWeight: 600 }}>{profitMargin}%</p>
+          </Tile>
+        </Column>
+      </Grid>
+
+      {/* Profit Margin Chart */}
+      <Grid style={{ marginBottom: '2rem' }}>
+        <Column lg={16} md={8} sm={4}>
+          <Tile>
+            <SimpleBarChart data={profitMarginChartData} options={profitMarginChartOptions} />
           </Tile>
         </Column>
       </Grid>

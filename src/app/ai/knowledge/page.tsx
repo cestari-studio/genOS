@@ -22,6 +22,8 @@ import {
   Button,
   Section,
   Heading,
+  AILabel,
+  AILabelContent,
 } from '@carbon/react';
 import { Upload, DocumentBlank, Folder, Add } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
@@ -117,7 +119,7 @@ export default function KnowledgePage() {
                   getHeaderProps,
                   getRowProps,
                 }: any) => (
-                  <TableContainer title={t('Indexed Documents')} description={t('10 of 101 documents shown')}>
+                  <TableContainer title={<span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>{t('Indexed Documents')} <AILabel size="mini"><AILabelContent><p style={{ fontSize: '0.75rem' }}>{t('Documents are automatically chunked and indexed by AI for semantic retrieval (RAG).')}</p></AILabelContent></AILabel></span>} description={t('10 of 101 documents shown')}>
                     <Table {...getTableProps()}>
                       <TableHead>
                         <TableRow>

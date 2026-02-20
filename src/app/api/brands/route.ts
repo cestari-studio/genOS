@@ -6,7 +6,14 @@ import { apiSuccess, apiError, apiValidationError } from '@/lib/validations/resp
 export async function GET() {
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase.from('brands').select('*').order('created_at', { ascending: false });
+    const { data: orgId } = await supabase.rpc('get_user_org_id');
+    if (!orgId) return apiError('Organização não encontrada', 403);
+
+    const { data, error } = await supabase
+      .from('brands')
+      .select('*')
+      .eq('organization_id', orgId)
+      .order('created_at', { ascending: false });
 
     if (error) throw error;
     return apiSuccess(data);

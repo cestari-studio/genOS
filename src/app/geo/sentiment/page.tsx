@@ -21,6 +21,28 @@ import {
   Heading,
 } from '@carbon/react';
 import { useTranslation } from '@/lib/i18n/context';
+import { DonutChart } from '@carbon/charts-react';
+import '@carbon/charts-react/styles.css';
+
+const sentimentDistributionData = [
+  { group: 'Positive', value: 67 },
+  { group: 'Neutral', value: 25 },
+  { group: 'Negative', value: 8 },
+];
+const sentimentDistributionOptions = {
+  title: 'Sentiment Distribution',
+  resizable: true,
+  height: '320px',
+  theme: 'g10' as const,
+  donut: { center: { label: 'Mentions', number: 10 } },
+  color: {
+    scale: {
+      Positive: '#24a148',
+      Neutral: '#a8a8a8',
+      Negative: '#da1e28',
+    },
+  },
+};
 
 const mentions = [
   {
@@ -174,6 +196,15 @@ export default function SentimentPage() {
           <Tile style={{ textAlign: 'center' }}>
             <Tag type="red" size="sm">Negative</Tag>
             <p style={{ fontSize: '2rem', fontWeight: 600, marginTop: '0.25rem' }}>8%</p>
+          </Tile>
+        </Column>
+      </Grid>
+
+      {/* Sentiment Donut Chart */}
+      <Grid style={{ marginBottom: '2rem' }}>
+        <Column lg={8} md={8} sm={4}>
+          <Tile>
+            <DonutChart data={sentimentDistributionData} options={sentimentDistributionOptions} />
           </Tile>
         </Column>
       </Grid>

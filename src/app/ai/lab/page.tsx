@@ -10,6 +10,8 @@ import {
   Toggle,
   Button,
   InlineNotification,
+  AILabel,
+  AILabelContent,
 } from '@carbon/react';
 import {
   Chemistry,
@@ -120,6 +122,10 @@ export default function AILabPage() {
         subtitle="Features in this lab may change or be removed. Enable them at your own discretion. Beta features may impact token usage."
         style={{ marginBottom: '1.5rem' }}
       />
+
+      <div style={{ marginBottom: '1rem' }}>
+        <AILabel size="mini"><AILabelContent><p style={{ fontSize: '0.75rem' }}>{t('Experiments use multiple AI models and techniques. Results and metrics are indicative and may vary.')}</p></AILabelContent></AILabel>
+      </div>
 
       <Grid style={{ marginBottom: '1.5rem' }}>
         <Column lg={4} md={4} sm={4}>

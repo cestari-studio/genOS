@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef } from 'react';
 import {
   Grid,
   Column,
@@ -11,115 +11,285 @@ import {
   AccordionItem,
 } from '@carbon/react';
 import { ArrowRight, Checkmark } from '@carbon/icons-react';
+import { motion, useInView } from 'framer-motion';
+import { useTranslation } from '@/lib/i18n/context';
 
-const plans = [
-  {
-    name: 'Seed',
-    price: '$49',
-    period: '/mo',
-    description: 'For individual creators and small teams getting started.',
-    popular: false,
-    features: ['10,000 AI tokens/mo', '1 user', 'Basic AI (Claude Haiku)', '5 content pieces/mo', 'Email support', '1 brand profile'],
-  },
-  {
-    name: 'Grow',
-    price: '$149',
-    period: '/mo',
-    description: 'For growing teams scaling their content operations.',
-    popular: false,
-    features: ['50,000 AI tokens/mo', '5 users', 'Advanced AI (Claude Sonnet)', '50 content pieces/mo', 'Priority support', '5 brand profiles', 'Social scheduler', 'Basic analytics'],
-  },
-  {
-    name: 'Scale',
-    price: '$299',
-    period: '/mo',
-    description: 'For agencies and enterprises requiring full AI capabilities.',
-    popular: true,
-    features: ['200,000 AI tokens/mo', '20 users', 'Full AI (Claude + Gemini + Granite)', 'Unlimited content', 'GEO Intelligence', '20 brand profiles', 'Social Hub', 'Advanced analytics', 'API access', 'Custom workflows'],
-  },
-  {
-    name: 'Enterprise',
-    price: 'Custom',
-    period: '',
-    description: 'For large organizations with custom requirements.',
-    popular: false,
-    features: ['Unlimited tokens', 'Unlimited users', 'All AI models + Helian Quantum', 'Unlimited everything', 'Dedicated support', 'Custom integrations', 'SLA guarantee', 'On-premise option', 'Quantum optimization', 'Custom AI training'],
-  },
-];
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.5, ease: 'easeOut' as const },
+  }),
+};
 
-const faqs = [
-  { q: 'Can I change plans at any time?', a: 'Yes, you can upgrade or downgrade your plan at any time. Changes take effect at the start of your next billing cycle.' },
-  { q: 'What happens when I run out of tokens?', a: 'You can purchase additional token packs or upgrade your plan. Your content will still be accessible, but AI generation will pause until tokens are replenished.' },
-  { q: 'Do you offer a free trial?', a: 'Yes! All plans include a 14-day free trial with full access to features. No credit card required to start.' },
-  { q: 'What AI models are included?', a: 'Seed uses Claude Haiku for fast, lightweight tasks. Grow includes Claude Sonnet for advanced reasoning. Scale and Enterprise include Claude Opus, Google Gemini, and IBM Granite for maximum capability.' },
-  { q: 'Is there a discount for annual billing?', a: 'Yes, annual billing saves you 20% compared to monthly pricing. Contact sales for enterprise annual agreements.' },
-  { q: 'What is GEO Intelligence?', a: 'GEO (Generative Engine Optimization) is our proprietary system that optimizes content for AI-powered search engines, improving your brand visibility in AI responses.' },
-];
+const stagger = {
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+
+function AnimatedDiv({ children, style }: any) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={inView ? 'visible' : 'hidden'}
+      variants={stagger}
+      style={style}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export default function PricingPage() {
+  const { t } = useTranslation();
+
+  const plans = [
+    {
+      nameKey: 'pricingPage.seed',
+      priceKey: 'pricingPage.seedPrice',
+      descKey: 'pricingPage.seedDesc',
+      recommended: false,
+      features: [
+        '1 Tenant',
+        'GEO B\u00e1sico',
+        '10,000 AI tokens/mo',
+        '1 user',
+        'Basic AI (Claude Haiku)',
+        '5 content pieces/mo',
+        'Email support',
+      ],
+    },
+    {
+      nameKey: 'pricingPage.grow',
+      priceKey: 'pricingPage.growPrice',
+      descKey: 'pricingPage.growDesc',
+      recommended: true,
+      features: [
+        '10 Tenants',
+        'Content Factory',
+        '50,000 AI tokens/mo',
+        '5 users',
+        'Advanced AI (Claude Sonnet)',
+        '50 content pieces/mo',
+        'Priority support',
+        '5 brand profiles',
+        'Social scheduler',
+      ],
+    },
+    {
+      nameKey: 'pricingPage.scale',
+      priceKey: 'pricingPage.scalePrice',
+      descKey: 'pricingPage.scaleDesc',
+      recommended: false,
+      features: [
+        '50 Tenants',
+        'AgentOps',
+        '200,000 AI tokens/mo',
+        '20 users',
+        'Full AI (Claude + Gemini + Granite)',
+        'Unlimited content',
+        'GEO Intelligence',
+        '20 brand profiles',
+        'Advanced analytics',
+        'API access',
+      ],
+    },
+    {
+      nameKey: 'pricingPage.enterprise',
+      priceKey: 'pricingPage.enterprisePrice',
+      descKey: 'pricingPage.enterpriseDesc',
+      recommended: false,
+      features: [
+        'RLS Auth',
+        'Qiskit Integration',
+        'Unlimited tokens',
+        'Unlimited users',
+        'All AI models + Helian Quantum',
+        'Unlimited everything',
+        'Dedicated support',
+        'Custom integrations',
+        'SLA guarantee',
+        'On-premise option',
+      ],
+    },
+  ];
+
+  const faqs = [
+    { q: 'Can I change plans at any time?', a: 'Yes, you can upgrade or downgrade your plan at any time. Changes take effect at the start of your next billing cycle.' },
+    { q: 'What happens when I run out of tokens?', a: 'You can purchase additional token packs or upgrade your plan. Your content will still be accessible, but AI generation will pause until tokens are replenished.' },
+    { q: 'Do you offer a free trial?', a: 'Yes! All plans include a 14-day free trial with full access to features. No credit card required to start.' },
+    { q: 'What AI models are included?', a: 'Seed uses Claude Haiku for fast, lightweight tasks. Grow includes Claude Sonnet for advanced reasoning. Scale and Enterprise include Claude Opus, Google Gemini, and IBM Granite for maximum capability.' },
+    { q: 'Is there a discount for annual billing?', a: 'Yes, annual billing saves you 20% compared to monthly pricing. Contact sales for enterprise annual agreements.' },
+    { q: 'What is GEO Intelligence?', a: 'GEO (Generative Engine Optimization) is our proprietary system that optimizes content for AI-powered search engines, improving your brand visibility in AI responses.' },
+  ];
+
   return (
     <div>
       {/* Hero */}
-      <div style={{ padding: '4rem 2rem', textAlign: 'center', backgroundColor: 'var(--cds-background)' }}>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 300, margin: '0 0 0.5rem' }}>Plans & Pricing</h1>
-        <p style={{ color: 'var(--cds-text-secondary)', fontSize: '1.125rem', maxWidth: '500px', margin: '0 auto' }}>
-          Choose the plan that fits your content operations. All plans include a 14-day free trial.
-        </p>
-      </div>
+      <section
+        style={{
+          padding: 'clamp(3rem, 6vw, 5rem) 2rem 3rem',
+          textAlign: 'center',
+          background: '#161616',
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1
+            style={{
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+              fontWeight: 600,
+              color: '#f4f4f4',
+              margin: '0 0 1rem',
+              letterSpacing: '-0.01em',
+            }}
+          >
+            {t('pricingPage.headline')}
+          </h1>
+          <p
+            style={{
+              color: '#c6c6c6',
+              fontSize: '1.125rem',
+              maxWidth: 560,
+              margin: '0 auto',
+              lineHeight: 1.5,
+            }}
+          >
+            {t('pricingPage.sub')}
+          </p>
+        </motion.div>
+      </section>
 
       {/* Pricing Cards */}
-      <div style={{ padding: '0 2rem 4rem' }}>
-        <Grid>
-          {plans.map((plan) => (
-            <Column key={plan.name} lg={4} md={4} sm={4}>
-              <Tile style={{
-                marginBottom: '1rem',
-                border: plan.popular ? '2px solid #0f62fe' : '1px solid var(--cds-border-subtle-01)',
-                position: 'relative',
-                padding: '2rem 1.5rem',
-              }}>
-                {plan.popular && (
-                  <Tag type="blue" size="sm" style={{ position: 'absolute', top: '-0.75rem', right: '1rem' }}>
-                    Most Popular
-                  </Tag>
-                )}
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>{plan.name}</h3>
-                <div style={{ marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '2.5rem', fontWeight: 600 }}>{plan.price}</span>
-                  <span style={{ color: 'var(--cds-text-secondary)' }}>{plan.period}</span>
-                </div>
-                <p style={{ fontSize: '0.875rem', color: 'var(--cds-text-secondary)', marginBottom: '1.5rem', minHeight: '2.5rem' }}>
-                  {plan.description}
-                </p>
-                <Button
-                  style={{ width: '100%', maxWidth: 'none', marginBottom: '1.5rem' }}
-                  kind={plan.popular ? 'primary' : 'tertiary'}
-                  renderIcon={ArrowRight}
-                >
-                  {plan.name === 'Enterprise' ? 'Contact Sales' : 'Start Free Trial'}
-                </Button>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                  {plan.features.map((feature) => (
-                    <li key={feature} style={{
-                      display: 'flex', alignItems: 'flex-start', gap: '0.5rem',
-                      padding: '0.375rem 0', fontSize: '0.875rem',
-                    }}>
-                      <Checkmark size={16} style={{ color: 'var(--cds-support-success)', flexShrink: 0, marginTop: '2px' }} />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Tile>
-            </Column>
-          ))}
-        </Grid>
-      </div>
+      <section style={{ padding: '3rem 2rem 4rem', background: '#f4f4f4' }}>
+        <AnimatedDiv>
+          <Grid fullWidth style={{ maxWidth: 1584, margin: '0 auto' }}>
+            {plans.map((plan, idx) => (
+              <Column key={plan.nameKey} lg={4} md={4} sm={4}>
+                <motion.div variants={fadeUp} custom={idx}>
+                  <Tile
+                    style={{
+                      marginBottom: '1rem',
+                      border: plan.recommended
+                        ? '2px solid #0f62fe'
+                        : '1px solid var(--cds-border-subtle-01, #e0e0e0)',
+                      position: 'relative',
+                      padding: '2rem 1.5rem',
+                      background: '#fff',
+                      minHeight: 520,
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    {plan.recommended && (
+                      <Tag
+                        type="blue"
+                        size="sm"
+                        style={{
+                          position: 'absolute',
+                          top: '-0.75rem',
+                          right: '1rem',
+                        }}
+                      >
+                        {t('pricingPage.recommended')}
+                      </Tag>
+                    )}
+                    <h3
+                      style={{
+                        fontSize: '1.25rem',
+                        fontWeight: 600,
+                        marginBottom: '0.5rem',
+                        color: '#161616',
+                      }}
+                    >
+                      {t(plan.nameKey)}
+                    </h3>
+                    <div style={{ marginBottom: '1rem' }}>
+                      <span style={{ fontSize: '2.5rem', fontWeight: 600, color: '#161616' }}>
+                        {t(plan.priceKey)}
+                      </span>
+                      {plan.priceKey !== 'pricingPage.enterprisePrice' && (
+                        <span style={{ color: '#525252' }}>{t('pricingPage.perMonth')}</span>
+                      )}
+                    </div>
+                    <p
+                      style={{
+                        fontSize: '0.875rem',
+                        color: '#525252',
+                        marginBottom: '1.5rem',
+                        minHeight: '2.5rem',
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {t(plan.descKey)}
+                    </p>
+                    <Button
+                      style={{
+                        width: '100%',
+                        maxWidth: 'none',
+                        marginBottom: '1.5rem',
+                      }}
+                      kind={plan.recommended ? 'primary' : 'tertiary'}
+                      renderIcon={ArrowRight}
+                    >
+                      {plan.nameKey === 'pricingPage.enterprise'
+                        ? t('pricingPage.contactSales')
+                        : t('pricingPage.startTrial')}
+                    </Button>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                      {plan.features.map((feature) => (
+                        <li
+                          key={feature}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '0.5rem',
+                            padding: '0.375rem 0',
+                            fontSize: '0.875rem',
+                          }}
+                        >
+                          <Checkmark
+                            size={16}
+                            style={{
+                              color: '#198038',
+                              flexShrink: 0,
+                              marginTop: '2px',
+                            }}
+                          />
+                          <span style={{ color: '#161616' }}>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </Tile>
+                </motion.div>
+              </Column>
+            ))}
+          </Grid>
+        </AnimatedDiv>
+      </section>
 
       {/* FAQ */}
-      <div style={{ padding: '4rem 2rem', backgroundColor: 'var(--cds-layer-01)' }}>
-        <Grid>
+      <section
+        style={{ padding: '4rem 2rem', background: 'var(--cds-layer-01, #f4f4f4)' }}
+      >
+        <Grid fullWidth style={{ maxWidth: 1584, margin: '0 auto' }}>
           <Column lg={16} md={8} sm={4}>
-            <h2 style={{ fontSize: '2rem', fontWeight: 300, marginBottom: '2rem' }}>Frequently Asked Questions</h2>
+            <h2
+              style={{
+                fontSize: '2rem',
+                fontWeight: 300,
+                marginBottom: '2rem',
+                color: '#161616',
+              }}
+            >
+              {t('pricingPage.faqTitle')}
+            </h2>
             <Accordion>
               {faqs.map((faq, i) => (
                 <AccordionItem key={i} title={faq.q}>
@@ -129,14 +299,27 @@ export default function PricingPage() {
             </Accordion>
           </Column>
         </Grid>
-      </div>
+      </section>
 
       {/* CTA */}
-      <div style={{ padding: '4rem 2rem', textAlign: 'center', backgroundColor: '#0f62fe', color: '#fff' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: 300, marginBottom: '1rem' }}>Ready to Get Started?</h2>
-        <p style={{ color: '#d0e2ff', marginBottom: '2rem' }}>Start your 14-day free trial today. No credit card required.</p>
-        <Button kind="secondary" size="lg" renderIcon={ArrowRight}>Start Free Trial</Button>
-      </div>
+      <section
+        style={{
+          padding: 'clamp(3rem, 6vw, 5rem) 2rem',
+          textAlign: 'center',
+          background: 'linear-gradient(135deg, #0f62fe 0%, #a56eff 100%)',
+          color: '#fff',
+        }}
+      >
+        <h2 style={{ fontSize: '2rem', fontWeight: 300, marginBottom: '1rem' }}>
+          {t('pricingPage.ctaTitle')}
+        </h2>
+        <p style={{ color: '#d0e2ff', marginBottom: '2rem' }}>
+          {t('pricingPage.ctaDesc')}
+        </p>
+        <Button kind="secondary" size="lg" renderIcon={ArrowRight}>
+          {t('pricingPage.startTrial')}
+        </Button>
+      </section>
     </div>
   );
 }

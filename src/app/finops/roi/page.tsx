@@ -21,6 +21,40 @@ import {
 } from '@carbon/react';
 import { Analytics, Growth, UserMultiple, Currency } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
+import { LineChart } from '@carbon/charts-react';
+import '@carbon/charts-react/styles.css';
+
+const roiTrendData = [
+  { group: 'Platform ROI', date: 'Sep 2025', value: 2.8 },
+  { group: 'Platform ROI', date: 'Oct 2025', value: 3.1 },
+  { group: 'Platform ROI', date: 'Nov 2025', value: 3.4 },
+  { group: 'Platform ROI', date: 'Dec 2025', value: 3.6 },
+  { group: 'Platform ROI', date: 'Jan 2026', value: 3.9 },
+  { group: 'Platform ROI', date: 'Feb 2026', value: 4.2 },
+  { group: 'Content ROI', date: 'Sep 2025', value: 4.0 },
+  { group: 'Content ROI', date: 'Oct 2025', value: 4.5 },
+  { group: 'Content ROI', date: 'Nov 2025', value: 4.9 },
+  { group: 'Content ROI', date: 'Dec 2025', value: 5.3 },
+  { group: 'Content ROI', date: 'Jan 2026', value: 5.7 },
+  { group: 'Content ROI', date: 'Feb 2026', value: 6.1 },
+  { group: 'AI Investment ROI', date: 'Sep 2025', value: 2.2 },
+  { group: 'AI Investment ROI', date: 'Oct 2025', value: 2.5 },
+  { group: 'AI Investment ROI', date: 'Nov 2025', value: 2.9 },
+  { group: 'AI Investment ROI', date: 'Dec 2025', value: 3.2 },
+  { group: 'AI Investment ROI', date: 'Jan 2026', value: 3.5 },
+  { group: 'AI Investment ROI', date: 'Feb 2026', value: 3.8 },
+];
+const roiTrendOptions = {
+  title: 'ROI Trend (Last 6 Months)',
+  resizable: true,
+  height: '350px',
+  theme: 'g10' as const,
+  axes: {
+    bottom: { mapsTo: 'date', scaleType: 'labels' as any },
+    left: { mapsTo: 'value', title: 'ROI Multiple (x)' },
+  },
+  curve: 'curveMonotoneX' as const,
+};
 
 const kpiData = [
   { label: 'Platform ROI', value: '4.2x', icon: Analytics },
@@ -101,6 +135,13 @@ export default function ROITrackerPage() {
           </Tile>
         </Column>
       ))}
+
+      {/* ROI Trend Chart */}
+      <Column lg={16} md={8} sm={4} style={{ marginBottom: '1rem' }}>
+        <Tile>
+          <LineChart data={roiTrendData} options={roiTrendOptions} />
+        </Tile>
+      </Column>
 
       {/* Time Period Filter */}
       <Column lg={4} md={4} sm={4} style={{ marginTop: '1rem', marginBottom: '1rem' }}>
