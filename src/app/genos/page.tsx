@@ -1,10 +1,10 @@
 import PublicShell from '@/components/layout/PublicShell';
-import HomeContent from './HomeContent';
+import GenosContent from './Content';
 
-export default function HomePage() {
+export default function GenosPage() {
   return (
     <PublicShell>
-      <HomeContent />
+      <GenosContent />
     </PublicShell>
   );
 }

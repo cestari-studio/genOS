@@ -1,10 +1,10 @@
 import PublicShell from '@/components/layout/PublicShell';
-import HomeContent from './HomeContent';
+import AiAgentsContent from './Content';
 
-export default function HomePage() {
+export default function AiAgentsPage() {
   return (
     <PublicShell>
-      <HomeContent />
+      <AiAgentsContent />
     </PublicShell>
   );
 }

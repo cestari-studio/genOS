@@ -1,10 +1,10 @@
 import PublicShell from '@/components/layout/PublicShell';
-import HomeContent from './HomeContent';
+import MarketingContent from './Content';
 
-export default function HomePage() {
+export default function MarketingPage() {
   return (
     <PublicShell>
-      <HomeContent />
+      <MarketingContent />
     </PublicShell>
   );
 }

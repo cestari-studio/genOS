@@ -1,10 +1,10 @@
 import PublicShell from '@/components/layout/PublicShell';
-import HomeContent from './HomeContent';
+import HelianContent from './Content';
 
-export default function HomePage() {
+export default function HelianPage() {
   return (
     <PublicShell>
-      <HomeContent />
+      <HelianContent />
     </PublicShell>
   );
 }

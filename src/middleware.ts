@@ -82,9 +82,14 @@ export async function middleware(request: NextRequest) {
   }
 
   // Page routes: existing redirect behavior
-  const publicRoutes = ['/login', '/forgot-password', '/reset-password'];
+  const publicRoutes = [
+    '/', '/login', '/forgot-password', '/reset-password',
+    '/pricing', '/marketing', '/ai-agents', '/content-factory',
+    '/ecommerce', '/genos', '/helian', '/social-media', '/websites',
+    '/solutions', '/terms', '/privacy',
+  ];
   const isPublicRoute = publicRoutes.some(route =>
-    pathname.startsWith(route)
+    pathname === route || pathname.startsWith(route + '/')
   );
 
   if (!user && !isPublicRoute) {
