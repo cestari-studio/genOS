@@ -1,0 +1,279 @@
+'use client';
+
+import React from 'react';
+import {
+  Grid,
+  Column,
+  Tile,
+  Tag,
+  Button,
+  ProgressBar,
+  Accordion,
+  AccordionItem,
+} from '@carbon/react';
+import { Checkmark, WatsonHealthAiResults } from '@carbon/icons-react';
+import { useTranslation } from '@/lib/i18n/context';
+
+interface Suggestion {
+  id: string;
+  category: string;
+  title: string;
+  description: string;
+  severity: 'high' | 'medium' | 'low';
+}
+
+const suggestions: Suggestion[] = [
+  {
+    id: '1',
+    category: 'title',
+    title: 'Headline could be more engaging',
+    description:
+      'Consider using a question or a number-based headline to increase click-through rate. For example: "5 Reasons Our Summer Collection Will Transform Your Wardrobe" instead of "Summer Collection Now Available".',
+    severity: 'medium',
+  },
+  {
+    id: '2',
+    category: 'grammar',
+    title: 'Passive voice detected in paragraph 3',
+    description:
+      'The sentence "The products were designed by our team" uses passive voice. Rewrite as "Our team designed the products" for stronger, more direct communication.',
+    severity: 'low',
+  },
+  {
+    id: '3',
+    category: 'grammar',
+    title: 'Run-on sentence in introduction',
+    description:
+      'The opening sentence is 42 words long. Break it into two sentences for better readability. Split after "...this season" and start a new sentence with "We focused...".',
+    severity: 'medium',
+  },
+  {
+    id: '4',
+    category: 'tone',
+    title: 'Tone shifts from professional to casual',
+    description:
+      'The first two paragraphs maintain a professional tone, but paragraph 4 switches to a very casual voice ("super excited", "can\'t wait"). Maintain consistency by using "enthusiastic" and "eager" instead.',
+    severity: 'high',
+  },
+  {
+    id: '5',
+    category: 'tone',
+    title: 'Consider adding empathy-driven language',
+    description:
+      'The content focuses on product features but lacks customer-centric language. Add phrases like "we understand your needs" or "designed with you in mind" to build emotional connection.',
+    severity: 'low',
+  },
+  {
+    id: '6',
+    category: 'keywords',
+    title: 'Missing high-value SEO keywords',
+    description:
+      'The following keywords are missing from your content but are trending in your industry: "sustainable fashion", "eco-friendly", "limited edition". Include these naturally within the body copy.',
+    severity: 'high',
+  },
+  {
+    id: '7',
+    category: 'keywords',
+    title: 'Keyword density too high for "collection"',
+    description:
+      'The word "collection" appears 12 times in 500 words (2.4% density). Reduce to under 1.5% by using synonyms like "range", "lineup", or "assortment".',
+    severity: 'medium',
+  },
+];
+
+const severityTagType: Record<string, 'red' | 'blue' | 'gray'> = {
+  high: 'red',
+  medium: 'blue',
+  low: 'gray',
+};
+
+export default function AIFeedbackPage() {
+  const { t } = useTranslation();
+
+  const readabilityScore = 72;
+  const seoScore = 58;
+  const brandAlignmentScore = 85;
+  const sentiment = 'positive';
+
+  const sentimentTagType: Record<string, 'green' | 'gray' | 'red'> = {
+    positive: 'green',
+    neutral: 'gray',
+    negative: 'red',
+  };
+
+  const groupedSuggestions: Record<string, Suggestion[]> = {
+    title: suggestions.filter((s) => s.category === 'title'),
+    grammar: suggestions.filter((s) => s.category === 'grammar'),
+    tone: suggestions.filter((s) => s.category === 'tone'),
+    keywords: suggestions.filter((s) => s.category === 'keywords'),
+  };
+
+  return (
+    <div style={{ padding: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div>
+          <h1 style={{ marginBottom: '0.25rem' }}>
+            {t('AI Content Feedback')}
+          </h1>
+          <p style={{ color: '#525252' }}>
+            {t('AI-powered analysis and suggestions to improve your content.')}
+          </p>
+        </div>
+        <Button kind="primary" renderIcon={Checkmark} size="md">
+          {t('Apply All Suggestions')}
+        </Button>
+      </div>
+
+      <Grid narrow>
+        {/* Scores */}
+        <Column sm={4} md={8} lg={8}>
+          <Tile style={{ padding: '1.5rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+              <WatsonHealthAiResults size={20} />
+              <h3 style={{ fontSize: '0.875rem', fontWeight: 600 }}>
+                {t('Content Analysis Scores')}
+              </h3>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ fontSize: '0.875rem' }}>{t('Readability')}</span>
+                <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>{readabilityScore}%</span>
+              </div>
+              <ProgressBar
+                label={t('Readability score')}
+                value={readabilityScore}
+                max={100}
+                hideLabel
+              />
+              <p style={{ fontSize: '0.75rem', color: '#525252', marginTop: '0.25rem' }}>
+                {t('Flesch-Kincaid grade level: 8.2 — suitable for general audience')}
+              </p>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ fontSize: '0.875rem' }}>{t('SEO Score')}</span>
+                <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>{seoScore}%</span>
+              </div>
+              <ProgressBar
+                label={t('SEO score')}
+                value={seoScore}
+                max={100}
+                hideLabel
+              />
+              <p style={{ fontSize: '0.75rem', color: '#525252', marginTop: '0.25rem' }}>
+                {t('Missing 3 target keywords; meta description needs optimization')}
+              </p>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ fontSize: '0.875rem' }}>{t('Brand Alignment')}</span>
+                <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>{brandAlignmentScore}%</span>
+              </div>
+              <ProgressBar
+                label={t('Brand alignment score')}
+                value={brandAlignmentScore}
+                max={100}
+                hideLabel
+              />
+              <p style={{ fontSize: '0.75rem', color: '#525252', marginTop: '0.25rem' }}>
+                {t('Voice and terminology are mostly consistent with brand guidelines')}
+              </p>
+            </div>
+
+            <div>
+              <span style={{ fontSize: '0.875rem', marginRight: '0.75rem' }}>
+                {t('Sentiment')}
+              </span>
+              <Tag type={sentimentTagType[sentiment]} size="sm">
+                {sentiment}
+              </Tag>
+            </div>
+          </Tile>
+        </Column>
+
+        {/* Summary Stats */}
+        <Column sm={4} md={8} lg={8}>
+          <Tile style={{ padding: '1.5rem', marginBottom: '1rem' }}>
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '1rem' }}>
+              {t('Suggestions Summary')}
+            </h3>
+            <Grid narrow>
+              <Column sm={2} md={2} lg={4}>
+                <div style={{ textAlign: 'center', padding: '1rem' }}>
+                  <p style={{ fontSize: '2rem', fontWeight: 700, color: '#da1e28' }}>2</p>
+                  <p style={{ fontSize: '0.75rem', color: '#525252' }}>{t('High Priority')}</p>
+                </div>
+              </Column>
+              <Column sm={2} md={2} lg={4}>
+                <div style={{ textAlign: 'center', padding: '1rem' }}>
+                  <p style={{ fontSize: '2rem', fontWeight: 700, color: '#0f62fe' }}>3</p>
+                  <p style={{ fontSize: '0.75rem', color: '#525252' }}>{t('Medium Priority')}</p>
+                </div>
+              </Column>
+              <Column sm={2} md={2} lg={4}>
+                <div style={{ textAlign: 'center', padding: '1rem' }}>
+                  <p style={{ fontSize: '2rem', fontWeight: 700, color: '#525252' }}>2</p>
+                  <p style={{ fontSize: '0.75rem', color: '#525252' }}>{t('Low Priority')}</p>
+                </div>
+              </Column>
+              <Column sm={2} md={2} lg={4}>
+                <div style={{ textAlign: 'center', padding: '1rem' }}>
+                  <p style={{ fontSize: '2rem', fontWeight: 700, color: '#161616' }}>7</p>
+                  <p style={{ fontSize: '0.75rem', color: '#525252' }}>{t('Total Suggestions')}</p>
+                </div>
+              </Column>
+            </Grid>
+          </Tile>
+        </Column>
+
+        {/* Detailed Suggestions */}
+        <Column sm={4} md={8} lg={16}>
+          <Tile style={{ padding: '1.5rem' }}>
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '1rem' }}>
+              {t('Detailed Suggestions')}
+            </h3>
+            <Accordion>
+              {Object.entries(groupedSuggestions).map(([category, items]) => (
+                <AccordionItem
+                  key={category}
+                  title={`${category.charAt(0).toUpperCase() + category.slice(1)} (${items.length} ${items.length === 1 ? 'suggestion' : 'suggestions'})`}
+                >
+                  {items.map((item) => (
+                    <div
+                      key={item.id}
+                      style={{
+                        padding: '1rem',
+                        marginBottom: '0.75rem',
+                        borderLeft: `3px solid ${item.severity === 'high' ? '#da1e28' : item.severity === 'medium' ? '#0f62fe' : '#a8a8a8'}`,
+                        backgroundColor: '#f4f4f4',
+                        borderRadius: '0 4px 4px 0',
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                        <h5 style={{ fontSize: '0.875rem', fontWeight: 600 }}>
+                          {item.title}
+                        </h5>
+                        <Tag type={severityTagType[item.severity]} size="sm">
+                          {item.severity}
+                        </Tag>
+                      </div>
+                      <p style={{ fontSize: '0.875rem', color: '#525252', marginBottom: '0.75rem' }}>
+                        {item.description}
+                      </p>
+                      <Button kind="ghost" size="sm" renderIcon={Checkmark}>
+                        {t('Apply Suggestion')}
+                      </Button>
+                    </div>
+                  ))}
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </Tile>
+        </Column>
+      </Grid>
+    </div>
+  );
+}
