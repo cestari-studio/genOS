@@ -68,7 +68,7 @@ export default function CarouselEditorPage() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <h1 style={{ marginBottom: '0.5rem' }}>
         {t('Content Carousel Editor')}
       </h1>

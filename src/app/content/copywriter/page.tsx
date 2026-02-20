@@ -190,7 +190,7 @@ export default function AICopywriterPage() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <h1 style={{ marginBottom: '0.5rem' }}>
         {t('AI Copywriter Hub')}
       </h1>

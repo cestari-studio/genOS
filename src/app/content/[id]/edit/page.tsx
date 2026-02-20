@@ -145,7 +145,7 @@ Analise quando seu público está mais ativo e programe seus posts.`,
         />
       )}
 
-      <Grid>
+      <Grid fullWidth>
         {/* Editor Principal */}
         <Column lg={10} md={8} sm={4}>
           <Tile style={{ marginBottom: '1rem' }}>

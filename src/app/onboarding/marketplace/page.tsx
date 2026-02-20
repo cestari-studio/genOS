@@ -163,7 +163,7 @@ export default function MarketplacePage() {
     .reduce((sum, a) => sum + parseInt(a.price.replace('$', ''), 10), 0);
 
   return (
-    <Grid fullWidth style={{ padding: '2rem 0' }}>
+    <Grid fullWidth>
       <Column lg={16} md={8} sm={4}>
         <h1 style={{ fontSize: '2rem', fontWeight: 600, marginBottom: '0.5rem' }}>
           Addon Marketplace

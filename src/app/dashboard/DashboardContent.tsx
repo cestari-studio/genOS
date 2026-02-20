@@ -79,7 +79,7 @@ export default function DashboardContent({ data }: { data: DashboardData }) {
         />
       </div>
 
-      <Grid>
+      <Grid fullWidth>
         <Column lg={8} md={4} sm={4}>
           <div className="content-card">
             <div className="card-header">

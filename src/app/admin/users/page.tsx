@@ -90,7 +90,7 @@ export default function AdminUsersPage() {
   }));
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <UserMultiple size={20} />

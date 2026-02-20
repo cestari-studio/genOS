@@ -112,7 +112,7 @@ export default function AnalyticsContent() {
         <p>{t('analytics.subtitle')}</p>
       </div>
 
-      <Grid>
+      <Grid fullWidth>
         <Column lg={4} md={4} sm={4}>
           <Tile className="stat-card">
             <div className="stat-card__header" style={{ color: 'var(--cds-link-primary, #0f62fe)' }}>
@@ -160,7 +160,7 @@ export default function AnalyticsContent() {
         </Column>
       </Grid>
 
-      <Grid style={{ marginTop: '2rem' }}>
+      <Grid fullWidth style={{ marginTop: '2rem' }}>
         <Column lg={8} md={4} sm={4}>
           <Tile>
             <DonutChart

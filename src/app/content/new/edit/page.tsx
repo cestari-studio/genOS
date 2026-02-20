@@ -156,7 +156,7 @@ export default function NewContentPage() {
         />
       )}
 
-      <Grid>
+      <Grid fullWidth>
         <Column lg={10} md={8} sm={4}>
           <Tile style={{ marginBottom: '1rem' }}>
             <TextInput

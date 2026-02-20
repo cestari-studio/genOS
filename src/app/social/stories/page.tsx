@@ -47,7 +47,7 @@ export default function StoriesPage() {
   const { t } = useTranslation();
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <VideoAdd size={20} />
@@ -68,7 +68,7 @@ export default function StoriesPage() {
               <h3>Story Templates</h3>
               <Button renderIcon={Add} size="sm">Create Blank</Button>
             </div>
-            <Grid>
+            <Grid fullWidth>
               {templates.map((tmpl) => (
                 <Column key={tmpl.id} lg={5} md={4} sm={4}>
                   <ClickableTile href="#" style={{ marginBottom: '1rem', padding: 0, overflow: 'hidden' }}>
@@ -91,7 +91,7 @@ export default function StoriesPage() {
             </Grid>
           </TabPanel>
           <TabPanel>
-            <Grid style={{ marginTop: '1rem' }}>
+            <Grid fullWidth style={{ marginTop: '1rem' }}>
               {drafts.map((draft) => (
                 <Column key={draft.id} lg={8} md={4} sm={4}>
                   <Tile style={{ marginBottom: '1rem' }}>
@@ -114,7 +114,7 @@ export default function StoriesPage() {
             </Grid>
           </TabPanel>
           <TabPanel>
-            <Grid style={{ marginTop: '1rem' }}>
+            <Grid fullWidth style={{ marginTop: '1rem' }}>
               {published.map((item) => (
                 <Column key={item.id} lg={8} md={4} sm={4}>
                   <Tile style={{ marginBottom: '1rem' }}>

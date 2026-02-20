@@ -50,7 +50,7 @@ export default function SocialReportsPage() {
   const rows = metrics.map(m => ({ ...m }));
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Report size={20} />

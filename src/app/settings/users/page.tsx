@@ -134,7 +134,7 @@ export default function UsersPage() {
       )}
 
       {/* Métricas */}
-      <Grid style={{ marginBottom: '1.5rem' }}>
+      <Grid fullWidth style={{ marginBottom: '1.5rem' }}>
         <Column lg={4} md={4} sm={4}>
           <Tile>
             <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>{t('users.totalUsers')}</h4>

@@ -90,7 +90,7 @@ export default function KnowledgePage() {
   }));
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <Section level={1}>
         <Heading style={{ marginBottom: '0.5rem' }}>
           {t('Knowledge Base')}
@@ -199,7 +199,7 @@ export default function KnowledgePage() {
           {/* Upload Tab */}
           <TabPanel>
             <div style={{ marginTop: '1rem' }}>
-              <Grid>
+              <Grid fullWidth>
                 <Column lg={8} md={6} sm={4}>
                   <Tile>
                     <div

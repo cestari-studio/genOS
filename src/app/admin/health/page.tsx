@@ -74,7 +74,7 @@ export default function HealthPage() {
   }));
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       {/* Page Header */}
       <div className="page-header" style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>

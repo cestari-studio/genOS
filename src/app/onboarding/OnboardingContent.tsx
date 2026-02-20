@@ -151,7 +151,7 @@ export default function OnboardingContent() {
         <Tile style={{ padding: '2rem' }}>
           {/* Step 0: Welcome */}
           {currentStep === 0 && (
-            <Grid>
+            <Grid fullWidth>
               <Column lg={16} md={8} sm={4}>
                 <h2 style={{ marginBottom: '1.5rem' }}>{t('onboarding.step0')}</h2>
               </Column>
@@ -200,7 +200,7 @@ export default function OnboardingContent() {
 
           {/* Step 1: Brand Setup */}
           {currentStep === 1 && (
-            <Grid>
+            <Grid fullWidth>
               <Column lg={16} md={8} sm={4}>
                 <h2 style={{ marginBottom: '1.5rem' }}>{t('onboarding.step1')}</h2>
               </Column>
@@ -237,7 +237,7 @@ export default function OnboardingContent() {
 
           {/* Step 2: Team */}
           {currentStep === 2 && (
-            <Grid>
+            <Grid fullWidth>
               <Column lg={16} md={8} sm={4}>
                 <h2 style={{ marginBottom: '1.5rem' }}>{t('onboarding.step2')}</h2>
               </Column>
@@ -274,7 +274,7 @@ export default function OnboardingContent() {
 
           {/* Step 3: First Client (optional) */}
           {currentStep === 3 && (
-            <Grid>
+            <Grid fullWidth>
               <Column lg={16} md={8} sm={4}>
                 <h2 style={{ marginBottom: '0.5rem' }}>{t('onboarding.step3')}</h2>
                 <div style={{ marginBottom: '1.5rem' }}>

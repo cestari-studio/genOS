@@ -96,7 +96,7 @@ export default function ClientPortalPage() {
   const approvedCount = content.filter(c => c.status === 'approved').length;
 
   return (
-    <Grid>
+    <Grid fullWidth>
       {/* Breadcrumb */}
       <Column lg={16} md={8} sm={4}>
         <Breadcrumb noTrailingSlash>

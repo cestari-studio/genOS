@@ -197,7 +197,7 @@ export default function BriefingDetailPage() {
         />
       )}
 
-      <Grid>
+      <Grid fullWidth>
         <Column lg={12} md={8} sm={4}>
           <Tabs>
             <TabList aria-label="Seções do Briefing">
@@ -218,7 +218,7 @@ export default function BriefingDetailPage() {
                   <h3 style={{ marginBottom: '1rem' }}>Público-Alvo</h3>
                   <p style={{ color: 'var(--cds-text-secondary)', lineHeight: 1.6 }}>{briefingData.sections.overview.targetAudience}</p>
                 </Tile>
-                <Grid style={{ marginTop: '1rem' }}>
+                <Grid fullWidth style={{ marginTop: '1rem' }}>
                   <Column lg={6} md={4} sm={4}>
                     <Tile>
                       <h3 style={{ marginBottom: '1rem' }}>Concorrentes</h3>
@@ -252,7 +252,7 @@ export default function BriefingDetailPage() {
                     ))}
                   </div>
                 </Tile>
-                <Grid style={{ marginTop: '1rem' }}>
+                <Grid fullWidth style={{ marginTop: '1rem' }}>
                   <Column lg={6} md={4} sm={4}>
                     <Tile>
                       <h3 style={{ marginBottom: '1rem' }}>Cores</h3>
@@ -298,7 +298,7 @@ export default function BriefingDetailPage() {
 
               {/* Cronograma */}
               <TabPanel>
-                <Grid style={{ marginTop: '1rem' }}>
+                <Grid fullWidth style={{ marginTop: '1rem' }}>
                   <Column lg={6} md={4} sm={4}>
                     <Tile>
                       <h3 style={{ marginBottom: '1rem' }}>Período</h3>

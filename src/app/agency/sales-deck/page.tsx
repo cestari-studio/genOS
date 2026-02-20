@@ -72,7 +72,7 @@ export default function SalesDeckPage() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header">
         <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Report size={24} />

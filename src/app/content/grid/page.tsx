@@ -148,7 +148,7 @@ export default function ContentGridPage() {
   });
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <h1 style={{ marginBottom: '1.5rem' }}>
         {t('Content Matrix')}
       </h1>

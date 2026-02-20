@@ -172,7 +172,7 @@ export default function EditBriefingPage() {
       )}
 
       <Form onSubmit={handleSave}>
-        <Grid>
+        <Grid fullWidth>
           <Column lg={12} md={8} sm={4}>
             <Accordion>
               {/* Informações Básicas */}
@@ -185,7 +185,7 @@ export default function EditBriefingPage() {
                     onChange={(e) => setBasicInfo({ ...basicInfo, title: e.target.value })}
                     required
                   />
-                  <Grid>
+                  <Grid fullWidth>
                     <Column lg={6} md={4} sm={4}>
                       <Select
                         id="client"
@@ -343,7 +343,7 @@ export default function EditBriefingPage() {
               {/* Cronograma */}
               <AccordionItem title="Cronograma">
                 <div style={{ padding: '1rem 0' }}>
-                  <Grid style={{ marginBottom: '1.5rem' }}>
+                  <Grid fullWidth style={{ marginBottom: '1.5rem' }}>
                     <Column lg={6} md={4} sm={4}>
                       <TextInput
                         id="startDate"

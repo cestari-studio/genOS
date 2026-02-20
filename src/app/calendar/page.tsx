@@ -348,7 +348,7 @@ export default function CalendarPage() {
             <SelectItem value="deadline" text={t('calendar.deadline')} />
             <SelectItem value="milestone" text={t('calendar.milestone')} />
           </Select>
-          <Grid>
+          <Grid fullWidth>
             <Column lg={8} md={4} sm={4}>
               <TextInput
                 id="event-date"

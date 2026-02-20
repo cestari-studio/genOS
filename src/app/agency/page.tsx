@@ -61,7 +61,7 @@ export default function AgencyHomePage() {
   const [visibleActivities, setVisibleActivities] = useState(4);
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header">
         <h1>Agency Dashboard</h1>
         <p>Overview of your agency operations and performance</p>

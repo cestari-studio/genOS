@@ -125,7 +125,7 @@ export default function SemanticMapPage() {
   const { t } = useTranslation();
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <Section level={1}>
         <Heading style={{ marginBottom: '0.5rem' }}>
           {t('Semantic Topic Map')}

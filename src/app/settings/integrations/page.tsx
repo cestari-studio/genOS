@@ -216,7 +216,7 @@ export default function IntegrationsPage() {
               return (
                 <div key={category} style={{ marginBottom: '2rem' }}>
                   <h3 style={{ marginBottom: '1rem' }}>{label}</h3>
-                  <Grid>
+                  <Grid fullWidth>
                     {categoryIntegrations.map(renderIntegrationCard)}
                   </Grid>
                 </div>
@@ -275,7 +275,7 @@ export default function IntegrationsPage() {
           {/* API */}
           <TabPanel>
             <div style={{ marginTop: '1rem' }}>
-              <Grid>
+              <Grid fullWidth>
                 <Column lg={8} md={8} sm={4}>
                   <Tile>
                     <h3 style={{ marginBottom: '1rem' }}>{t('integrations.apiKeys')}</h3>

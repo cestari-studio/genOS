@@ -29,15 +29,119 @@ body {
   min-height: 100vh;
 }
 
-.main-content {
+.main-wrapper {
   flex: 1;
   margin-left: 256px;
   padding: 2rem;
+  min-width: 0; // prevent flex overflow
   transition: margin-left 150ms cubic-bezier(0.2, 0, 0.38, 0.9);
 }
 
-.main-content.collapsed {
+.main-wrapper.collapsed {
   margin-left: 48px;
+}
+
+// ── Carbon Responsive Breakpoints ────────────────────────
+// sm: 320–672px (4 cols) — mobile
+@media (max-width: 671px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .main-wrapper {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .main-wrapper.collapsed {
+    margin-left: 0;
+  }
+
+  // Hide fixed sidebar on mobile — Carbon SideNav handles its own overlay
+  .genos-sidebar.cds--side-nav {
+    transform: translateX(-100%);
+  }
+
+  .page-header {
+    margin-bottom: 1rem;
+
+    h1 {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+
+    .stat-value {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+    }
+  }
+
+  .content-card .card-header {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .content-card .card-body {
+    padding: 1rem;
+  }
+}
+
+// md: 672–1056px (8 cols) — tablet
+@media (min-width: 672px) and (max-width: 1055px) {
+  .main-wrapper {
+    margin-left: 48px; // collapsed sidebar width on tablet
+    padding: 1.5rem;
+  }
+
+  .page-header {
+    margin-bottom: 1.5rem;
+
+    h1 {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+// lg: 1056px+ (16 cols) — desktop (default styles above)
+
+// ── Responsive overrides for Carbon Charts ───────────────
+@media (max-width: 671px) {
+  // Force charts to respect container width on mobile
+  .cds--chart-holder {
+    min-width: 0 !important;
+  }
+
+  // Stack DataTable actions vertically on mobile
+  .cds--table-toolbar .cds--toolbar-content {
+    flex-wrap: wrap;
+  }
+
+  // Make tabs scrollable on mobile
+  .cds--tabs .cds--tabs--scrollable__nav {
+    overflow-x: auto;
+  }
+
+  // Tile grids — single column on mobile
+  .cds--tile {
+    margin-bottom: 0.5rem;
+  }
 }
 
 // ── Page Header (Carbon heading-04 + body-01) ──────────
@@ -291,7 +395,7 @@ main[style*="background-color: #161616"] {
 
 // ── Reduced motion (accessibility compliance) ───────────
 @media (prefers-reduced-motion: reduce) {
-  .main-content {
+  .main-wrapper {
     transition: none;
   }
 

@@ -210,7 +210,7 @@ export default function SystemLogsPage() {
   };
 
   return (
-    <Grid fullWidth style={{ padding: '2rem 0' }}>
+    <Grid fullWidth>
       <Column lg={16} md={8} sm={4}>
         <Breadcrumb style={{ marginBottom: '1rem' }}>
           <BreadcrumbItem href="/dashboard">{t('Dashboard')}</BreadcrumbItem>

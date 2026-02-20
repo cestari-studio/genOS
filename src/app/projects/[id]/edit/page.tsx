@@ -145,7 +145,7 @@ export default function EditProjectPage() {
       )}
 
       <Form onSubmit={handleSave}>
-        <Grid>
+        <Grid fullWidth>
           {/* Informações Básicas */}
           <Column lg={8} md={8} sm={4}>
             <Tile style={{ marginBottom: '1rem' }}>

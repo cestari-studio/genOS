@@ -52,7 +52,7 @@ export default function TrendsContent() {
         <p>{t('trends.subtitle')}</p>
       </div>
 
-      <Grid>
+      <Grid fullWidth>
         <Column lg={4} md={4} sm={4}>
           <Dropdown
             id="platform-selector"
@@ -75,7 +75,7 @@ export default function TrendsContent() {
           <Loading description={t('common.loading')} withOverlay={false} />
         </div>
       ) : (
-        <Grid style={{ marginTop: '1.5rem' }}>
+        <Grid fullWidth style={{ marginTop: '1.5rem' }}>
           <Column lg={16} md={8} sm={4}>
             <Tile>
               <RadarChart

@@ -146,7 +146,7 @@ export default function DocumentViewPage() {
         </div>
       </div>
 
-      <Grid>
+      <Grid fullWidth>
         {/* PDF Viewer */}
         <Column lg={showComments ? 12 : 16} md={8} sm={4}>
           <Tile style={{ padding: 0 }}>

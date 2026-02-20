@@ -197,7 +197,7 @@ export default function DNAConfiguratorContent() {
   );
 
   const renderStep1 = () => (
-    <Grid>
+    <Grid fullWidth>
       <Column lg={8} md={4} sm={4}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div>
@@ -290,7 +290,7 @@ export default function DNAConfiguratorContent() {
 
   const renderStep2 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <Grid>
+      <Grid fullWidth>
         <Column lg={8} md={4} sm={4}>
           <TextInput
             id="age-range"

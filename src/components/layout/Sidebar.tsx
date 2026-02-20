@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -48,9 +47,13 @@ import {
 } from '@carbon/icons-react';
 import { useTranslation } from '@/lib/i18n/context';
 
-export default function Sidebar() {
+interface SidebarProps {
+  collapsed: boolean;
+  onToggleCollapse: () => void;
+}
+
+export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
   const { t } = useTranslation();
 
   const isActive = (href: string) => {
@@ -237,7 +240,7 @@ export default function Sidebar() {
         )}
         <button
           className="collapse-btn"
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={onToggleCollapse}
           aria-label={collapsed ? t('sidebar.expand') : t('sidebar.collapse')}
         >
           {collapsed ? <ChevronRight /> : <ChevronLeft />}

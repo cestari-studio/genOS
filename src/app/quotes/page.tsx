@@ -208,7 +208,7 @@ export default function QuotesPage() {
       </div>
 
       {/* Métricas */}
-      <Grid style={{ marginBottom: '1.5rem' }}>
+      <Grid fullWidth style={{ marginBottom: '1.5rem' }}>
         <Column lg={4} md={4} sm={4}>
           <Tile>
             <h4 style={{ color: 'var(--cds-text-secondary)', marginBottom: '0.5rem' }}>{t('quotes.accepted')}</h4>
@@ -363,7 +363,7 @@ export default function QuotesPage() {
         secondaryButtonText={t('common.cancel')}
         size="lg"
       >
-        <Grid>
+        <Grid fullWidth>
           <Column lg={8} md={4} sm={4}>
             <TextInput
               id="quote-title"
@@ -461,7 +461,7 @@ export default function QuotesPage() {
           </div>
         </div>
 
-        <Grid style={{ marginTop: '1rem' }}>
+        <Grid fullWidth style={{ marginTop: '1rem' }}>
           <Column lg={8} md={4} sm={4}>
             <TextInput
               id="quote-valid"

@@ -100,7 +100,7 @@ export default function TenantsPage() {
   }));
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       {/* Page Header */}
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
         <div>

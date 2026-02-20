@@ -61,7 +61,7 @@ export default function PaymentPage() {
   };
 
   return (
-    <Grid fullWidth style={{ padding: '2rem 0' }}>
+    <Grid fullWidth>
       <Column lg={16} md={8} sm={4}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
           <Purchase size={24} />

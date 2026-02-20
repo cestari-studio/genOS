@@ -90,7 +90,7 @@ export default function ClientProfilePage() {
 
   if (loading) {
     return (
-      <Grid>
+      <Grid fullWidth>
         <Column lg={16} md={8} sm={4}>
           <SkeletonText heading width="30%" />
           <SkeletonPlaceholder style={{ height: '200px', marginTop: '1rem' }} />
@@ -101,7 +101,7 @@ export default function ClientProfilePage() {
 
   if (!client) {
     return (
-      <Grid>
+      <Grid fullWidth>
         <Column lg={16} md={8} sm={4}>
           <Tile>
             <p>Cliente não encontrado</p>
@@ -113,7 +113,7 @@ export default function ClientProfilePage() {
   }
 
   return (
-    <Grid>
+    <Grid fullWidth>
       {/* Breadcrumb */}
       <Column lg={16} md={8} sm={4}>
         <Breadcrumb noTrailingSlash>
@@ -160,7 +160,7 @@ export default function ClientProfilePage() {
           <TabPanels>
             {/* Informações */}
             <TabPanel>
-              <Grid style={{ marginTop: '1rem' }}>
+              <Grid fullWidth style={{ marginTop: '1rem' }}>
                 <Column lg={8} md={4} sm={4}>
                   <Tile>
                     <h4 style={{ marginBottom: '1rem' }}>Contato</h4>

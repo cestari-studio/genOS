@@ -84,7 +84,7 @@ export default function BrandsListContent() {
       </div>
 
       {/* Brand Cards */}
-      <Grid>
+      <Grid fullWidth>
         {mockBrands.map((brand) => (
           <Column key={brand.id} lg={8} md={4} sm={4} style={{ marginBottom: '1rem' }}>
             <ClickableTile

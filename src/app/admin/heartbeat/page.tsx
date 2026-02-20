@@ -263,7 +263,7 @@ export default function HeartbeatPage() {
   }));
 
   return (
-    <Grid fullWidth style={{ padding: '2rem 0' }}>
+    <Grid fullWidth>
       <Column lg={12} md={6} sm={4}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
           <Activity size={24} />

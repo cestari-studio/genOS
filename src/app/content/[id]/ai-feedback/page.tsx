@@ -111,7 +111,7 @@ export default function AIFeedbackPage() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <div>
           <h1 style={{ marginBottom: '0.25rem' }}>

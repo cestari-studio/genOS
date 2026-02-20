@@ -107,7 +107,7 @@ export default function ProjectDetailsPage() {
 
   if (loading) {
     return (
-      <Grid>
+      <Grid fullWidth>
         <Column lg={16} md={8} sm={4}>
           <SkeletonText heading width="30%" />
         </Column>
@@ -117,7 +117,7 @@ export default function ProjectDetailsPage() {
 
   if (!project) {
     return (
-      <Grid>
+      <Grid fullWidth>
         <Column lg={16} md={8} sm={4}>
           <Tile>
             <p>Projeto não encontrado</p>
@@ -132,7 +132,7 @@ export default function ProjectDetailsPage() {
   const progress = Math.round((completedTasks / tasks.length) * 100);
 
   return (
-    <Grid>
+    <Grid fullWidth>
       {/* Breadcrumb */}
       <Column lg={16} md={8} sm={4}>
         <Breadcrumb noTrailingSlash>
@@ -193,7 +193,7 @@ export default function ProjectDetailsPage() {
           <TabPanels>
             {/* Visão Geral */}
             <TabPanel>
-              <Grid style={{ marginTop: '1rem' }}>
+              <Grid fullWidth style={{ marginTop: '1rem' }}>
                 <Column lg={8} md={4} sm={4}>
                   <Tile>
                     <h4 style={{ marginBottom: '1rem' }}>Detalhes</h4>

@@ -163,7 +163,7 @@ export default function BillingPage() {
       )}
 
       {/* Métricas */}
-      <Grid style={{ marginBottom: '1.5rem' }}>
+      <Grid fullWidth style={{ marginBottom: '1.5rem' }}>
         <Column lg={4} md={4} sm={4}>
           <Tile>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
@@ -418,7 +418,7 @@ export default function BillingPage() {
         secondaryButtonText={t('common.cancel')}
         size="lg"
       >
-        <Grid>
+        <Grid fullWidth>
           <Column lg={8} md={4} sm={4}>
             <Select id="invoice-client" labelText={t('billing.invoiceClient')}>
               <SelectItem value="" text={t('common.select')} />

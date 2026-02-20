@@ -54,7 +54,7 @@ export default function AccountSettingsPage() {
   };
 
   return (
-    <Grid fullWidth style={{ padding: '2rem 0' }}>
+    <Grid fullWidth>
       <Column lg={16} md={8} sm={4}>
         <Section level={1}>
           <Heading style={{ marginBottom: '1.5rem' }}>

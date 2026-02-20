@@ -38,7 +38,7 @@ export default function ForecastPage() {
   const { t } = useTranslation();
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header">
         <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <ChartLineData size={24} />
@@ -50,7 +50,7 @@ export default function ForecastPage() {
       </div>
 
       {/* KPI Tiles */}
-      <Grid style={{ marginBottom: '2rem', marginTop: '1.5rem' }}>
+      <Grid fullWidth style={{ marginBottom: '2rem', marginTop: '1.5rem' }}>
         <Column lg={4} md={2} sm={4}>
           <Tile style={{ textAlign: 'center', padding: '1.5rem' }}>
             <ChartLineData size={20} style={{ color: 'var(--cds-link-primary)', marginBottom: '0.5rem' }} />
@@ -97,7 +97,7 @@ export default function ForecastPage() {
       <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1rem' }}>
         {t('Monthly Projections')}
       </h2>
-      <Grid>
+      <Grid fullWidth>
         {monthlyProjections.map((projection) => (
           <Column key={projection.id} lg={5} md={4} sm={4} style={{ marginBottom: '1rem' }}>
             <Tile style={{ padding: '1.5rem', height: '100%' }}>

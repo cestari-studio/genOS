@@ -116,7 +116,7 @@ export default function ViralPage() {
   const { t } = useTranslation();
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <Section level={1}>
         <Heading style={{ marginBottom: '0.5rem' }}>
           {t('Viral Prediction')}

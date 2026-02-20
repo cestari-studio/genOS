@@ -103,7 +103,7 @@ export default function QuantumEnginePage() {
   const fidelityValue = parseFloat(quantumMetrics.fidelity) / 100;
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header" style={{ marginBottom: '2rem' }}>
         <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Chemistry size={20} />

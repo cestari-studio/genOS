@@ -73,7 +73,7 @@ export default function DocsPage() {
   const rows = apiEndpoints.map(e => ({ ...e }));
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Book size={20} />

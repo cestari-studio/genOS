@@ -89,7 +89,7 @@ export default function CopilotPage() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <Section level={1}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
           <Heading>

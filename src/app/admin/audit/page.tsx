@@ -82,7 +82,7 @@ export default function AuditPage() {
   const rows = paged.map(e => ({ id: e.id, timestamp: e.timestamp, user: e.user, action: e.action, resource: e.resource, ip: e.ip, severity: e.severity }));
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Security size={20} />

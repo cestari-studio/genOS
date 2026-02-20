@@ -43,7 +43,7 @@ export default function DashboardCharts() {
       <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
         {t('dashboard.charts.title')}
       </h2>
-      <Grid>
+      <Grid fullWidth>
         <Column lg={8} md={4} sm={4}>
           <Tile style={{ marginBottom: '1rem' }}>
             <LineChart

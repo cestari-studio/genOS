@@ -142,7 +142,7 @@ export default function MediaPage() {
         </div>
       </div>
 
-      <Grid>
+      <Grid fullWidth>
         {/* Sidebar - Pastas */}
         <Column lg={3} md={2} sm={4}>
           <Tile style={{ padding: '1rem' }}>
@@ -232,7 +232,7 @@ export default function MediaPage() {
 
           {/* Grid View */}
           {viewMode === 'grid' && (
-            <Grid>
+            <Grid fullWidth>
               {filteredFiles.map(file => {
                 const IconComponent = typeIcons[file.type];
                 return (

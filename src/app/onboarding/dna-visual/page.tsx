@@ -109,7 +109,7 @@ export default function DnaVisualPage() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header" style={{ marginBottom: '2rem' }}>
         <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
           <ColorPalette size={20} />
@@ -121,7 +121,7 @@ export default function DnaVisualPage() {
         </p>
       </div>
 
-      <Grid>
+      <Grid fullWidth>
         {/* Logo Upload Section */}
         <Column lg={16} md={8} sm={4} style={{ marginBottom: '2rem' }}>
           <Tile style={{ padding: '1.5rem' }}>

@@ -126,7 +126,7 @@ export default function ReportsPage() {
   }));
 
   return (
-    <Grid>
+    <Grid fullWidth>
       <Column lg={16} md={8} sm={4}>
         <div className="page-header">
           <h1>{t('reports.title')}</h1>

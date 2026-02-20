@@ -7,7 +7,7 @@ export default function PrivacyPage() {
   const { t } = useTranslation();
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
       <div className="page-header">
         <h1>Privacy Policy</h1>
         <p>Last updated: February 2026</p>

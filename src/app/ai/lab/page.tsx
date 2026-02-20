@@ -106,7 +106,7 @@ export default function AILabPage() {
   const activeCount = experiments.filter(e => e.enabled).length;
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Chemistry size={20} />
@@ -127,7 +127,7 @@ export default function AILabPage() {
         <AILabel size="mini"><AILabelContent><p style={{ fontSize: '0.75rem' }}>{t('Experiments use multiple AI models and techniques. Results and metrics are indicative and may vary.')}</p></AILabelContent></AILabel>
       </div>
 
-      <Grid style={{ marginBottom: '1.5rem' }}>
+      <Grid fullWidth style={{ marginBottom: '1.5rem' }}>
         <Column lg={4} md={4} sm={4}>
           <Tile>
             <p style={{ fontSize: '0.875rem', color: 'var(--cds-text-secondary)' }}>Total Experiments</p>
@@ -158,7 +158,7 @@ export default function AILabPage() {
         </Column>
       </Grid>
 
-      <Grid>
+      <Grid fullWidth>
         {experiments.map((exp) => {
           const IconComponent = exp.icon;
           const config = statusConfig[exp.status];

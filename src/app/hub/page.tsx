@@ -103,7 +103,7 @@ export default function HubHomePage() {
   ];
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header" style={{ marginBottom: '2rem' }}>
         <h1>Client Home Dashboard</h1>
         <p style={{ color: '#525252', marginTop: '0.5rem' }}>
@@ -121,7 +121,7 @@ export default function HubHomePage() {
           padding: '2rem',
         }}
       >
-        <Grid>
+        <Grid fullWidth>
           <Column lg={12} md={6} sm={4}>
             <h2 style={{ marginBottom: '0.5rem' }}>Welcome, Acme Corp</h2>
             <p>
@@ -147,7 +147,7 @@ export default function HubHomePage() {
       </Tile>
 
       {/* KPI Stat Tiles */}
-      <Grid style={{ marginBottom: '2rem' }}>
+      <Grid fullWidth style={{ marginBottom: '2rem' }}>
         {kpiTiles.map((kpi) => (
           <Column key={kpi.key} lg={4} md={4} sm={4}>
             <Tile
@@ -184,7 +184,7 @@ export default function HubHomePage() {
 
       {/* Quick Action Cards */}
       <h3 style={{ marginBottom: '1rem' }}>Quick Actions</h3>
-      <Grid style={{ marginBottom: '2rem' }}>
+      <Grid fullWidth style={{ marginBottom: '2rem' }}>
         {quickActions.map((action) => (
           <Column key={action.label} lg={4} md={4} sm={4}>
             <ClickableTile
@@ -217,7 +217,7 @@ export default function HubHomePage() {
 
       {/* Recent Content Feed */}
       <h3 style={{ marginBottom: '1rem' }}>Recent Content</h3>
-      <Grid>
+      <Grid fullWidth>
         <Column lg={16} md={8} sm={4}>
           {recentContent.map((item, index) => (
             <Tile key={index} style={{ marginBottom: '0.5rem' }}>

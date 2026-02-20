@@ -131,7 +131,7 @@ export default function SocialHubPage() {
   const { t } = useTranslation();
 
   return (
-    <Grid fullWidth style={{ padding: '2rem 0' }}>
+    <Grid fullWidth>
       <Column lg={16} md={8} sm={4}>
         <h1 style={{ marginBottom: '0.5rem' }}>{t('Social Hub')}</h1>
         <p style={{ marginBottom: '2rem', color: '#525252' }}>

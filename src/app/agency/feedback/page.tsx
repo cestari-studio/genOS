@@ -284,7 +284,7 @@ export default function AgencyFeedbackPage() {
   );
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <div className="page-header" style={{ marginBottom: '2rem' }}>
         <h1>Feedback Inbox</h1>
         <p style={{ color: '#525252', marginTop: '0.5rem' }}>

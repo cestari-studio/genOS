@@ -113,7 +113,7 @@ export default function EditClientPage() {
 
   if (loading) {
     return (
-      <Grid>
+      <Grid fullWidth>
         <Column lg={16} md={8} sm={4}>
           <SkeletonText heading width="30%" />
         </Column>
@@ -122,7 +122,7 @@ export default function EditClientPage() {
   }
 
   return (
-    <Grid>
+    <Grid fullWidth>
       {/* Breadcrumb */}
       <Column lg={16} md={8} sm={4}>
         <Breadcrumb noTrailingSlash>
