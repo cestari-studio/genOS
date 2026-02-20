@@ -1,0 +1,239 @@
+// ── Login Page: Split Layout ────────────────────────────────────
+
+.login-page {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #001141;
+}
+
+// ── Left Visual Panel ──────────────────────────────────────────
+.login-visual {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.login-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.login-brand {
+  position: relative;
+  z-index: 3;
+  padding: 3rem;
+  max-width: 480px;
+}
+
+.login-brand__title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.login-brand__version {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: #78a9ff;
+  letter-spacing: 0.32px;
+  margin: 0.5rem 0 0;
+}
+
+.login-brand__tagline {
+  margin-top: 1.5rem;
+
+  p {
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.login-brand__features {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.login-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.25rem;
+}
+
+.login-feature__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4589ff;
+  flex-shrink: 0;
+}
+
+// ── Right Form Panel ───────────────────────────────────────────
+.login-form-panel {
+  width: 480px;
+  min-width: 480px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cds-layer-01, #ffffff);
+  padding: 3rem;
+  overflow-y: auto;
+}
+
+.login-form-wrapper {
+  width: 100%;
+  max-width: 360px;
+}
+
+.login-form__mobile-logo {
+  display: none;
+  margin-bottom: 2rem;
+  text-align: center;
+
+  h2 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--cds-text-primary, #161616);
+    margin: 0;
+  }
+
+  span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--cds-text-helper, #6f6f6f);
+  }
+}
+
+.login-form__header {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 2.25rem;
+    color: var(--cds-text-primary, #161616);
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: var(--cds-text-secondary, #525252);
+    margin: 0;
+  }
+}
+
+.login-form__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.login-form__submit {
+  width: 100%;
+  max-width: none;
+}
+
+.login-form__footer {
+  margin-top: 2rem;
+  text-align: center;
+
+  p {
+    font-size: 0.875rem;
+    color: var(--cds-text-secondary, #525252);
+    margin: 0;
+  }
+}
+
+.login-form__legal {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+  text-align: center;
+
+  p {
+    font-size: 0.75rem;
+    color: var(--cds-text-helper, #6f6f6f);
+    margin: 0;
+  }
+}
+
+// ── Responsive: Tablet (md) ────────────────────────────────────
+@media (max-width: 1055px) {
+  .login-form-panel {
+    width: 420px;
+    min-width: 420px;
+    padding: 2rem;
+  }
+
+  .login-brand {
+    padding: 2rem;
+  }
+
+  .login-brand__title {
+    font-size: 2.5rem;
+  }
+}
+
+// ── Responsive: Mobile (sm) ────────────────────────────────────
+@media (max-width: 671px) {
+  .login-page {
+    flex-direction: column;
+  }
+
+  .login-visual {
+    display: none;
+  }
+
+  .login-form-panel {
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+    padding: 1.5rem;
+    background:
+      linear-gradient(180deg, #001141 0%, var(--cds-layer-01, #ffffff) 30%);
+  }
+
+  .login-form-wrapper {
+    max-width: 100%;
+  }
+
+  .login-form__mobile-logo {
+    display: block;
+  }
+
+  .login-form__header {
+    text-align: center;
+  }
+
+  .login-form__legal {
+    margin-top: 2rem;
+  }
+}
+
+// ── Reduced Motion ─────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .login-visual svg *,
+  .login-glow {
+    animation: none !important;
+    transition: none !important;
+  }
+}
